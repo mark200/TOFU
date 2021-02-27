@@ -102,25 +102,4 @@ public class Question {
         this.answered = answered;
     }
 
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Question question = (Question) o;
-        return getPrimaryKey().equals(question.getPrimaryKey()) &&
-                getStudent_id().equals(question.getStudent_id()) &&
-                getContent().equals(question.getContent()) &&
-                getVote_counter().equals(question.getVote_counter()) &&
-                getAnswered().equals(question.getAnswered()) &&
-                getCreated_at().equals(question.getCreated_at());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getPrimaryKey(), getStudent_id(), getContent(), getVote_counter(), getAnswered(), getCreated_at());
-    }
 }
