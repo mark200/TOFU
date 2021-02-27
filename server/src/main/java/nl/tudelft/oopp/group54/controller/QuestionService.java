@@ -1,20 +1,23 @@
 package nl.tudelft.oopp.group54.controller;
 
 import nl.tudelft.oopp.group54.entities.Question;
+import org.h2.util.json.JSONObject;
 import org.springframework.lang.Nullable;
 
+import java.util.List;
+
 public interface QuestionService {
-    String postQuestion(String lectureId, String userId, String questionText);
+    JSONObject postQuestion(String lectureId, String userId, String questionText);
 
-    String voteOnQuestion(String lectureId,
-                          String userId,
-                          String questionId,
-                          boolean isUpvote);
+    JSONObject voteOnQuestion(String lectureId,
+                              String userId,
+                              String questionId,
+                              boolean isUpvote);
 
-    String answerQuestion(String lectureId,
-                          String userId,
-                          String questionId,
-                          @Nullable String answerText);
+    JSONObject answerQuestion(String lectureId,
+                              String userId,
+                              String questionId,
+                              @Nullable String answerText);
 
-    Question getAllQuestions(String lectureId, String userId);
+    List<Question> getAllQuestions(String lectureId, String userId);
 }
