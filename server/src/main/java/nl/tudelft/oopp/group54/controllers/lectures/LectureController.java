@@ -4,11 +4,7 @@ package nl.tudelft.oopp.group54.controllers.lectures;
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
 
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -105,6 +101,13 @@ public class LectureController {
     return lectureService.joinOngoingLecture(lectureID, userID, userName);
   }
 
+  @GetMapping(
+          value = "/{lectureID}",
+          produces = {MediaType.APPLICATION_JSON_VALUE})
+  public Map<String, Object> getLectureMetadata(@PathVariable("lectureID") Long lectureID) {
 
+
+    return lectureService.getLectureMetadata(lectureID);
+  }
 
 }
