@@ -30,7 +30,7 @@ public class Question {
     private Boolean answered;
 
 
-    @Column(name = "created_at", columnDefinition = "TIMESTAMPTZ DEFAULT CURRENT_TIME")
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIME")
     @NotNull
     private Date created_at;
 
@@ -102,4 +102,15 @@ public class Question {
         this.answered = answered;
     }
 
+    @Override
+    public String toString() {
+        return "Question{" +
+                "primaryKey=" + primaryKey +
+                ", student_id=" + student_id +
+                ", content='" + content + '\'' +
+                ", vote_counter=" + vote_counter +
+                ", answered=" + answered +
+                ", created_at=" + created_at +
+                '}';
+    }
 }

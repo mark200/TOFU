@@ -1,52 +1,136 @@
-package nl.tudelft.oopp.group54.controller;
+package nl.tudelft.oopp.group54.controllers.questions;
 
 import nl.tudelft.oopp.demo.entities.Quote;
 
+import nl.tudelft.oopp.group54.controllers.ParamResolver;
+import nl.tudelft.oopp.group54.entities.Question;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
-@Controller
+@RestController
+@RequestMapping(value = "/lectures")
 public class QuestionController {
 
 
+    QuestionService questionService = new MockQuestionServiceImplementation();
 
 
+    @PostMapping(value = "/{lectureID}/questions")
+    public Map<String, Object> postQuestion(@PathVariable(value = "lectureID") Long lectureId,
+                                            @RequestBody Map<String, Object> requestPayload){
 
-    /**
-     * GET Endpoint to retrieve a random quote.
-     *
-     * @return randomly selected {@link Quote}.
-     */
-    @GetMapping("quote")
-    @ResponseBody
-    public Quote getRandomQuote() {
-        Quote q1 = new Quote(
-                1,
-                "A clever person solves a problem. A wise person avoids it.",
-                "Albert Einstein"
+        boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
+                requestPayload,
+                Arrays.asList("userId", "questionText")
         );
 
-        Quote q2 = new Quote(
-                2,
-                "The computer was born to solve problems that did not exist before.",
-                "Bill Gates"
+        if(!containsNecessaryData){
+
+            Map<String, Object> toBeReturned = new TreeMap<>();
+            toBeReturned.put("success", "false");
+            toBeReturned.put("message", "Expected lectureId," +
+                    " userId and question Text to be provided");
+
+            return toBeReturned;
+        }
+
+        String userId;
+        String questionText;
+
+        try {
+            userId = (String) requestPayload.get("userId");
+            questionText = (String) requestPayload.get("questionText");
+        } catch (Exception e){
+            Map<String, Object> toBeReturned = new TreeMap<>();
+            toBeReturned.put("success", "false");
+            toBeReturned.put("message", e.getMessage());
+
+            return toBeReturned;
+        }
+
+        return questionService.postQuestion(lectureId, userId, questionText);
+    }
+
+
+
+    @GetMapping(value = "/{lectureID}/questions")
+    public Map<String, Object> getAllQuestions(@PathVariable(value = "lectureID") Long lectureID,
+                                               @RequestBody Map<String, Object> requestPayload){
+
+        boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
+                requestPayload,
+                Arrays.asList("userID")
         );
 
-        Quote q3 = new Quote(
-                3,
-                "Tell me and I forget.  Teach me and I remember.  Involve me and I learn.",
-                "Benjamin Franklin"
-        );
+        if(!containsNecessaryData){
 
-        ArrayList<Quote> quotes = new ArrayList<>();
-        quotes.add(q1);
-        quotes.add(q2);
-        quotes.add(q3);
+            Map<String, Object> toBeReturned = new TreeMap<>();
+            toBeReturned.put("success", "false");
+            toBeReturned.put("message", "Expected userID" +
+                    " to be provided");
 
-        return quotes.get(new Random().nextInt(quotes.size()));
+            return toBeReturned;
+        }
+
+        String userId;
+
+        try {
+            userId = (String) requestPayload.get("userId");
+        } catch (Exception e){
+            Map<String, Object> toBeReturned = new TreeMap<>();
+            toBeReturned.put("success", "false");
+            toBeReturned.put("message", e.getMessage());
+
+            return toBeReturned;
+        }
+
+        List<Question> questions = questionService.getAllQuestions(lectureID, userId);
+        Map<String, Object> toBeReturned = new TreeMap<>();
+        Map<String, Object> innerObject = new TreeMap<>();
+        List<Map<String, Object>> answeredList = new ArrayList<>();
+        List<Map<String, Object>> unansweredList = new ArrayList<>();
+
+        /**
+         * Inflate answeredList
+         */
+        Map<String, Object> answeredQuestion = new TreeMap<>();
+        answeredQuestion.put("userID", "ID of the user who asked the question");
+        answeredQuestion.put("userName", "John Doe");
+        answeredQuestion.put("questionText", "this is the actual text that comprises the question");
+        answeredQuestion.put("answerText", "this field does not need to exist in the final response");
+        answeredQuestion.put("score", 42);
+        answeredQuestion.put("answered", false);
+
+        answeredList.add(answeredQuestion);
+
+        /**
+         * Inflate unansweredList
+         */
+        Map<String, Object> unansweredQuestion = new TreeMap<>();
+        unansweredQuestion.put("userID", "ID of the user who asked the question");
+        unansweredQuestion.put("userName", "John Doe");
+        unansweredQuestion.put("questionText", "this is the actual text that comprises the question");
+        unansweredQuestion.put("score", 42);
+        unansweredQuestion.put("answered", false);
+
+        unansweredList.add(unansweredQuestion);
+
+
+
+
+        innerObject.put("answered", answeredList);
+        innerObject.put("unanswered", unansweredList);
+
+
+        toBeReturned.put("sucess", true);
+        toBeReturned.put("count", questions.size());
+        toBeReturned.put("userId", 13); //FIXME: change to userName.
+        toBeReturned.put("questions", innerObject);
+
+        return toBeReturned;
+
     }
 }
