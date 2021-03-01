@@ -29,4 +29,16 @@ public class MockLectureServiceImplementation implements LectureService {
 
         return toBeReturned;
     }
+
+    @Override
+    public Map<String, Object> getLectureMetadata(Long lectureId) {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+
+        toBeReturned.put("success", "true");
+        toBeReturned.put("start", "10:45:00");
+        toBeReturned.put("end", "12:45:00");
+        toBeReturned.put("count", 139);
+
+        return toBeReturned;
+    }
 }
