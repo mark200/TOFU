@@ -38,43 +38,6 @@ public class MockQuestionServiceImplementation implements QuestionService {
     return status;
   }
 
-  /**
-   * increases the vote on the question
-   * @param lectureId
-   * @param userId
-   * @param questionId
-   * @param isUpvote
-   * @return success, if vote was successful, otherwise false.
-   */
-  @Override
-  public Map<String, Object> voteOnQuestion(Long lectureId, String userId, String questionId, boolean isUpvote) {
-    Map<String, Object> status = new TreeMap<>();
-    QuestionKey currentKey = new QuestionKey(Integer.parseInt(questionId), lectureId.intValue());
-
-    if(questionMap.containsKey(currentKey)){
-      questionMap.get(currentKey).setVote_counter(questionMap.get(currentKey).getVote_counter() + 1);
-      status.put("success", true);
-      return status;
-    }
-
-    status.put("success", false);
-    status.put("message", "Question does not exist");
-
-    return status;
-
-
-  }
-
-  @Override
-  public Map<String, Object> answerQuestion(Long lectureId, String userId, String questionId, String answerText) {
-
-    Map<String, Object> status = new TreeMap<>();
-
-    status.put("sucess", true);
-
-    return status;
-  }
-
   @Override
   public List<Question> getAllQuestions(Long lectureId, String userId) {
 

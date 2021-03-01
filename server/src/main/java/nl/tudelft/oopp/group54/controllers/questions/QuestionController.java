@@ -5,6 +5,7 @@ import nl.tudelft.oopp.demo.entities.Quote;
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
 import nl.tudelft.oopp.group54.entities.Question;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,9 @@ public class QuestionController {
     QuestionService questionService = new MockQuestionServiceImplementation();
 
 
-    @PostMapping(value = "/{lectureID}/questions")
+    @PostMapping(value = "/{lectureID}/questions",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> postQuestion(@PathVariable(value = "lectureID") Long lectureId,
                                             @RequestBody Map<String, Object> requestPayload){
 
@@ -56,7 +59,9 @@ public class QuestionController {
 
 
 
-    @GetMapping(value = "/{lectureID}/questions")
+    @GetMapping(value = "/{lectureID}/questions",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> getAllQuestions(@PathVariable(value = "lectureID") Long lectureID,
                                                @RequestBody Map<String, Object> requestPayload){
 

@@ -5,6 +5,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 public class QuestionKey implements Serializable, Comparable {
@@ -45,5 +46,19 @@ public class QuestionKey implements Serializable, Comparable {
     public int compareTo(Object o) {
         QuestionKey that = (QuestionKey) o;
         return Integer.valueOf(id).compareTo(Integer.valueOf(that.getId()));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        QuestionKey that = (QuestionKey) o;
+        return getId() == that.getId() &&
+                getLecture_id() == that.getLecture_id();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getLecture_id());
     }
 }

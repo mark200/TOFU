@@ -11,15 +11,5 @@ import java.util.List;
 public interface QuestionService {
     Map<String, Object> postQuestion(Long lectureId, String userId, String questionText);
 
-    Map<String, Object> voteOnQuestion(Long lectureId,
-                          String userId,
-                          String questionId,
-                          boolean isUpvote);
-
-    Map<String, Object> answerQuestion(Long lectureId,
-                          String userId,
-                          String questionId,
-                          @Nullable String answerText);
-
     List<Question> getAllQuestions(Long lectureId, String userId);
 }
