@@ -8,8 +8,6 @@ import java.util.Date;
 @Table(name = "User")
 public class User {
     @EmbeddedId
-    @Column(name = "id", columnDefinition = "serial NOT NULL")
-    @NotNull
     private UserKey primaryKey;
 
     @Column(name = "name", columnDefinition = "VARCHAR (40) NOT NULL")
