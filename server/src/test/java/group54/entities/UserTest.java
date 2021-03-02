@@ -85,4 +85,10 @@ public class UserTest {
         User u1 = new User(124, "Ivan Ivanovv", 69, "127.0.0.1", date, 1);
         assertNotEquals(u1, u);
     }
+
+    @Test
+    public void testToString() {
+        String expected = "User{id=123, name='Ivan Ivanov', lectureID=57, ipAddress='127.0.0.1', lastQuestion=" + date + ", roleID=1}";
+        assertEquals(expected, u.toString());
+    }
 }
