@@ -2,26 +2,38 @@ package nl.tudelft.oopp.group54.controllers;
 
 import java.io.IOException;
 
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
+
+import nl.tudelft.oopp.group54.views.ApplicationScene;
 import nl.tudelft.oopp.group54.views.MainView;
 
-public class MainSceneController {
+public class MainSceneController extends AbstractApplicationController {
 
-    /**
-     * Handles clicking the button.
-     * @throws IOException 
-     */
-    public void createButtonClicked() throws IOException {
-    	Parent part = FXMLLoader.load(getClass().getResource("/dateTimeScene.fxml"));
-        Scene scene = new Scene(part);
-        MainView.changeScene(scene);
+    @FXML
+    private Button createButton;
+
+    @FXML
+    private Button joinButton;
+
+    @FXML
+    private AnchorPane anchorPane;
+
+    public void createButtonClicked() {
+        MainView.changeScene(ApplicationScene.DATETIME, true);
     }
     
-    public void joinButtonClicked() throws IOException {
-    	Parent part = FXMLLoader.load(getClass().getResource("/lectureRoomScene.fxml"));
-        Scene scene = new Scene(part);
-        MainView.changeScene(scene);
+    public void joinButtonClicked() {
+        MainView.changeScene(ApplicationScene.JOINLECTURE, true);
+    }
+
+    @Override
+    public void performControllerSpecificSetup() {
+        System.out.println("Main controller config");
     }
 }
