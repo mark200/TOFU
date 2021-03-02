@@ -1,6 +1,8 @@
 package nl.tudelft.oopp.group54.controllers.votes;
 
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
+import nl.tudelft.oopp.group54.controllers.questions.MockQuestionServiceImplementation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +13,9 @@ import java.util.TreeMap;
 @RestController
 @RequestMapping(value = "/lectures/{lectureID}/questions/{questionID}/")
 public class VoteController {
-    VoteService voteService = new MockVoteServiceImpl();
+
+    @Autowired
+    MockVoteServiceImpl voteService;
 
     @PostMapping(value = "votes",
             consumes = {MediaType.APPLICATION_JSON_VALUE},

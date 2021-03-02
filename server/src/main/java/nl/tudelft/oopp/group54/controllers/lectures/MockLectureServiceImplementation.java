@@ -1,9 +1,12 @@
 package nl.tudelft.oopp.group54.controllers.lectures;
 
+import org.springframework.stereotype.Service;
+
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
+@Service
 public class MockLectureServiceImplementation implements LectureService {
     @Override
     public Map<String, Object> createNewLecture(Date startTime, String lectureName) {

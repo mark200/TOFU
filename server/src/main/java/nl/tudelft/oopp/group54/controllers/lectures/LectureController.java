@@ -3,6 +3,7 @@ package nl.tudelft.oopp.group54.controllers.lectures;
 
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,8 @@ import java.util.TreeMap;
 @RequestMapping(value="/lectures")
 public class LectureController {
 
-  LectureService lectureService = new MockLectureServiceImplementation();
+  @Autowired
+  MockLectureServiceImplementation lectureService;
 
   @PostMapping(
           value = "",
