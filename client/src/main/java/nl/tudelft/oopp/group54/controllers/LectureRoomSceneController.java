@@ -3,7 +3,9 @@ package nl.tudelft.oopp.group54.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import nl.tudelft.oopp.group54.Question;
 import nl.tudelft.oopp.group54.controllers.AbstractApplicationController;
 
 public class LectureRoomSceneController extends AbstractApplicationController {
@@ -17,16 +19,14 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
   @Override
   public void performControllerSpecificSetup() {
-    for(int i =0; i <100;i++) {
-      Text text = new Text();
-      text.setText("Hello World!");
-      questionBox.getChildren().add(text);
+    for(int i =0; i <1;i++) {
+      addQuestion("hello world");
     }
   }
 
   public void addQuestion(String question){
-    Text text = new Text();
-    text.setText(question);
-    questionBox.getChildren().add(text);
+    Question q = new Question(question);
+    
+    questionBox.getChildren().add(q);
   }
 }
