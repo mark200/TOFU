@@ -7,18 +7,14 @@ import java.util.Date;
 @Entity
 @Table(name = "User")
 public class User {
-    @Id
+    @EmbeddedId
     @Column(name = "id", columnDefinition = "serial NOT NULL")
     @NotNull
-    private long id;
+    private UserKey primaryKey;
 
     @Column(name = "name", columnDefinition = "VARCHAR (40) NOT NULL")
     @NotNull
     private String name;
-
-    @Column(name = "lecture_id", columnDefinition = "INT NOT NULL")
-    @NotNull
-    private long lectureID;
 
     @Column(name = "IP", columnDefinition = "VARCHAR NOT NULL")
     @NotNull
@@ -37,36 +33,34 @@ public class User {
 
     /**
      * Constructor
-     * @param id
+     * @param primaryKey
      * @param name
-     * @param lectureID
      * @param ipAddress
      * @param lastQuestion
      * @param roleID
      */
-    public User(long id, String name, long lectureID, String ipAddress, Date lastQuestion, int roleID) {
-        this.id = id;
+    public User(@NotNull UserKey primaryKey, @NotNull String name, @NotNull String ipAddress, Date lastQuestion, @NotNull int roleID) {
+        this.primaryKey = primaryKey;
         this.name = name;
-        this.lectureID = lectureID;
         this.ipAddress = ipAddress;
         this.lastQuestion = lastQuestion;
         this.roleID = roleID;
     }
 
     /**
-     * Returns the Identification number of the user
+     * Updates the Identification number and the Lecture ID of the question
      * @return
      */
-    public long getId() {
-        return id;
+    public UserKey getKey() {
+        return this.primaryKey;
     }
 
     /**
-     * Updates the Identification number of the question
-     * @param id new ID
+     * Updates the Identification number and the Lecture ID of the question
+     * @param primaryKey
      */
-    public void setId(long id) {
-        this.id = id;
+    public void setKey(UserKey primaryKey) {
+        this.primaryKey = primaryKey;
     }
 
     /**
@@ -83,22 +77,6 @@ public class User {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * Returns the Identification Number of the lecture that the user is currently watching
-     * @return
-     */
-    public long getLectureID() {
-        return lectureID;
-    }
-
-    /**
-     * Changes the Identification number that the user is currently watching
-     * @param lectureID Identification number of a new lecture
-     */
-    public void setLectureID(long lectureID) {
-        this.lectureID = lectureID;
     }
 
     /**
@@ -161,23 +139,21 @@ public class User {
 
         User user = (User) o;
 
-        if (getId() != user.getId()) return false;
-        if (getLectureID() != user.getLectureID()) return false;
         if (getRoleID() != user.getRoleID()) return false;
+        if (!primaryKey.equals(user.primaryKey)) return false;
         if (!getName().equals(user.getName())) return false;
         if (!getIpAddress().equals(user.getIpAddress())) return false;
         return lastQuestion.equals(user.lastQuestion);
     }
 
     /**
-     * Computres the hashcode of the object
+     * Computes the hashcode
      * @return
      */
     @Override
     public int hashCode() {
-        int result = (int) (getId() ^ (getId() >>> 32));
+        int result = primaryKey.hashCode();
         result = 31 * result + getName().hashCode();
-        result = 31 * result + (int) (getLectureID() ^ (getLectureID() >>> 32));
         result = 31 * result + getIpAddress().hashCode();
         result = 31 * result + lastQuestion.hashCode();
         result = 31 * result + getRoleID();
@@ -191,9 +167,8 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "primaryKey=" + primaryKey +
                 ", name='" + name + '\'' +
-                ", lectureID=" + lectureID +
                 ", ipAddress='" + ipAddress + '\'' +
                 ", lastQuestion=" + lastQuestion +
                 ", roleID=" + roleID +
