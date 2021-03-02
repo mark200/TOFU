@@ -52,10 +52,10 @@
                                                 <TextField maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
                                              </children>
                                           </GridPane>
-                                          <ScrollPane prefHeight="900.0" prefWidth="900.0">
-                                            <content>
-                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="295.0" prefWidth="593.0" />
-                                            </content>
+                                          <ScrollPane fx:id="questionScroll" prefHeight="900.0" prefWidth="900.0">
+                                             <content>
+                                                <VBox fx:id="questionBox" prefHeight="276.0" prefWidth="575.0" />
+                                             </content>
                                           </ScrollPane>
                                        </children>
                                     </GridPane>
