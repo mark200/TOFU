@@ -17,7 +17,6 @@ public class User {
     private String name;
 
     @Column(name = "lecture_id", columnDefinition = "INT NOT NULL")
-    @JoinColumn(name = "")
     @NotNull
     private long lectureID;
 
