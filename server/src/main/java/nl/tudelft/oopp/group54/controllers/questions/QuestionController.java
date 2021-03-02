@@ -16,7 +16,10 @@ import java.util.*;
 public class QuestionController {
 
 
-    QuestionService questionService = new MockQuestionServiceImplementation();
+    //QuestionService questionService = new MockQuestionServiceImplementation();
+
+    @Autowired
+    QuestionService questionService;
 
 
     @PostMapping(value = "/{lectureID}/questions",
