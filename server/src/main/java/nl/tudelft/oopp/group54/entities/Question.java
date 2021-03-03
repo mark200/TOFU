@@ -24,7 +24,7 @@ public class Question {
     private String content;
 
     @Column(name = "vote_counter", columnDefinition = "INT default 0")
-    private Integer voteCounter = 0;
+    private Integer vote_counter = 0;
 
     @Column(name = "answered", columnDefinition = "BOOLEAN NOT NULL DEFAULT FALSE")
     @NotNull
@@ -32,7 +32,7 @@ public class Question {
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIME")
     @NotNull
-    private Date createdAt;
+    private Date created_at;
 
     @Column(name = "answer_text", columnDefinition = "VARCHAR(1000)")
     private String answerText;
