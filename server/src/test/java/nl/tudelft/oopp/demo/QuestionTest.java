@@ -34,8 +34,6 @@ public class QuestionTest {
 
     @Test
     public void equalsPrimaryKeys(){
-        System.out.println(question.equals(questionDuplicate));
-        System.out.println(key.equals(keyDuplicate));
         assertEquals(question, questionDuplicate);
     }
 
