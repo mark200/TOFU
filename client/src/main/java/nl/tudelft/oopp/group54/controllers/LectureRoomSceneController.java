@@ -19,8 +19,8 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
   @Override
   public void performControllerSpecificSetup() {
-    for(int i =0; i <1;i++) {
-      addQuestion("hello world");
+    for(int i  = 0; i < 3; i++) {
+      addQuestion("hello world " + i);
     }
   }
 

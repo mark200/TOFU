@@ -8,10 +8,9 @@ public class Question extends Pane{
 	
 	public Question(String question) {
 		this.question = question;
-		setWidth(100);
-		setHeight(100);
-		Text text = new Text(question);
-		getChildren().add(text);
-		setStyle("-fx-background-color: black;");
+		setPrefSize(100, 100);
+		Text t = new Text (10, 20, question);
+		getChildren().add(t);
+		setStyle("-fx-border-color: black");
 	}
 }
