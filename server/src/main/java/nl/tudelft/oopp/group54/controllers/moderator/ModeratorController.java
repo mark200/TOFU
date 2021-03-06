@@ -1,6 +1,7 @@
 package nl.tudelft.oopp.group54.controllers.moderator;
 
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,9 @@ import java.util.TreeMap;
 @RestController
 @RequestMapping("/r/lectures")
 public class ModeratorController {
-    ModeratorService moderatorService = new MockModeratorServiceImplementation();
+
+    @Autowired
+    MockModeratorServiceImplementation moderatorService;
 
     @PutMapping(
             value = "/{lectureID}",

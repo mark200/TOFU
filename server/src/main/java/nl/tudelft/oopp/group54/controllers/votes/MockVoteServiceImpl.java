@@ -1,10 +1,12 @@
 package nl.tudelft.oopp.group54.controllers.votes;
 
 import nl.tudelft.oopp.group54.entities.QuestionKey;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.TreeMap;
 
+@Service
 public class MockVoteServiceImpl implements VoteService {
 
     @Override
