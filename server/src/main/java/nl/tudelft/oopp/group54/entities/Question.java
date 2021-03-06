@@ -24,17 +24,18 @@ public class Question {
     private String content;
 
     @Column(name = "vote_counter", columnDefinition = "INT default 0")
-    private Integer vote_counter;
+    private Integer vote_counter = 0;
 
     @Column(name = "answered", columnDefinition = "BOOLEAN NOT NULL DEFAULT FALSE")
     @NotNull
     private Boolean answered;
 
-
     @Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIME")
     @NotNull
     private Date created_at;
 
+    @Column(name = "answer_text", columnDefinition = "VARCHAR(1000)")
+    private String answerText;
 
     public Question(){
 
@@ -83,6 +84,10 @@ public class Question {
         return created_at;
     }
 
+    public String getAnswerText() {
+        return answerText;
+    }
+
     public void setPrimaryKey(QuestionKey primaryKey) {
         this.primaryKey = primaryKey;
     }
@@ -101,6 +106,34 @@ public class Question {
 
     public void setAnswered(Boolean answered) {
         this.answered = answered;
+    }
+
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
+    }
+
+    public void setAnswerText(String answerText) {
+        this.answerText = answerText;
+    }
+
+    /**
+     * Compare two Question Objects, the idea is to compare their primary keys,
+     * because in the context of this application questions with different primary keys
+     * will be different questions.
+     * @param o Object.
+     * @return true if their primaryKey is equal, otherwise false.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Question question = (Question) o;
+        return getPrimaryKey().equals(question.getPrimaryKey());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPrimaryKey(), getStudent_id(), getContent(), getVote_counter(), getAnswered(), getCreated_at(), getAnswerText());
     }
 
     @Override
