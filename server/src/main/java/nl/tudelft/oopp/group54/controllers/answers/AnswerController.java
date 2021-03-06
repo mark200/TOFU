@@ -1,6 +1,7 @@
 package nl.tudelft.oopp.group54.controllers.answers;
 
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,8 @@ import java.util.TreeMap;
 @RestController
 @RequestMapping(value = "/lectures")
 public class AnswerController {
-    AnswerService answerService = new MockAnswerServiceImpl();
+    @Autowired
+    MockAnswerServiceImpl answerService;
 
     @PostMapping(value = "{lectureID}/questions/{questionID}/answer",
             consumes = {MediaType.APPLICATION_JSON_VALUE},

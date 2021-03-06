@@ -16,11 +16,8 @@ import java.util.*;
 public class QuestionController {
 
 
-    //QuestionService questionService = new MockQuestionServiceImplementation();
-
     @Autowired
-    QuestionService questionService;
-
+    MockQuestionServiceImplementation questionService;
 
     @PostMapping(value = "/{lectureID}/questions",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
