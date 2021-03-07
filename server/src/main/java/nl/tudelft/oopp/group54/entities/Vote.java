@@ -11,7 +11,7 @@ public class Vote {
 
     @Column(name = "vote_value", columnDefinition = "INT DEFAULT 0")
     @NotNull
-    private int voteValue = 0;
+    private Integer voteValue = 0;
 
     /**
      * Empty constructor

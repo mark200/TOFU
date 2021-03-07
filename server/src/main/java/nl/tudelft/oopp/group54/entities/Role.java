@@ -1,17 +1,15 @@
 package nl.tudelft.oopp.group54.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Role")
 public class Role {
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     @Column(name = "id", columnDefinition = "serial PRIMARY KEY")
-    private int id;
+    private Integer id;
 
     @Column(name = "name", columnDefinition = "varchar(32) NOT NULL")
     private String name;

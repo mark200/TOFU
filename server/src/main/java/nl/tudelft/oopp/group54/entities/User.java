@@ -18,7 +18,7 @@ public class User {
     @NotNull
     private String ipAddress;
 
-    @Column(name = "last_question_timestamp", columnDefinition = "TIMESTAMPTZ DEFAULT CURRENT_TIME")
+    @Column(name = "last_question_timestamp", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIME")
     private Date lastQuestion;
 
     @Column(name = "Role_id", columnDefinition = "INT NOT NULL")

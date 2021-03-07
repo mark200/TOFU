@@ -3,20 +3,21 @@ package nl.tudelft.oopp.group54.entities;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Embeddable
-public class VoteKey {
+public class VoteKey implements Serializable {
     @Column(name = "student_id", columnDefinition = "INT NOT NULL")
     @NotNull
-    private int studentID;
+    private Integer studentID;
 
     @Column(name = "lecture_id", columnDefinition = "INT NOT NULL")
     @NotNull
-    private int lectureID;
+    private Integer lectureID;
 
     @Column(name = "question_id", columnDefinition = "INT NOT NULL")
     @NotNull
-    private int questionID;
+    private Integer questionID;
 
     /**
      * Empty Constructor

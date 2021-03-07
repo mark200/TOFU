@@ -11,10 +11,10 @@ import java.util.Objects;
 public class AnswerKey implements Serializable, Comparable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private Integer id;
 
     @Column(name = "lecture_id", nullable = false)
-    private int lecture_id;
+    private Integer lecture_id;
 
     public AnswerKey(int id, int lecture_id) {
         this.id = id;

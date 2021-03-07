@@ -12,11 +12,11 @@ public class UserKey implements Serializable, Comparable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @NotNull
-    private int id;
+    private Integer id;
 
     @Column(name = "lecture_id")
     @NotNull
-    private int lecture_id;
+    private Integer lecture_id;
 
     /**
      * Empty Constructor
