@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.group54.controllers.util;
+package nl.tudelft.oopp.group54.util;
 
 import java.util.regex.Pattern;
 
@@ -9,7 +9,7 @@ public class TextFormatterFactory {
   private static Pattern createPattern(TextFormatterType tft) {
     switch (tft) {
       case JOIN_ID:
-        return Pattern.compile("\\d{0,12}");
+        return Pattern.compile("/j/\\d{0,12}/\\d{0,12}");
       case TIME:
         return Pattern.compile("\\d{0,2}:?\\d{0,2}");
       case NAME:

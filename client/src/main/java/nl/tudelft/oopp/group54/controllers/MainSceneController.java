@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 
+import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.controllers.AbstractApplicationController;
 import nl.tudelft.oopp.group54.views.ApplicationScene;
 import nl.tudelft.oopp.group54.views.MainView;

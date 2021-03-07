@@ -81,8 +81,6 @@ public class MainView extends Application {
 
     AbstractApplicationController controller = loader.getController();
     controller.performControllerSpecificSetup();
-
-
   }
 
 
