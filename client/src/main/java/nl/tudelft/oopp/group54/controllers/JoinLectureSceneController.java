@@ -24,7 +24,7 @@ public class JoinLectureSceneController extends AbstractApplicationController {
   @FXML
   TextField enterNameTextField;
 
-//  Datastore ds = Datastore.getInstance();
+  Datastore ds = Datastore.getInstance();
 
 
   @Override
@@ -60,21 +60,31 @@ public class JoinLectureSceneController extends AbstractApplicationController {
 
       return;
     }
+    
+    String joinIdTextFieldString = joinIdTextFieldText.toString();
+    
+//    System.out.println(joinIdTextFieldString);
+    
+    Long lectureId = Long.parseLong(joinIdTextFieldString.substring(3, 9));
+    Long joinId = Long.parseLong(joinIdTextFieldString.substring(10, 16));
+    
+//    System.out.println("lectureId = " + lectureId);
+//    System.out.println("joinId = " + joinId);
 
-//    JoinLectureResponse response = null;
-//    try {
-//      response = ServerCommunication.postLecture(timestamp, lectureName.toString());
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//      this.displayStatusMessage(e.getMessage());
-//    }
-//
-//    if(response.getSuccess()) {
-//      this.ds.setCreateLectureResponse(response);
-//      MainView.changeScene(ApplicationScene.COPYLINK, true);
-//    }
-//
-//
-//    MainView.changeScene(ApplicationScene.LECTUREROOM, true);
+    JoinLectureResponse response = null;
+    try {
+      response = ServerCommunication.joinLecture(enterNameTextFieldText.toString(), lectureId, joinId);
+    } catch (Exception e) {
+      e.printStackTrace();
+      this.displayStatusMessage(e.getMessage());
+    }
+
+    if(response.getSuccess()) {
+      this.ds.setJoinLectureResponse(response);
+      MainView.changeScene(ApplicationScene.COPYLINK, true);
+    }
+
+
+    MainView.changeScene(ApplicationScene.LECTUREROOM, true);
   }
 }

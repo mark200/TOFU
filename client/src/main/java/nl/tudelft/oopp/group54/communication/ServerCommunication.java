@@ -46,14 +46,23 @@ public class ServerCommunication {
         return objectMapper.readValue(response.body(), CreateLectureResponse.class);
     }
 
-    public static JoinLectureResponse joinLecture(String userName, Long lectureId, Long userId) throws JsonProcessingException {
-        JoinLectureRequest jlr = new JoinLectureRequest(userName, lectureId, userId);
+    public static JoinLectureResponse joinLecture(String userName, Long lectureId, Long joinId) throws IOException, InterruptedException {
+        
+    	JoinLectureRequest jlr = new JoinLectureRequest(userName, lectureId, joinId);
         String jlrJson =  objectMapper.writeValueAsString(jlr);
+       
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(jlrJson))
                 .header("content-type", "application/json")
-                .uri(URI.create(ds.getServiceEndpoint()+"/lectures/j/" + lectureId + "/" + userId))
+                .uri(URI.create(ds.getServiceEndpoint()+"/lectures/j/" + lectureId + "/" + joinId))
                 .build();
-        return null;
+        
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), JoinLectureResponse.class);
     }
 }
