@@ -1,15 +1,21 @@
 package nl.tudelft.oopp.demo.controllers;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import nl.tudelft.oopp.demo.entities.Quote;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 @Controller
 public class QuoteController {
+
+
+
+
+
     /**
      * GET Endpoint to retrieve a random quote.
      *
