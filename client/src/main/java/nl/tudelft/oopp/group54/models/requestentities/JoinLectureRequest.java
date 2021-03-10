@@ -1,6 +1,8 @@
 package nl.tudelft.oopp.group54.models.requestentities;
 
-public class JoinLectureRequest {
+import java.io.Serializable;
+
+public class JoinLectureRequest implements Serializable {
 
   private String userName;
   private Long lectureID;

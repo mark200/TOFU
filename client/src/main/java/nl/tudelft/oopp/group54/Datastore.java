@@ -1,6 +1,7 @@
 package nl.tudelft.oopp.group54;
 
 import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
+import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
 
 import javafx.collections.FXCollections;
@@ -14,6 +15,7 @@ public class Datastore {
   ObservableList<QuestionView> currentAnsweredQuestionViews;
 
   CreateLectureResponse createLectureResponse;
+  JoinLectureResponse joinLectureResponse;
 
   String serviceEndpoint = "http://localhost:8080";
 
@@ -21,6 +23,7 @@ public class Datastore {
     this.currentAnsweredQuestionViews = FXCollections.observableArrayList();
     this.currentUnansweredQuestionViews = FXCollections.observableArrayList();
     createLectureResponse = null;
+    joinLectureResponse = null;
   }
 
   public static Datastore getInstance() {
@@ -68,4 +71,13 @@ public class Datastore {
   public void setCreateLectureResponse(CreateLectureResponse createLectureResponse) {
     this.createLectureResponse = createLectureResponse;
   }
+  
+
+  public JoinLectureResponse getJoinLectureResponse() {
+	  return joinLectureResponse;
+  }
+
+  public void setJoinLectureResponse(JoinLectureResponse joinLectureResponse) {
+	  this.joinLectureResponse = joinLectureResponse;
+  }  
 }

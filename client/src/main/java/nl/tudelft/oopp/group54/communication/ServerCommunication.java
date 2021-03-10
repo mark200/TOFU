@@ -1,10 +1,13 @@
 package nl.tudelft.oopp.group54.communication;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.models.requestentities.CreateLectureRequest;
+import nl.tudelft.oopp.group54.models.requestentities.JoinLectureRequest;
 import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
+import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
 
 import java.io.IOException;
 import java.net.URI;
@@ -43,4 +46,23 @@ public class ServerCommunication {
         return objectMapper.readValue(response.body(), CreateLectureResponse.class);
     }
 
+    public static JoinLectureResponse joinLecture(String userName, Long lectureId, Long joinId) throws IOException, InterruptedException {
+        
+    	JoinLectureRequest jlr = new JoinLectureRequest(userName, lectureId, joinId);
+        String jlrJson =  objectMapper.writeValueAsString(jlr);
+       
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(jlrJson))
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint()+"/lectures/j/" + lectureId + "/" + joinId))
+                .build();
+        
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), JoinLectureResponse.class);
+    }
 }
