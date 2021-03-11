@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.demo;
+package group54.entities;
 
 
 import nl.tudelft.oopp.group54.entities.Lecture;
@@ -21,8 +21,8 @@ public class LectureTest {
     @BeforeAll
     public static void init(){
         Date date = new Date();
-        lecture1 = new Lecture(123, "312", date, 132, 132, 231);
-        lecture2 = new Lecture(123, "312", date, 132, 131, 231);
+        lecture1 = new Lecture(123, "312", date, "123", "132", "123");
+        lecture2 = new Lecture(123, "312", date, "123", "132", "123");
     }
 
     @Test

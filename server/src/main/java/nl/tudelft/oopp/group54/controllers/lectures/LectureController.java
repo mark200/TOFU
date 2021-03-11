@@ -21,7 +21,11 @@ import java.util.TreeMap;
 public class LectureController {
 
   @Autowired
-  MockLectureServiceImplementation lectureService;
+  LectureServiceImpl lectureService;
+
+  public void setLectureService(LectureServiceImpl service){
+    this.lectureService = service;
+  }
 
   @PostMapping(
           value = "",
