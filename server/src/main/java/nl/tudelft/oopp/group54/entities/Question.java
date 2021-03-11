@@ -28,14 +28,14 @@ public class Question {
 
     @Column(name = "answered", columnDefinition = "BOOLEAN NOT NULL DEFAULT FALSE")
     @NotNull
-    private Boolean answered;
+    private Boolean answered = false;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIME")
     @NotNull
     private Date created_at;
 
     @Column(name = "answer_text", columnDefinition = "VARCHAR(1000)")
-    private String answerText;
+    private String answerText = "";
 
     public Question(){
 

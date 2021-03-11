@@ -16,7 +16,7 @@ public class QuestionKey implements Serializable, Comparable {
     @Column(name = "lecture_id", nullable = false)
     private Integer lecture_id;
 
-    public QuestionKey(int id, int lecture_id) {
+    public QuestionKey(Integer id, Integer lecture_id) {
         this.id = id;
         this.lecture_id = lecture_id;
     }
