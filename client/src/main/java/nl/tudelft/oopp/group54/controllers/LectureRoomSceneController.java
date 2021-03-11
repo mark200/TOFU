@@ -14,6 +14,8 @@ import nl.tudelft.oopp.group54.views.ApplicationScene;
 import nl.tudelft.oopp.group54.views.MainView;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
 
+import java.io.IOException;
+
 public class LectureRoomSceneController extends AbstractApplicationController {
 
 //  @FXML
@@ -68,21 +70,22 @@ public class LectureRoomSceneController extends AbstractApplicationController {
   }
   
   private void postQuestion() {
-	  String questionText = questionField.getCharacters().toString();
-	  
-	  PostQuestionResponse response = null;
-	    try {
-	      response = ServerCommunication.postQuestion(questionText);
-	    } catch (Exception e) {
-	      e.printStackTrace();
-	      this.displayStatusMessage(e.getMessage());
-	    }
+      String questionText = questionField.getCharacters().toString();
+      PostQuestionResponse response = null;
 
-	    if(response.getSuccess()) {
-	      
-	      //should anything(like storing the response) happen here?
-            this.ds.addUnansweredQuestion(questionText);
-	    	questionField.clear();
-	    }
+      try {
+          response = ServerCommunication.postQuestion(questionText);
+      } catch (IOException e) {
+          e.printStackTrace();
+      } catch (InterruptedException e) {
+          e.printStackTrace();
+      }
+
+      if (response.getSuccess()) {
+
+          //should anything(like storing the response) happen here?
+          this.ds.addUnansweredQuestion(questionText);
+          questionField.clear();
+      }
   }
 }

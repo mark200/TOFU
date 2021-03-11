@@ -23,8 +23,8 @@ public class Datastore {
   Long lectureId = 0L;
 
   private Datastore() {
-    this.currentAnsweredQuestionViews = FXCollections.observableArrayList();
     this.currentUnansweredQuestionViews = FXCollections.observableArrayList();
+    this.currentAnsweredQuestionViews = FXCollections.observableArrayList();
     createLectureResponse = null;
     joinLectureResponse = null;
   }

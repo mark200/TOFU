@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class PostQuestionRequest implements Serializable {
 	String questionText;
-	Long userId;
+	String userId;
 	
-	public PostQuestionRequest(String questionText, Long userId) {
+	public PostQuestionRequest(String questionText, String userId) {
 		this.questionText = questionText;
 		this.userId = userId;
 	}
@@ -19,11 +19,11 @@ public class PostQuestionRequest implements Serializable {
 		this.questionText = questionText;
 	}
 	
-	public Long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 	
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 

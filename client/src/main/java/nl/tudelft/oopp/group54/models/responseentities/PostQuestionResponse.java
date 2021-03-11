@@ -5,17 +5,28 @@ import java.io.Serializable;
 public class PostQuestionResponse implements Serializable{
 	private boolean success;
 	private String message;
+	private Integer questionID;
 	
 	public PostQuestionResponse() {
 		this.success = false;
 		this.message = "";
+		this.questionID = 0;
 	}
 	
-	public PostQuestionResponse(boolean success, String message) {
+	public PostQuestionResponse(boolean success, String message, Integer questionID) {
 		this.success = success;
 		this.message = message;
+		this.questionID = questionID;
 	}
-	
+
+	public Integer getQuestionID() {
+		return questionID;
+	}
+
+	public void setQuestionID(Integer questionID) {
+		this.questionID = questionID;
+	}
+
 	public boolean getSuccess() {
 		return success;
 	}

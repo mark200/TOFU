@@ -70,7 +70,7 @@ public class ServerCommunication {
     
     public static PostQuestionResponse postQuestion(String questionText) throws IOException, InterruptedException {
     	
-    	PostQuestionRequest pqr = new PostQuestionRequest(questionText, ds.getUserId());
+    	PostQuestionRequest pqr = new PostQuestionRequest(questionText, ds.getUserId().toString());
     	String pqrJson = objectMapper.writeValueAsString(pqr);
     	
     	
