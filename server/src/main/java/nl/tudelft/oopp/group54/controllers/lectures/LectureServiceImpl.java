@@ -35,7 +35,7 @@ public class LectureServiceImpl implements LectureService {
         //FIXME: There might be a bug if lecture needs to be created instantly
         Map<String, Object> toBeReturned = new TreeMap<>();
         Date currentTime = new Date();
-        
+
         // if start time is before the current time
         if (startTime.before(currentTime)) {
             toBeReturned.put("success", false);
