@@ -63,13 +63,10 @@ public class JoinLectureSceneController extends AbstractApplicationController {
     
     String joinIdTextFieldString = joinIdTextFieldText.toString();
     
-//    System.out.println(joinIdTextFieldString);
     
     Long lectureId = Long.parseLong(joinIdTextFieldString.substring(3, 9));
     Long joinId = Long.parseLong(joinIdTextFieldString.substring(10, 16));
     
-//    System.out.println("lectureId = " + lectureId);
-//    System.out.println("joinId = " + joinId);
 
     JoinLectureResponse response = null;
     try {
@@ -81,6 +78,8 @@ public class JoinLectureSceneController extends AbstractApplicationController {
 
     if(response.getSuccess()) {
       this.ds.setJoinLectureResponse(response);
+      this.ds.setUserId(response.getUserID());
+      this.ds.setLectureId(lectureId);
       MainView.changeScene(ApplicationScene.COPYLINK, true);
     }
 

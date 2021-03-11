@@ -1,7 +1,9 @@
 package nl.tudelft.oopp.group54.controllers;
 
 import nl.tudelft.oopp.group54.Datastore;
+import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
+import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
 import nl.tudelft.oopp.group54.views.ApplicationScene;
 import nl.tudelft.oopp.group54.views.MainView;
 
@@ -47,10 +49,27 @@ public class CopyLinkSceneController extends AbstractApplicationController {
     if(this.copyLecturerLinkClaimed
             && this.copyStudentLinkClaimed
             && this.copyModeratorLinkClaimed) {
-      MainView.changeScene(ApplicationScene.LECTUREROOM, true);
+      joinLecture();
     }
 
     this.displayStatusMessage("You should claim all of the links before proceeding!");
+  }
+  
+  private void joinLecture() {
+	  JoinLectureResponse response = null;
+	    try {
+	      response = ServerCommunication.joinLecture("lecturer", this.createLectureResponse.getLectureID(), this.createLectureResponse.getLecturerID());
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	      this.displayStatusMessage(e.getMessage());
+	    }
+
+	    if(response.getSuccess()) {
+	      this.ds.setJoinLectureResponse(response);
+	      this.ds.setUserId(response.getUserID());
+	      this.ds.setLectureId(this.createLectureResponse.getLectureID());
+	      MainView.changeScene(ApplicationScene.LECTUREROOM, true);
+	    }
   }
 
   public void copyLecturerLinkButtonClicked() {
