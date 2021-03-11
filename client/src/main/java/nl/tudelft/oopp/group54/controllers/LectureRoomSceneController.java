@@ -81,6 +81,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 	    if(response.getSuccess()) {
 	      
 	      //should anything(like storing the response) happen here?
+            this.ds.addUnansweredQuestion(questionText);
 	    	questionField.clear();
 	    }
   }
