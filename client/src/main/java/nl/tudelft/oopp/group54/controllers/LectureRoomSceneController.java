@@ -1,8 +1,11 @@
 package nl.tudelft.oopp.group54.controllers;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
 
@@ -16,6 +19,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
   @FXML
   ListView<QuestionView> unansweredQuestionView;
+  
+  @FXML
+  TextField questionField;
 
   Datastore ds = Datastore.getInstance();
 
@@ -40,6 +46,25 @@ public class LectureRoomSceneController extends AbstractApplicationController {
       ds.addUnansweredQuestion("hello world " + i);
       ds.addAnsweredQuestion("hello world " + i);
     }
-
+    
+    questionField.setOnKeyPressed(event -> {
+    	keyPressed(event);
+    });
+  }
+  
+  public void askButtonClicked() {
+	  postQuestion();
+  }
+  
+  public void keyPressed(KeyEvent event) {
+	  if(event.getCode() == KeyCode.ENTER) {
+		  postQuestion();
+	  }
+  }
+  
+  private void postQuestion() {
+	  CharSequence questionText = questionField.getCharacters();
+	  System.out.println(questionText);
+	  questionField.clear();
   }
 }
