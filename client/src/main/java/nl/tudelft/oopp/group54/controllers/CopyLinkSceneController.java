@@ -9,6 +9,7 @@ import nl.tudelft.oopp.group54.views.MainView;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -27,9 +28,13 @@ public class CopyLinkSceneController extends AbstractApplicationController {
   @FXML
   Button copyStudentLinkButton;
   Boolean copyStudentLinkClaimed = false;
+  
+  @FXML
+  TextField usernameField;
 
   @FXML
   Button goToLectureButton;
+  
 
   Datastore ds = Datastore.getInstance();
   Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -49,16 +54,24 @@ public class CopyLinkSceneController extends AbstractApplicationController {
     if(this.copyLecturerLinkClaimed
             && this.copyStudentLinkClaimed
             && this.copyModeratorLinkClaimed) {
-      joinLecture();
+    	
+    	if(!usernameField.getCharacters().isEmpty()) {
+    		joinLecture();
+    	} else {
+    		this.shakeWidget(usernameField);
+    		this.displayStatusMessage("Please enter a username!");
+    	}
+      
+    } else {
+    	this.displayStatusMessage("You should claim all of the links before proceeding!");
     }
-
-    this.displayStatusMessage("You should claim all of the links before proceeding!");
+    
   }
   
   private void joinLecture() {
 	  JoinLectureResponse response = null;
 	    try {
-	      response = ServerCommunication.joinLecture("lecturer", this.createLectureResponse.getLectureID(), this.createLectureResponse.getLecturerID());
+	      response = ServerCommunication.joinLecture(usernameField.getCharacters().toString(), this.createLectureResponse.getLectureID(), this.createLectureResponse.getLecturerID());
 	    } catch (Exception e) {
 	      e.printStackTrace();
 	      this.displayStatusMessage(e.getMessage());
