@@ -1,5 +1,5 @@
-//package group54.services;
-//
+package nl.tudelft.oopp.demo.services;
+
 //import nl.tudelft.oopp.group54.entities.Lecture;
 //import nl.tudelft.oopp.group54.repositories.LectureRepository;
 //import org.junit.jupiter.api.BeforeAll;

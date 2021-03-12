@@ -1,5 +1,4 @@
-package group54.entities;
-
+package nl.tudelft.oopp.demo.entities;
 
 import nl.tudelft.oopp.group54.entities.Lecture;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,7 +26,7 @@ public class LectureTest {
 
     @Test
     public void equalsPrimaryKeys(){
-        assertNotEquals(lecture1, lecture2);
+        assertEquals(lecture1, lecture2);
         assertTrue(lecture1.equalsPrimaryKeys(lecture2));
     }
 
