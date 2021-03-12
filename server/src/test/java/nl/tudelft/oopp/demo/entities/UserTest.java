@@ -1,4 +1,4 @@
-package group54.entities;
+package nl.tudelft.oopp.demo.entities;
 
 import nl.tudelft.oopp.group54.entities.User;
 import nl.tudelft.oopp.group54.entities.UserKey;
@@ -78,3 +78,4 @@ public class UserTest {
         assertNotEquals(u1, u);
     }
 }
+

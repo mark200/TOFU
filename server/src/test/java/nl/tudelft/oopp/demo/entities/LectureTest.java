@@ -1,5 +1,4 @@
-package nl.tudelft.oopp.demo;
-
+package nl.tudelft.oopp.demo.entities;
 
 import nl.tudelft.oopp.group54.entities.Lecture;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,13 +20,13 @@ public class LectureTest {
     @BeforeAll
     public static void init(){
         Date date = new Date();
-        lecture1 = new Lecture(123, "312", date, 132, 132, 231);
-        lecture2 = new Lecture(123, "312", date, 132, 131, 231);
+        lecture1 = new Lecture(123, "312", date, "123", "132", "123");
+        lecture2 = new Lecture(123, "312", date, "123", "132", "123");
     }
 
     @Test
     public void equalsPrimaryKeys(){
-        assertNotEquals(lecture1, lecture2);
+        assertEquals(lecture1, lecture2);
         assertTrue(lecture1.equalsPrimaryKeys(lecture2));
     }
 

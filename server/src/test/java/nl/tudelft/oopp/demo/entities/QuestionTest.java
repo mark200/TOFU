@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.demo;
+package nl.tudelft.oopp.demo.entities;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,7 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Date;
 
-
+@DataJpaTest
 public class QuestionTest {
 
     static Question question;
@@ -39,3 +39,4 @@ public class QuestionTest {
 
 
 }
+
