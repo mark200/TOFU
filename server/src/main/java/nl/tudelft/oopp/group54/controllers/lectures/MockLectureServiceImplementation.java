@@ -15,6 +15,7 @@ public class MockLectureServiceImplementation implements LectureService {
 
         toBeReturned.put("success", true);
         toBeReturned.put("lectureID", 123456);
+        toBeReturned.put("lecturerID", 555555);
         toBeReturned.put("studentID", 234567);
         toBeReturned.put("moderatorID", 420420);
 

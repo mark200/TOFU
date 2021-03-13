@@ -1,10 +1,20 @@
 package nl.tudelft.oopp.group54.controllers;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import nl.tudelft.oopp.group54.Datastore;
+import nl.tudelft.oopp.group54.communication.ServerCommunication;
+import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
+import nl.tudelft.oopp.group54.views.ApplicationScene;
+import nl.tudelft.oopp.group54.views.MainView;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
+
+import java.io.IOException;
 
 public class LectureRoomSceneController extends AbstractApplicationController {
 
@@ -16,6 +26,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
   @FXML
   ListView<QuestionView> unansweredQuestionView;
+  
+  @FXML
+  TextField questionField;
 
   Datastore ds = Datastore.getInstance();
 
@@ -40,6 +53,39 @@ public class LectureRoomSceneController extends AbstractApplicationController {
       ds.addUnansweredQuestion("hello world " + i);
       ds.addAnsweredQuestion("hello world " + i);
     }
+    
+    questionField.setOnKeyPressed(event -> {
+    	keyPressed(event);
+    });
+  }
+  
+  public void askButtonClicked() {
+	  postQuestion();
+  }
+  
+  public void keyPressed(KeyEvent event) {
+	  if(event.getCode() == KeyCode.ENTER) {
+		  postQuestion();
+	  }
+  }
+  
+  private void postQuestion() {
+      String questionText = questionField.getCharacters().toString();
+      PostQuestionResponse response = null;
 
+      try {
+          response = ServerCommunication.postQuestion(questionText);
+      } catch (IOException e) {
+          e.printStackTrace();
+      } catch (InterruptedException e) {
+          e.printStackTrace();
+      }
+
+      if (response.getSuccess()) {
+
+          //should anything(like storing the response) happen here?
+          this.ds.addUnansweredQuestion(questionText);
+          questionField.clear();
+      }
   }
 }

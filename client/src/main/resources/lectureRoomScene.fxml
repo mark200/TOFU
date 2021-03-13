@@ -54,11 +54,11 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <TextField maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Your question here..." GridPane.valignment="BOTTOM" />
-                                          <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Ask" GridPane.columnIndex="1" GridPane.valignment="BOTTOM" />
+                                          <TextField fx:id="questionField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Your question here..." GridPane.valignment="BOTTOM" />
+                                          <Button fx:id="askButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#askButtonClicked" text="Ask" GridPane.columnIndex="1" GridPane.valignment="BOTTOM" />
                                        </children>
                                     </GridPane>
-                                    <ListView fx:id="answeredQuestionView" />
+                                    <ListView fx:id="unansweredQuestionView" />
                                  </children>
                               </GridPane>
                            </children>
@@ -77,7 +77,7 @@
                                     <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <ListView fx:id="unansweredQuestionView" prefHeight="337.0" prefWidth="600.0" />
+                                    <ListView fx:id="answeredQuestionView" prefHeight="337.0" prefWidth="600.0" />
                                  </children>
                               </GridPane>
                            </children></AnchorPane>

@@ -18,10 +18,13 @@ public class Datastore {
   JoinLectureResponse joinLectureResponse;
 
   String serviceEndpoint = "http://localhost:8080";
+  
+  Long userId = 0L;
+  Long lectureId = 0L;
 
   private Datastore() {
-    this.currentAnsweredQuestionViews = FXCollections.observableArrayList();
     this.currentUnansweredQuestionViews = FXCollections.observableArrayList();
+    this.currentAnsweredQuestionViews = FXCollections.observableArrayList();
     createLectureResponse = null;
     joinLectureResponse = null;
   }
@@ -71,7 +74,6 @@ public class Datastore {
   public void setCreateLectureResponse(CreateLectureResponse createLectureResponse) {
     this.createLectureResponse = createLectureResponse;
   }
-  
 
   public JoinLectureResponse getJoinLectureResponse() {
 	  return joinLectureResponse;
@@ -79,5 +81,22 @@ public class Datastore {
 
   public void setJoinLectureResponse(JoinLectureResponse joinLectureResponse) {
 	  this.joinLectureResponse = joinLectureResponse;
-  }  
+  }
+  
+  public void setLectureId(Long lectureId) {
+	  this.lectureId = lectureId;
+  }
+  
+  public Long getLectureId() {
+	  return lectureId;
+  }
+  
+  public void setUserId(Long userId) {
+	  this.userId = userId;
+  }
+  
+  public Long getUserId() {
+	  return userId;
+  }
+  
 }
