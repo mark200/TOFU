@@ -11,7 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-import java.awt.*;
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 
@@ -55,7 +55,7 @@ public class CopyLinkSceneController extends AbstractApplicationController {
             && this.copyStudentLinkClaimed
             && this.copyModeratorLinkClaimed) {
     	
-    	if(!usernameField.getCharacters().isEmpty()) {
+    	if(usernameField.getText().length() != 0) {
     		joinLecture();
     	} else {
     		this.shakeWidget(usernameField);
