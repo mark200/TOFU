@@ -16,13 +16,16 @@ import java.util.*;
 public class QuestionController {
 
 
+    // @Autowired
+    // MockQuestionServiceImplementation questionService;
+
     @Autowired
-    MockQuestionServiceImplementation questionService;
+    QuestionServiceImplementation questionService;
 
     @PostMapping(value = "/{lectureID}/questions",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> postQuestion(@PathVariable(value = "lectureID") Long lectureId,
+    public Map<String, Object> postQuestion(@PathVariable(value = "lectureID") Integer lectureId,
                                             @RequestBody Map<String, Object> requestPayload){
 
         boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(

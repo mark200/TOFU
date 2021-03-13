@@ -19,10 +19,10 @@ public class MockQuestionServiceImplementation implements QuestionService {
    * @param lectureId
    * @param userId
    * @param questionText
-   * @return status of the requst
+   * @return status of the request
    */
   @Override
-  public Map<String, Object> postQuestion(Long lectureId, String userId, String questionText) {
+  public Map<String, Object> postQuestion(Integer lectureId, String userId, String questionText) {
 
     Map<String, Object> status = new TreeMap<>();
     QuestionKey mockQuestionKey = new QuestionKey(123, 123);
