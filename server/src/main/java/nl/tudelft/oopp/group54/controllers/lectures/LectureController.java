@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 
 
@@ -72,7 +73,7 @@ public class LectureController {
             value = "/j/{lectureID}/{userID}",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> joinOngoingLecture(@PathVariable(value = "lectureID") Long lectureID,
+    public Map<String, Object> joinOngoingLecture(@PathVariable(value = "lectureID") Integer lectureID,
                                                   @PathVariable(value = "userID") Long userID,
                                                   @RequestBody Map<String, Object> requestPayload) {
 
@@ -105,9 +106,7 @@ public class LectureController {
     @GetMapping(
             value = "/{lectureID}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> getLectureMetadata(@PathVariable("lectureID") Long lectureID) {
-
-
+    public Map<String, Object> getLectureMetadata(@PathVariable("lectureID") Integer lectureID) {
         return lectureService.getLectureMetadata(lectureID);
     }
 

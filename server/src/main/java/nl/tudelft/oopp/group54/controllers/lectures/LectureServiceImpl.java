@@ -1,20 +1,23 @@
 package nl.tudelft.oopp.group54.controllers.lectures;
 
 import nl.tudelft.oopp.group54.entities.Lecture;
+import nl.tudelft.oopp.group54.entities.User;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
+import nl.tudelft.oopp.group54.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class LectureServiceImpl implements LectureService {
 
     @Autowired
     private LectureRepository repository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public void setRepository(LectureRepository repository) {
         this.repository = repository;
@@ -91,7 +94,7 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public Map<String, Object> joinOngoingLecture(Long lectureId, Long joinId, String userName) {
+    public Map<String, Object> joinOngoingLecture(Integer lectureId, Long joinId, String userName) {
         Map<String, Object> toBeReturned = new TreeMap<>();
 
         toBeReturned.put("success", true);
@@ -102,14 +105,39 @@ public class LectureServiceImpl implements LectureService {
         return toBeReturned;
     }
 
+    /**
+     * For now this method only returns the number of people watching the lecture
+     * @param lectureId
+     * @return
+     */
     @Override
-    public Map<String, Object> getLectureMetadata(Long lectureId) {
+    public Map<String, Object> getLectureMetadata(Integer lectureId) {
         Map<String, Object> toBeReturned = new TreeMap<>();
 
-        toBeReturned.put("success", "true");
-        toBeReturned.put("start", "10:45:00");
-        toBeReturned.put("end", "12:45:00");
-        toBeReturned.put("count", 139);
+        if (lectureId == null) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "LectureID cannot be null.");
+            return toBeReturned;
+        }
+
+        Optional<Lecture> foundLecture = repository.findById(lectureId);
+
+        if (foundLecture.isEmpty()) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "The lecture does not exist or could not be found by ID.");
+            return toBeReturned;
+        }
+
+        int usersWatchingLecture = userRepository.findAll().stream()
+                                        .filter(x -> x.getKey().getLecture_id() == lectureId.intValue())
+                                        .collect(Collectors.toList()).size();
+
+        toBeReturned.put("success", true);
+        toBeReturned.put("lectureID", lectureId);
+        toBeReturned.put("People", usersWatchingLecture);
+        toBeReturned.put("studentJoinID", foundLecture.get().getStudentJoinId());
+        toBeReturned.put("moderatorJoinID", foundLecture.get().getModeratorJoinId());
+        toBeReturned.put("lecturerJoinID", foundLecture.get().getLecturerJoinId());
 
         return toBeReturned;
     }
