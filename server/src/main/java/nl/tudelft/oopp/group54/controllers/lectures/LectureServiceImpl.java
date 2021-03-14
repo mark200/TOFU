@@ -97,10 +97,22 @@ public class LectureServiceImpl implements LectureService {
     public Map<String, Object> joinOngoingLecture(Integer lectureId, Long joinId, String userName) {
         Map<String, Object> toBeReturned = new TreeMap<>();
 
-        toBeReturned.put("success", true);
-        toBeReturned.put("userID", 123456);
-        toBeReturned.put("userName", userName);
-        toBeReturned.put("role", "Student");
+        if (lectureId == null) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "LectureId cannot be null");
+        }
+
+        if (joinId == null) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "JoinId cannot be null");
+        }
+
+        if (userName == null) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "UserName cannot be null");
+        }
+
+        
 
         return toBeReturned;
     }
