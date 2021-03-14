@@ -70,7 +70,6 @@ public class QuestionController {
 
         List<Question> questions = questionService.getAllQuestions(lectureID, userId);
         Map<String, Object> toBeReturned = new TreeMap<>();
-        Map<String, Object> innerObject = new TreeMap<>();
         List<Map<String, Object>> answeredList = new ArrayList<>();
         List<Map<String, Object>> unansweredList = new ArrayList<>();
 
@@ -102,14 +101,11 @@ public class QuestionController {
 
 
 
-        innerObject.put("answered", answeredList);
-        innerObject.put("unanswered", unansweredList);
-
-
+        toBeReturned.put("answered", answeredList);
+        toBeReturned.put("unanswered", unansweredList);
         toBeReturned.put("success", true);
         toBeReturned.put("count", questions.size());
         toBeReturned.put("userId", 13); //FIXME: change to userName.
-        toBeReturned.put("questions", innerObject);
 
         return toBeReturned;
 
