@@ -88,4 +88,8 @@ public class LectureRoomSceneController extends AbstractApplicationController {
           questionField.clear();
       }
   }
+  
+  public void refreshButtonClicked() {
+	  
+  }
 }
