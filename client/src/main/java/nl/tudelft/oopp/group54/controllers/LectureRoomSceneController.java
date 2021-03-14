@@ -101,8 +101,8 @@ public class LectureRoomSceneController extends AbstractApplicationController {
           e.printStackTrace();
       }
 
-//      if (response.getSuccess()) {
-//    	  this.displayStatusMessage("Refreshed succesfully.");
-//      }
+      if (response.getSuccess()) {
+    	  this.displayStatusMessage("Refreshed succesfully.");
+      }
   }
 }

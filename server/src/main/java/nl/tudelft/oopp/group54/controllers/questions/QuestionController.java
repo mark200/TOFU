@@ -77,7 +77,7 @@ public class QuestionController {
          * Inflate answeredList
          */
         Map<String, Object> answeredQuestion = new TreeMap<>();
-        answeredQuestion.put("userID", "ID of the user who asked the question");
+        answeredQuestion.put("userId", "ID of the user who asked the question");
         answeredQuestion.put("userName", "John Doe");
         answeredQuestion.put("questionText", "this is the actual text that comprises the question");
         answeredQuestion.put("answerText", "this field does not need to exist in the final response");
@@ -90,7 +90,7 @@ public class QuestionController {
          * Inflate unansweredList
          */
         Map<String, Object> unansweredQuestion = new TreeMap<>();
-        unansweredQuestion.put("userID", "ID of the user who asked the question");
+        unansweredQuestion.put("userId", "ID of the user who asked the question");
         unansweredQuestion.put("userName", "John Doe");
         unansweredQuestion.put("questionText", "this is the actual text that comprises the question");
         unansweredQuestion.put("score", 42);

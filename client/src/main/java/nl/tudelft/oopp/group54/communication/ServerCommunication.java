@@ -109,7 +109,7 @@ public class ServerCommunication {
             System.out.println("Status: " + response.statusCode());
         }
         
-    	
+
     	return objectMapper.readValue(response.body(), GetAllQuestionsResponse.class);
     }
 }
