@@ -105,7 +105,6 @@ public class QuestionController {
         toBeReturned.put("unanswered", unansweredList);
         toBeReturned.put("success", true);
         toBeReturned.put("count", questions.size());
-        toBeReturned.put("userId", 13); //FIXME: change to userName.
 
         return toBeReturned;
 
