@@ -86,6 +86,7 @@ public class LectureServiceImpl implements LectureService {
                 Lecture(null, lectureName, startTime, studentId, moderatorId, lecturerId);
         repository.save(newLecture);
 
+        // FIXME the order of those IDs should be fixed
         toBeReturned.put("success", true);
         toBeReturned.put("lectureID", studentId);
         toBeReturned.put("studentID", moderatorId);
