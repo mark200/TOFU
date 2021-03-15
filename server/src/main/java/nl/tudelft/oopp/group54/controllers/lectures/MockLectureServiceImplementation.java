@@ -23,7 +23,7 @@ public class MockLectureServiceImplementation implements LectureService {
     }
 
     @Override
-    public Map<String, Object> joinOngoingLecture(Integer lectureId, Long joinId, String userName) {
+    public Map<String, Object> joinOngoingLecture(Integer lectureId, String roleCode, String userName) {
         Map<String, Object> toBeReturned = new TreeMap<>();
 
         toBeReturned.put("success", true);

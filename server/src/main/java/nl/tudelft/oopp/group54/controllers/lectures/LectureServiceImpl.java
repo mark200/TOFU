@@ -2,6 +2,7 @@ package nl.tudelft.oopp.group54.controllers.lectures;
 
 import nl.tudelft.oopp.group54.entities.Lecture;
 import nl.tudelft.oopp.group54.entities.User;
+import nl.tudelft.oopp.group54.entities.UserKey;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,8 +94,16 @@ public class LectureServiceImpl implements LectureService {
         return toBeReturned;
     }
 
+    /**
+     * Creates a new User when joining the specified lecture
+     * and assigns them a role
+     * @param lectureId
+     * @param roleCode
+     * @param userName
+     * @return
+     */
     @Override
-    public Map<String, Object> joinOngoingLecture(Integer lectureId, Long joinId, String userName) {
+    public Map<String, Object> joinOngoingLecture(Integer lectureId, String roleCode, String userName) {
         Map<String, Object> toBeReturned = new TreeMap<>();
 
         if (lectureId == null) {
@@ -102,7 +111,7 @@ public class LectureServiceImpl implements LectureService {
             toBeReturned.put("message", "LectureId cannot be null");
         }
 
-        if (joinId == null) {
+        if (roleCode == null) {
             toBeReturned.put("success", false);
             toBeReturned.put("message", "JoinId cannot be null");
         }
@@ -112,13 +121,57 @@ public class LectureServiceImpl implements LectureService {
             toBeReturned.put("message", "UserName cannot be null");
         }
 
-        
+        Optional<Lecture> foundLecture = repository.findById(lectureId);
+        Date timeNow = new Date();
+
+        // Lecture does not exist
+        if (foundLecture.isEmpty()) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "Lecture by this ID does not exist.");
+            return toBeReturned;
+        }
+
+        // Lecture has not started yet
+        if (foundLecture.get().getStartTime().compareTo(timeNow) > 0) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "The lecture has not started yet.");
+            return toBeReturned;
+        }
+
+        User newUser = new User(new UserKey(new Random().nextInt(), lectureId), userName,"127.0.0.1",null,0);
+
+        // Determine role of student
+        if (foundLecture.get().getStudentJoinId().equals(roleCode)) {
+            newUser.setRoleID(1);
+        } else if (foundLecture.get().getLecturerJoinId().equals(roleCode)) {
+            newUser.setRoleID(2);
+        } else if (foundLecture.get().getModeratorJoinId().equals(roleCode)) {
+            newUser.setRoleID(3);
+        } else {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "Unrecognized roleCode/user ID.");
+            return toBeReturned;
+        }
+
+        userRepository.flush();
+
+        try {
+            userRepository.save(newUser);
+            toBeReturned.put("success", true);
+            toBeReturned.put("userID", newUser.getKey().getId());
+            toBeReturned.put("userName", newUser.getName());
+            toBeReturned.put("role", (newUser.getRoleID() == 1) ? "Student" : ((newUser.getRoleID() == 2) ? "Lecturer" : "Moderator"));
+        } catch (Exception e) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", e.toString());
+        }
 
         return toBeReturned;
     }
 
     /**
      * For now this method only returns the number of people watching the lecture
+     * (meaning only this new functionality is implemented)
      * @param lectureId
      * @return
      */
