@@ -3,8 +3,8 @@ package nl.tudelft.oopp.group54.controllers.votes;
 import java.util.Map;
 
 public interface VoteService {
-    Map<String, Object> voteOnQuestion(Long lectureId,
+    Map<String, Object> voteOnQuestion(Integer lectureId,
                                        String userId,
-                                       Long questionId,
+                                       Integer questionId,
                                        boolean isUpvote);
 }
