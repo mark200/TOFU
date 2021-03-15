@@ -1,6 +1,7 @@
 package nl.tudelft.oopp.group54.models;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class QuestionModel implements Serializable{
 	private String userId;
@@ -9,6 +10,7 @@ public class QuestionModel implements Serializable{
 	private int score;
 	private boolean answered;
 	private String answerText;
+	private Date createdAt;
 
 	private QuestionModel() {
 		
@@ -61,7 +63,13 @@ public class QuestionModel implements Serializable{
 	public void setAnswerText(String answerText) {
 		this.answerText = answerText;
 	}
-	
-	
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
 
 }
