@@ -10,7 +10,7 @@ import java.util.TreeMap;
 public class MockVoteServiceImpl implements VoteService {
 
     @Override
-    public Map<String, Object> voteOnQuestion(Long lectureId, String userId, Long questionId, boolean isUpvote) {
+    public Map<String, Object> voteOnQuestion(Integer lectureId, String userId, Integer questionId, boolean isUpvote) {
         Map<String, Object> status = new TreeMap<>();
 
         //QuestionKey currentKey = new QuestionKey(Integer.parseInt(questionId), lectureId.intValue());
