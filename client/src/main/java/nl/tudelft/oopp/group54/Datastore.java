@@ -1,5 +1,6 @@
 package nl.tudelft.oopp.group54;
 
+import com.sun.javafx.collections.ImmutableObservableList;
 import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
@@ -45,7 +46,10 @@ public class Datastore {
   }
 
   public void setCurrentUnansweredQuestionViews(ObservableList<QuestionView> currentUnansweredQuestionViews) {
-    this.currentUnansweredQuestionViews = currentUnansweredQuestionViews;
+    if(currentUnansweredQuestionViews == null)
+        this.currentUnansweredQuestionViews.clear();
+    else
+        this.currentUnansweredQuestionViews = currentUnansweredQuestionViews;
   }
 
   public ObservableList<QuestionView> getCurrentAnsweredQuestionViews() {
@@ -53,7 +57,10 @@ public class Datastore {
   }
 
   public void setCurrentAnsweredQuestionViews(ObservableList<QuestionView> currentAnsweredQuestionViews) {
-    this.currentAnsweredQuestionViews = currentAnsweredQuestionViews;
+    if(currentAnsweredQuestionViews == null)
+        this.currentAnsweredQuestionViews.clear();
+    else
+        this.currentAnsweredQuestionViews = currentAnsweredQuestionViews;
   }
 
   public void addUnansweredQuestion(String question){

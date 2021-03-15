@@ -8,6 +8,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.communication.ServerCommunication;
+import nl.tudelft.oopp.group54.models.QuestionModel;
+import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
 import nl.tudelft.oopp.group54.views.ApplicationScene;
@@ -84,8 +86,32 @@ public class LectureRoomSceneController extends AbstractApplicationController {
       if (response.getSuccess()) {
 
           //should anything(like storing the response) happen here?
-          this.ds.addUnansweredQuestion(questionText);
+          //this.ds.addUnansweredQuestion(questionText);
           questionField.clear();
+      }
+  }
+  
+  public void refreshButtonClicked() {
+	  GetAllQuestionsResponse response = null;
+
+      try {
+          response = ServerCommunication.getAllQuestions();
+      } catch (IOException e) {
+          e.printStackTrace();
+      } catch (InterruptedException e) {
+          e.printStackTrace();
+      }
+
+      if (response.getSuccess()) {
+    	  this.displayStatusMessage("Refreshed succesfully.");
+    	  this.ds.setCurrentUnansweredQuestionViews(null);
+    	  this.ds.setCurrentAnsweredQuestionViews(null);
+    	  for(QuestionModel question : response.getAnswered()){
+    	      this.ds.addAnsweredQuestion(question.getQuestionText());
+          }
+    	  for(QuestionModel question : response.getUnanswered()){
+    	      this.ds.addUnansweredQuestion(question.getQuestionText());
+          }
       }
   }
 }

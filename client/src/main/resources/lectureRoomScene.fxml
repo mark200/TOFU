@@ -21,8 +21,8 @@
          </columnConstraints>
          <rowConstraints>
             <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="334.0" minHeight="10.0" prefHeight="332.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="28.0" minHeight="-Infinity" prefHeight="28.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
             <ToolBar fx:id="utilityToolbar" maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0">
@@ -89,6 +89,7 @@
                   <Font size="14.0" />
                </font>
             </Text>
+            <Button mnemonicParsing="false" onAction="#refreshButtonClicked" prefHeight="30.0" prefWidth="56.0" text="Refresh" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>

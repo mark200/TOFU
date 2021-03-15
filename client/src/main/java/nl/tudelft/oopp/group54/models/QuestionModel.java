@@ -1,31 +1,75 @@
 package nl.tudelft.oopp.group54.models;
 
-public class QuestionModel {
+import java.io.Serializable;
+import java.util.Date;
 
-  private String text;
-  private int score;
+public class QuestionModel implements Serializable{
+	private String userId;
+	private String userName;
+	private String questionText;
+	private int score;
+	private boolean answered;
+	private String answerText;
+	private Date createdAt;
 
-  QuestionModel(String text, int score) {
-    this.text = text;
-    this.score = score;
-  }
+	private QuestionModel() {
+		
+	}
 
-  public String getText() {
-    return text;
-  }
+	public String getUserId() {
+		return userId;
+	}
 
-  public void setText(String text) {
-    this.text = text;
-  }
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
-  public int getScore() {
-    return score;
-  }
+	public String getUserName() {
+		return userName;
+	}
 
-  public void setScore(int score) {
-    this.score = score;
-  }
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
+	public String getQuestionText() {
+		return questionText;
+	}
 
+	public void setQuestionText(String questionText) {
+		this.questionText = questionText;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public boolean isAnswered() {
+		return answered;
+	}
+
+	public void setAnswered(boolean answered) {
+		this.answered = answered;
+	}
+
+	public String getAnswerText() {
+		return answerText;
+	}
+
+	public void setAnswerText(String answerText) {
+		this.answerText = answerText;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
 
 }
