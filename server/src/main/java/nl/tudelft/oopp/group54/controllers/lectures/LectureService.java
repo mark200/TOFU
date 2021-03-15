@@ -6,7 +6,7 @@ import java.util.Map;
 public interface LectureService {
     Map<String, Object> createNewLecture(Date startTime, String lectureName);
 
-    Map<String, Object> joinOngoingLecture(Integer lectureId, Long joinId, String userName);
+    Map<String, Object> joinOngoingLecture(Integer lectureId, String roleCode, String userName);
 
     Map<String, Object> getLectureMetadata(Integer lectureId);
 }
