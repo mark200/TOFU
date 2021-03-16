@@ -82,6 +82,12 @@ public class QuestionServiceImplementation implements QuestionService {
         return status;
     }
 
+    /**
+     * Returns all question asked by the User with userID in JSON format
+     * @param lectureId the lecture where the questions have been asked
+     * @param userId the user that has asked the questions we return
+     * @return
+     */
     @Override
     public Map<String, Object> getAllQuestions(Integer lectureId, String userId) {
         Map<String, Object> toBeReturned = new TreeMap<>();
