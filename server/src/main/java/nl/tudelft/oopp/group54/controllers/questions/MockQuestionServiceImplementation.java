@@ -39,7 +39,7 @@ public class MockQuestionServiceImplementation implements QuestionService {
   }
 
   @Override
-  public List<Question> getAllQuestions(Long lectureId, String userId) {
+  public List<Question> getAllQuestions(Integer lectureId, String userId) {
 
     List<Question> questions = new ArrayList<>(questionMap.values());
 

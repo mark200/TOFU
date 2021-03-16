@@ -21,7 +21,7 @@ public class Datastore {
   String serviceEndpoint = "http://localhost:8080";
   
   Long userId = 0L;
-  Long lectureId = 0L;
+  Integer lectureId = 0;
 
   private Datastore() {
     this.currentUnansweredQuestionViews = FXCollections.observableArrayList();
@@ -90,11 +90,11 @@ public class Datastore {
 	  this.joinLectureResponse = joinLectureResponse;
   }
   
-  public void setLectureId(Long lectureId) {
+  public void setLectureId(Integer lectureId) {
 	  this.lectureId = lectureId;
   }
   
-  public Long getLectureId() {
+  public Integer getLectureId() {
 	  return lectureId;
   }
   

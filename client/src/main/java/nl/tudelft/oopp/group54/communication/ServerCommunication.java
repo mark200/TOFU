@@ -51,7 +51,7 @@ public class ServerCommunication {
         return objectMapper.readValue(response.body(), CreateLectureResponse.class);
     }
 
-    public static JoinLectureResponse joinLecture(String userName, Long lectureId, Long joinId) throws IOException, InterruptedException {
+    public static JoinLectureResponse joinLecture(String userName, Integer lectureId, String joinId) throws IOException, InterruptedException {
         
     	JoinLectureRequest jlr = new JoinLectureRequest(userName, lectureId, joinId);
         String jlrJson =  objectMapper.writeValueAsString(jlr);

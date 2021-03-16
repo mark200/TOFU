@@ -64,42 +64,43 @@ public class QuestionController {
 
     @GetMapping(value = "/{lectureID}/questions",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> getAllQuestions(@PathVariable(value = "lectureID") Long lectureID,
+    public Map<String, Object> getAllQuestions(@PathVariable(value = "lectureID") Integer lectureID,
                                                @RequestParam String userId){
 
-
-        List<Question> questions = questionService.getAllQuestions(lectureID, userId);
         Map<String, Object> toBeReturned = new TreeMap<>();
+        List<Question> questions;
+        try {
+            questions = questionService.getAllQuestions(lectureID, userId);
+        } catch (IllegalArgumentException e) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", e.getMessage());
+            return toBeReturned;
+        }
+
         List<Map<String, Object>> answeredList = new ArrayList<>();
         List<Map<String, Object>> unansweredList = new ArrayList<>();
 
-        /**
-         * Inflate answeredList
-         */
-        Map<String, Object> answeredQuestion = new TreeMap<>();
-        answeredQuestion.put("userId", "ID of the user who asked the question");
-        answeredQuestion.put("userName", "John Doe");
-        answeredQuestion.put("questionText", "this is the actual text that comprises the question");
-        answeredQuestion.put("answerText", "this field does not need to exist in the final response");
-        answeredQuestion.put("score", 42);
-        answeredQuestion.put("answered", false);
-
-        answeredList.add(answeredQuestion);
-
-        /**
-         * Inflate unansweredList
-         */
-        Map<String, Object> unansweredQuestion = new TreeMap<>();
-        unansweredQuestion.put("userId", "ID of the user who asked the question");
-        unansweredQuestion.put("userName", "John Doe");
-        unansweredQuestion.put("questionText", "this is the actual text that comprises the question");
-        unansweredQuestion.put("score", 42);
-        unansweredQuestion.put("answered", false);
-
-        unansweredList.add(unansweredQuestion);
-
-
-
+        for(Question question: questions) {
+            if(question.getAnswered()) {
+                Map<String, Object> answeredQuestion = new TreeMap<>();
+                answeredQuestion.put("userId", question.getStudent_id());
+                answeredQuestion.put("userName", "John Doe");
+                answeredQuestion.put("questionText", question.getContent());
+                answeredQuestion.put("score", question.getVote_counter());
+                answeredQuestion.put("createdAt", question.getCreated_at());
+                answeredQuestion.put("answerText", question.getAnswerText());
+                answeredQuestion.put("answered", true);
+                answeredList.add(answeredQuestion);
+            } else {
+                Map<String, Object> unansweredQuestion = new TreeMap<>();
+                unansweredQuestion.put("userId", question.getStudent_id());
+                unansweredQuestion.put("userName", "John Doe");
+                unansweredQuestion.put("questionText", question.getContent());
+                unansweredQuestion.put("score", question.getVote_counter());
+                unansweredQuestion.put("createdAt", question.getCreated_at());
+                unansweredList.add(unansweredQuestion);
+            }
+        }
 
         toBeReturned.put("answered", answeredList);
         toBeReturned.put("unanswered", unansweredList);
