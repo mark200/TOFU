@@ -16,8 +16,8 @@ import java.util.*;
 public class QuestionController {
 
 
-    // @Autowired
-    // MockQuestionServiceImplementation questionService;
+//     @Autowired
+//     MockQuestionServiceImplementation questionService;
 
     @Autowired
     QuestionServiceImplementation questionService;
@@ -63,7 +63,6 @@ public class QuestionController {
 
 
     @GetMapping(value = "/{lectureID}/questions",
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> getAllQuestions(@PathVariable(value = "lectureID") Integer lectureID,
                                                @RequestBody Map<String, Object> requestPayload){
@@ -85,13 +84,14 @@ public class QuestionController {
 
         String userId;
 
+        Map<String, Object> toBeReturned = new TreeMap<>();
+        List<Question> questions;
         try {
             userId = (String) requestPayload.get("userID");
         } catch (Exception e){
             Map<String, Object> toBeReturned = new TreeMap<>();
             toBeReturned.put("success", "false");
             toBeReturned.put("message", e.getMessage());
-
             return toBeReturned;
         }
 

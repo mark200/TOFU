@@ -70,11 +70,11 @@ public class LectureController {
     }
 
     @PostMapping(
-            value = "/j/{lectureID}/{userID}",
+            value = "/j/{lectureID}/{roleCode}",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> joinOngoingLecture(@PathVariable(value = "lectureID") Integer lectureID,
-                                                  @PathVariable(value = "userID") Long userID,
+                                                  @PathVariable(value = "roleCode") String roleCode,
                                                   @RequestBody Map<String, Object> requestPayload) {
 
         boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
@@ -100,7 +100,7 @@ public class LectureController {
             return toBeReturned;
         }
 
-        return lectureService.joinOngoingLecture(lectureID, userID, userName);
+        return lectureService.joinOngoingLecture(lectureID, roleCode, userName);
     }
 
     @GetMapping(
