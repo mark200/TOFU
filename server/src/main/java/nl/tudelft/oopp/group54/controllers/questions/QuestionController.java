@@ -89,7 +89,6 @@ public class QuestionController {
         try {
             userId = (String) requestPayload.get("userID");
         } catch (Exception e){
-            Map<String, Object> toBeReturned = new TreeMap<>();
             toBeReturned.put("success", "false");
             toBeReturned.put("message", e.getMessage());
             return toBeReturned;
