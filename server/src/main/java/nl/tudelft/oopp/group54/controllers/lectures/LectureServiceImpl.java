@@ -110,17 +110,26 @@ public class LectureServiceImpl implements LectureService {
 
         if (lectureId == null) {
             toBeReturned.put("success", false);
-            toBeReturned.put("message", "LectureId cannot be null");
+            toBeReturned.put("message", "LectureId cannot be null.");
+            return toBeReturned;
         }
 
         if (roleCode == null) {
             toBeReturned.put("success", false);
-            toBeReturned.put("message", "JoinId cannot be null");
+            toBeReturned.put("message", "JoinId cannot be null.");
+            return toBeReturned;
         }
 
         if (userName == null) {
             toBeReturned.put("success", false);
-            toBeReturned.put("message", "UserName cannot be null");
+            toBeReturned.put("message", "UserName cannot be null.");
+            return toBeReturned;
+        }
+
+        if (userName.length() > 40) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "UserName is unacceptable.");
+            return toBeReturned;
         }
 
         Optional<Lecture> foundLecture = repository.findById(lectureId);
