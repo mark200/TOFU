@@ -119,7 +119,6 @@ public class QuestionServiceImplementation implements QuestionService {
             return toBeReturned;
         }
 
-        Map<String, Object> questionsMap = new TreeMap<>();
         String userName = foundUser.get().getName();
 
         List<Question> allQuestions = questionRepository.findAll();
@@ -134,13 +133,10 @@ public class QuestionServiceImplementation implements QuestionService {
                                                                         .map(x -> transformQuestion(x, userName))
                                                                         .collect(Collectors.toList());
 
-        questionsMap.put("answered", answeredQuestions);
-        questionsMap.put("unanswered", unAnsweredQuestions);
-
+        toBeReturned.put("answered", answeredQuestions);
+        toBeReturned.put("unanswered", unAnsweredQuestions);
         toBeReturned.put("success", true);
         toBeReturned.put("count", answeredQuestions.size() + unAnsweredQuestions.size());
-        toBeReturned.put("userName", foundUser.get().getName());
-        toBeReturned.put("questions", questionsMap);
 
         return toBeReturned;
     }
@@ -156,7 +152,8 @@ public class QuestionServiceImplementation implements QuestionService {
         }
 
         Map<String, Object> toBeReturned = new TreeMap<>();
-        toBeReturned.put("userID", q.getStudent_id());
+        toBeReturned.put("questionId", q.getPrimaryKey().getId());
+        toBeReturned.put("userId", q.getStudent_id());
         toBeReturned.put("userName", userName);
         toBeReturned.put("questionText", q.getContent());
         toBeReturned.put("score", q.getVote_counter());

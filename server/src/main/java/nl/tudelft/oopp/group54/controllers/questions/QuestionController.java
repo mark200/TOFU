@@ -62,38 +62,13 @@ public class QuestionController {
 
 
 
-    @GetMapping(value = "/{lectureID}/questions",
+    @GetMapping(value = "/{lectureId}/questions",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> getAllQuestions(@PathVariable(value = "lectureID") Integer lectureID,
-                                               @RequestBody Map<String, Object> requestPayload){
+    public Map<String, Object> getAllQuestions(@PathVariable(value = "lectureId") Integer lectureId,
+                                               @RequestParam String userId){
 
-        boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
-                requestPayload,
-                Arrays.asList("userID")
-        );
+        
 
-        if(!containsNecessaryData){
-
-            Map<String, Object> toBeReturned = new TreeMap<>();
-            toBeReturned.put("success", "false");
-            toBeReturned.put("message", "Expected userID" +
-                    " to be provided");
-
-            return toBeReturned;
-        }
-
-        String userId;
-
-        Map<String, Object> toBeReturned = new TreeMap<>();
-        List<Question> questions;
-        try {
-            userId = (String) requestPayload.get("userID");
-        } catch (Exception e){
-            toBeReturned.put("success", "false");
-            toBeReturned.put("message", e.getMessage());
-            return toBeReturned;
-        }
-
-        return questionService.getAllQuestions(lectureID, userId);
+        return questionService.getAllQuestions(lectureId, userId);
     }
 }

@@ -1,6 +1,8 @@
 package nl.tudelft.oopp.group54;
 
 import com.sun.javafx.collections.ImmutableObservableList;
+
+import nl.tudelft.oopp.group54.models.QuestionModel;
 import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
@@ -63,13 +65,13 @@ public class Datastore {
         this.currentAnsweredQuestionViews = currentAnsweredQuestionViews;
   }
 
-  public void addUnansweredQuestion(String question){
-    QuestionView q = new QuestionView(question);
+  public void addUnansweredQuestion(QuestionModel question){
+    QuestionView q = new QuestionView(question.getQuestionText(), question.getQuestionId());
     this.currentUnansweredQuestionViews.add(q);
   }
 
-  public void addAnsweredQuestion(String question){
-    QuestionView q = new QuestionView(question);
+  public void addAnsweredQuestion(QuestionModel question){
+	QuestionView q = new QuestionView(question.getQuestionText(), question.getQuestionId());
     this.currentAnsweredQuestionViews.add(q);
   }
 
