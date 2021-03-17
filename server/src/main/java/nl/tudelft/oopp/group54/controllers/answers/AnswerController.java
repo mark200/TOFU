@@ -13,13 +13,13 @@ import java.util.TreeMap;
 @RequestMapping(value = "/lectures")
 public class AnswerController {
     @Autowired
-    MockAnswerServiceImpl answerService;
+    AnswerServiceImpl answerService;
 
     @PostMapping(value = "{lectureID}/questions/{questionID}/answer",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> answerQuestion(@PathVariable(value = "lectureID") Long lectureId,
-                                              @PathVariable(value = "questionID") Long questionId,
+    public Map<String, Object> answerQuestion(@PathVariable(value = "lectureID") Integer lectureId,
+                                              @PathVariable(value = "questionID") Integer questionId,
                                               @RequestBody Map<String, Object> requestPayload){
         boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
                 requestPayload,
