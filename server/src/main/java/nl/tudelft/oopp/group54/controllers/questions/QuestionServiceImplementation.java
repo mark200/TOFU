@@ -1,9 +1,6 @@
 package nl.tudelft.oopp.group54.controllers.questions;
 
-import nl.tudelft.oopp.group54.entities.Question;
-import nl.tudelft.oopp.group54.entities.QuestionKey;
-import nl.tudelft.oopp.group54.entities.User;
-import nl.tudelft.oopp.group54.entities.UserKey;
+import nl.tudelft.oopp.group54.entities.*;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.QuestionRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
@@ -11,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionServiceImplementation implements QuestionService {
@@ -19,6 +17,9 @@ public class QuestionServiceImplementation implements QuestionService {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private LectureRepository lectureRepository;
 
     /**
      * post a question
@@ -81,30 +82,89 @@ public class QuestionServiceImplementation implements QuestionService {
         return status;
     }
 
+    /**
+     * Returns all question asked by the User with userID in JSON format
+     * @param lectureId the lecture where the questions have been asked
+     * @param userId the user that has asked the questions we return
+     * @return
+     */
     @Override
-    public List<Question> getAllQuestions(Integer lectureId, String userId) {
+    public Map<String, Object> getAllQuestions(Integer lectureId, String userId) {
+        Map<String, Object> toBeReturned = new TreeMap<>();
 
         if (lectureId == null) {
-            throw new IllegalArgumentException("LectureID cannot be null!");
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "LectureId cannot be null.");
+            return toBeReturned;
         }
 
         if (userId == null) {
-            throw new IllegalArgumentException("UserID cannot be null!");
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "userId cannot be null.");
+            return toBeReturned;
         }
 
-        Optional<User> findUserRow = userRepository.findById(
-                new UserKey(Integer.parseInt(userId), lectureId)
-        );
+        Optional<User> foundUser = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
 
-        if (findUserRow.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "Unrecognized user ID or specified lecture does not exist!"
-            );
+        if (foundLecture.isEmpty()) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "Lecture by this ID does not exist.");
+            return toBeReturned;
         }
 
-        List<Question> test = questionRepository.findByLectureId(lectureId);
+        if (foundUser.isEmpty()) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "Unrecognized userID.");
+            return toBeReturned;
+        }
 
+        Map<String, Object> questionsMap = new TreeMap<>();
+        String userName = foundUser.get().getName();
 
-        return test;
+        List<Question> allQuestions = questionRepository.findAll();
+
+        List<Map<String, Object>> answeredQuestions = allQuestions.stream()
+                                                                        .filter(x -> x.getAnswered() == true)
+                                                                        .map(x -> transformQuestion(x, userName))
+                                                                        .collect(Collectors.toList());
+
+        List<Map<String, Object>> unAnsweredQuestions = allQuestions.stream()
+                                                                        .filter(x -> x.getAnswered() == false)
+                                                                        .map(x -> transformQuestion(x, userName))
+                                                                        .collect(Collectors.toList());
+
+        questionsMap.put("answered", answeredQuestions);
+        questionsMap.put("unanswered", unAnsweredQuestions);
+
+        toBeReturned.put("success", true);
+        toBeReturned.put("count", answeredQuestions.size() + unAnsweredQuestions.size());
+        toBeReturned.put("userName", foundUser.get().getName());
+        toBeReturned.put("questions", questionsMap);
+
+        return toBeReturned;
+    }
+
+    /**
+     * Transform a question into JSON format
+     * @param q an object of type Question
+     * @return A JSON representation of the object
+     */
+    public Map<String, Object> transformQuestion(Question q, String userName) {
+        if (q == null) {
+            return null;
+        }
+
+        Map<String, Object> toBeReturned = new TreeMap<>();
+        toBeReturned.put("userID", q.getStudent_id());
+        toBeReturned.put("userName", userName);
+        toBeReturned.put("questionText", q.getContent());
+        toBeReturned.put("score", q.getVote_counter());
+        toBeReturned.put("answered", q.getAnswered());
+
+        if (q.getAnswered())
+            toBeReturned.put("answerText", q.getAnswerText());
+
+        return toBeReturned;
     }
 }
