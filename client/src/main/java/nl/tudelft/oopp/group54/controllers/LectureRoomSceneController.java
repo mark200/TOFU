@@ -106,10 +106,10 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     	  this.ds.setCurrentUnansweredQuestionViews(null);
     	  this.ds.setCurrentAnsweredQuestionViews(null);
     	  for(QuestionModel question : response.getAnswered()){
-    	      this.ds.addAnsweredQuestion(question.getQuestionText());
+    	      this.ds.addAnsweredQuestion(question);
     	  }
     	  for(QuestionModel question : response.getUnanswered()){
-    	      this.ds.addUnansweredQuestion(question.getQuestionText());
+    	      this.ds.addUnansweredQuestion(question);
     	  }
       }
   }

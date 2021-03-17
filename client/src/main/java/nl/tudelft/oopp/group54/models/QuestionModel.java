@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class QuestionModel implements Serializable{
 	private String userId;
+	private String questionId;
 	private String userName;
 	private String questionText;
 	private int score;
@@ -15,6 +16,16 @@ public class QuestionModel implements Serializable{
 	private QuestionModel() {
 		
 	}
+	
+
+	public String getQuestionId() {
+		return questionId;
+	}
+
+	public void setQuestionId(String questionId) {
+		this.questionId = questionId;
+	}
+
 
 	public String getUserId() {
 		return userId;
