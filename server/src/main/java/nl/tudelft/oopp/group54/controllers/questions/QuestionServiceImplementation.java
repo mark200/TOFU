@@ -122,12 +122,14 @@ public class QuestionServiceImplementation implements QuestionService {
         Map<String, Object> questionsMap = new TreeMap<>();
         String userName = foundUser.get().getName();
 
-        List<Map<String, Object>> answeredQuestions = questionRepository.findAll().stream()
+        List<Question> allQuestions = questionRepository.findAll();
+
+        List<Map<String, Object>> answeredQuestions = allQuestions.stream()
                                                                         .filter(x -> x.getAnswered() == true)
                                                                         .map(x -> transformQuestion(x, userName))
                                                                         .collect(Collectors.toList());
 
-        List<Map<String, Object>> unAnsweredQuestions = questionRepository.findAll().stream()
+        List<Map<String, Object>> unAnsweredQuestions = allQuestions.stream()
                                                                         .filter(x -> x.getAnswered() == false)
                                                                         .map(x -> transformQuestion(x, userName))
                                                                         .collect(Collectors.toList());
