@@ -9,7 +9,7 @@ import java.util.TreeMap;
 public class MockAnswerServiceImpl implements AnswerService {
 
     @Override
-    public Map<String, Object> answerQuestion(Long lectureId, String userId, Long questionId, String answerText) {
+    public Map<String, Object> answerQuestion(Integer lectureId, String userId, Integer questionId, String answerText) {
 
         Map<String, Object> status = new TreeMap<>();
 

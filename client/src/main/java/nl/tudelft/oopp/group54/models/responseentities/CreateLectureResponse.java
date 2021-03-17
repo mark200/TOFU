@@ -5,29 +5,39 @@ import java.io.Serializable;
 public class CreateLectureResponse implements Serializable {
 
   private Boolean success;
-  private Long lectureID;
-  private Long lecturerID;
-  private Long studentID;
-  private Long moderatorID;
+
+  private Integer lectureID;
+
+  private String lecturerID;
+  private String studentID;
+  private String moderatorID;
+
   private String message;
 
   public CreateLectureResponse() {
     this.success = false;
-    this.lectureID = 0L;
-    this.studentID = 0L;
-    this.moderatorID = 0L;
+    this.lectureID = 0;
+
+    this.lecturerID = "";
+    this.studentID = "";
+    this.moderatorID = "";
+
     this.message = "";
   }
 
   public CreateLectureResponse(Boolean success,
-                               Long lectureID,
-                               Long studentID,
-                               Long moderatorID,
+                               Integer lecturerID,
+                               String lectureID,
+                               String studentID,
+                               String moderatorID,
                                String message) {
     this.success = success;
-    this.lectureID = lectureID;
+    this.lectureID = lecturerID;
+
+    this.lecturerID = lectureID;
     this.studentID = studentID;
     this.moderatorID = moderatorID;
+
     this.message = message;
   }
 
@@ -42,27 +52,27 @@ public class CreateLectureResponse implements Serializable {
     this.success = success;
   }
 
-  public Long getLectureID() {
+  public Integer getLectureID() {
     return lectureID;
   }
 
-  public void setLectureID(Long lectureID) {
+  public void setLectureID(Integer lectureID) {
     this.lectureID = lectureID;
   }
 
-  public Long getStudentID() {
+  public String getStudentID() {
     return studentID;
   }
 
-  public void setStudentID(Long studentID) {
+  public void setStudentID(String studentID) {
     this.studentID = studentID;
   }
 
-  public Long getModeratorID() {
+  public String getModeratorID() {
     return moderatorID;
   }
 
-  public void setModeratorID(Long moderatorID) {
+  public void setModeratorID(String moderatorID) {
     this.moderatorID = moderatorID;
   }
 
@@ -74,11 +84,11 @@ public class CreateLectureResponse implements Serializable {
     this.message = message;
   }
 
-  public Long getLecturerID() {
+  public String getLecturerID() {
     return lecturerID;
   }
 
-  public void setLecturerID(Long lecturerID) {
+  public void setLecturerID(String lecturerID) {
     this.lecturerID = lecturerID;
   }
 

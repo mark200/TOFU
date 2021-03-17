@@ -15,6 +15,7 @@ public class MockLectureServiceImplementation implements LectureService {
 
         toBeReturned.put("success", true);
         toBeReturned.put("lectureID", 123456);
+        toBeReturned.put("lecturerID", 555555);
         toBeReturned.put("studentID", 234567);
         toBeReturned.put("moderatorID", 420420);
 
@@ -22,7 +23,7 @@ public class MockLectureServiceImplementation implements LectureService {
     }
 
     @Override
-    public Map<String, Object> joinOngoingLecture(Long lectureId, Long joinId, String userName) {
+    public Map<String, Object> joinOngoingLecture(Integer lectureId, String roleCode, String userName) {
         Map<String, Object> toBeReturned = new TreeMap<>();
 
         toBeReturned.put("success", true);
@@ -34,7 +35,7 @@ public class MockLectureServiceImplementation implements LectureService {
     }
 
     @Override
-    public Map<String, Object> getLectureMetadata(Long lectureId) {
+    public Map<String, Object> getLectureMetadata(Integer lectureId) {
         Map<String, Object> toBeReturned = new TreeMap<>();
 
         toBeReturned.put("success", "true");

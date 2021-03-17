@@ -32,22 +32,25 @@ public class QuestionView extends AnchorPane {
 	Button downvoteButton;
 
 	Label currentScore;
+	
+	String questionId;
 
-	public QuestionView(String s) {
+	public QuestionView(String s, String questionId) {
 		this.outerGridPane = new GridPane();
 		this.innerGridPane = new GridPane();
 		this.innerVBox = new VBox();
 		this.menuBar = new MenuBar();
 		this.questionTextArea = new TextArea(s);
+		this.questionId = questionId;
 
     this.questionTextArea.setWrapText(true);
     this.questionTextArea.setEditable(false);
     this.questionTextArea.setPrefRowCount(6);
 
 
-		this.upvoteButton = new Button("↑");
+		this.upvoteButton = new Button("^");
 		this.currentScore = new Label("0");
-		this.downvoteButton = new Button("↓" );
+		this.downvoteButton = new Button("v");
 
 		this.innerGridPane.add(this.upvoteButton, 0, 0);
 		this.innerGridPane.add(this.currentScore, 0, 1);
@@ -67,6 +70,14 @@ public class QuestionView extends AnchorPane {
 
 		this.outerGridPane.getColumnConstraints().addAll(cc2, cc);
 **/
+		
+		upvoteButton.setOnAction(event -> {
+			voteButtonPressed(true);
+		});
+		
+		downvoteButton.setOnAction(event -> {
+			voteButtonPressed(false);
+		});
 
 		this.getChildren().addAll(this.outerGridPane, this.menuBar);
 	}
@@ -79,6 +90,10 @@ public class QuestionView extends AnchorPane {
 
 		setLeftAnchor(menuBar, 0.0);
 		setRightAnchor(menuBar, 0.0);
+	}
+	
+	private void voteButtonPressed(boolean upvote) {
+		
 	}
 
 //	public void setQuestionModel() {

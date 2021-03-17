@@ -21,17 +21,17 @@ public class Lecture {
     @NotNull
     private Date startTime;
 
-    @Column(name = "student_join_id", columnDefinition = "INT NOT NULL")
+    @Column(name = "student_join_id", columnDefinition = "VARCHAR(32) NOT NULL")
     @NotNull
-    private Integer studentJoinId;
+    private String studentJoinId;
 
-    @Column(name = "moderator_join_id", columnDefinition = "INT NOT NULL")
+    @Column(name = "moderator_join_id", columnDefinition = "VARCHAR(32) NOT NULL")
     @NotNull
-    private Integer moderatorJoinId;
+    private String moderatorJoinId;
 
-    @Column(name = "lecturer_join_id", columnDefinition = "INT NOT NULL")
+    @Column(name = "lecturer_join_id", columnDefinition = "VARCHAR(32) NOT NULL")
     @NotNull
-    private Integer lecturerJoinId;
+    private String lecturerJoinId;
 
     public Lecture(){
 
@@ -46,7 +46,7 @@ public class Lecture {
      * @param moderatorJoinId - Integer
      * @param lecturerJoinId - Integer
      */
-    public Lecture(Integer id, @NotNull String lectureName, @NotNull Date startTime, @NotNull Integer studentJoinId, @NotNull Integer moderatorJoinId, @NotNull Integer lecturerJoinId) {
+    public Lecture(Integer id, @NotNull String lectureName, @NotNull Date startTime, @NotNull String studentJoinId, @NotNull String moderatorJoinId, @NotNull String lecturerJoinId) {
         this.id = id;
         this.lectureName = lectureName;
         this.startTime = startTime;
@@ -67,15 +67,15 @@ public class Lecture {
         return startTime;
     }
 
-    public Integer getStudentJoinId() {
+    public String getStudentJoinId() {
         return studentJoinId;
     }
 
-    public Integer getModeratorJoinId() {
+    public String getModeratorJoinId() {
         return moderatorJoinId;
     }
 
-    public Integer getLecturerJoinId() {
+    public String getLecturerJoinId() {
         return lecturerJoinId;
     }
 
@@ -91,15 +91,15 @@ public class Lecture {
         this.startTime = startTime;
     }
 
-    public void setStudentJoinId(Integer studentJoinId) {
+    public void setStudentJoinId(String studentJoinId) {
         this.studentJoinId = studentJoinId;
     }
 
-    public void setModeratorJoinId(Integer moderatorJoinId) {
+    public void setModeratorJoinId(String moderatorJoinId) {
         this.moderatorJoinId = moderatorJoinId;
     }
 
-    public void setLecturerJoinId(Integer lecturerJoinId) {
+    public void setLecturerJoinId(String lecturerJoinId) {
         this.lecturerJoinId = lecturerJoinId;
     }
 

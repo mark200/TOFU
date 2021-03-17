@@ -62,14 +62,20 @@ public class JoinLectureSceneController extends AbstractApplicationController {
     }
     
     String joinIdTextFieldString = joinIdTextFieldText.toString();
-    
-//    System.out.println(joinIdTextFieldString);
-    
-    Long lectureId = Long.parseLong(joinIdTextFieldString.substring(3, 9));
-    Long joinId = Long.parseLong(joinIdTextFieldString.substring(10, 16));
-    
-//    System.out.println("lectureId = " + lectureId);
-//    System.out.println("joinId = " + joinId);
+
+    String[] textFieldParts = joinIdTextFieldString.split("/");
+
+    Integer lectureId = 0;
+    String joinId = "";
+
+    for(int i = 0; i < textFieldParts.length; i++) {
+      if(textFieldParts[i].matches("-?\\d+")) {
+        lectureId = Integer.parseInt(textFieldParts[i]);
+      }
+      if(textFieldParts[i].matches(".{2,50}")) {
+        joinId = textFieldParts[i];
+      }
+    }
 
     JoinLectureResponse response = null;
     try {
@@ -80,11 +86,15 @@ public class JoinLectureSceneController extends AbstractApplicationController {
     }
 
     if(response.getSuccess()) {
+
+      System.out.println(response);
+
       this.ds.setJoinLectureResponse(response);
-      MainView.changeScene(ApplicationScene.COPYLINK, true);
+      this.ds.setUserId(response.getUserID());
+      this.ds.setLectureId(lectureId);
+      MainView.changeScene(ApplicationScene.LECTUREROOM, true);
+    } else {
+      this.displayStatusMessage(response.getMessage());
     }
-
-
-    MainView.changeScene(ApplicationScene.LECTUREROOM, true);
   }
 }

@@ -1,5 +1,8 @@
 package nl.tudelft.oopp.group54;
 
+import com.sun.javafx.collections.ImmutableObservableList;
+
+import nl.tudelft.oopp.group54.models.QuestionModel;
 import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
@@ -18,10 +21,13 @@ public class Datastore {
   JoinLectureResponse joinLectureResponse;
 
   String serviceEndpoint = "http://localhost:8080";
+  
+  Long userId = 0L;
+  Integer lectureId = 0;
 
   private Datastore() {
-    this.currentAnsweredQuestionViews = FXCollections.observableArrayList();
     this.currentUnansweredQuestionViews = FXCollections.observableArrayList();
+    this.currentAnsweredQuestionViews = FXCollections.observableArrayList();
     createLectureResponse = null;
     joinLectureResponse = null;
   }
@@ -42,7 +48,10 @@ public class Datastore {
   }
 
   public void setCurrentUnansweredQuestionViews(ObservableList<QuestionView> currentUnansweredQuestionViews) {
-    this.currentUnansweredQuestionViews = currentUnansweredQuestionViews;
+    if(currentUnansweredQuestionViews == null)
+        this.currentUnansweredQuestionViews.clear();
+    else
+        this.currentUnansweredQuestionViews = currentUnansweredQuestionViews;
   }
 
   public ObservableList<QuestionView> getCurrentAnsweredQuestionViews() {
@@ -50,16 +59,19 @@ public class Datastore {
   }
 
   public void setCurrentAnsweredQuestionViews(ObservableList<QuestionView> currentAnsweredQuestionViews) {
-    this.currentAnsweredQuestionViews = currentAnsweredQuestionViews;
+    if(currentAnsweredQuestionViews == null)
+        this.currentAnsweredQuestionViews.clear();
+    else
+        this.currentAnsweredQuestionViews = currentAnsweredQuestionViews;
   }
 
-  public void addUnansweredQuestion(String question){
-    QuestionView q = new QuestionView(question);
+  public void addUnansweredQuestion(QuestionModel question){
+    QuestionView q = new QuestionView(question.getQuestionText(), question.getQuestionId());
     this.currentUnansweredQuestionViews.add(q);
   }
 
-  public void addAnsweredQuestion(String question){
-    QuestionView q = new QuestionView(question);
+  public void addAnsweredQuestion(QuestionModel question){
+	QuestionView q = new QuestionView(question.getQuestionText(), question.getQuestionId());
     this.currentAnsweredQuestionViews.add(q);
   }
 
@@ -71,7 +83,6 @@ public class Datastore {
   public void setCreateLectureResponse(CreateLectureResponse createLectureResponse) {
     this.createLectureResponse = createLectureResponse;
   }
-  
 
   public JoinLectureResponse getJoinLectureResponse() {
 	  return joinLectureResponse;
@@ -79,5 +90,22 @@ public class Datastore {
 
   public void setJoinLectureResponse(JoinLectureResponse joinLectureResponse) {
 	  this.joinLectureResponse = joinLectureResponse;
-  }  
+  }
+  
+  public void setLectureId(Integer lectureId) {
+	  this.lectureId = lectureId;
+  }
+  
+  public Integer getLectureId() {
+	  return lectureId;
+  }
+  
+  public void setUserId(Long userId) {
+	  this.userId = userId;
+  }
+  
+  public Long getUserId() {
+	  return userId;
+  }
+  
 }

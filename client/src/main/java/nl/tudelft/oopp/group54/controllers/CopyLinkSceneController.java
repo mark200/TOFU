@@ -1,14 +1,17 @@
 package nl.tudelft.oopp.group54.controllers;
 
 import nl.tudelft.oopp.group54.Datastore;
+import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
+import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
 import nl.tudelft.oopp.group54.views.ApplicationScene;
 import nl.tudelft.oopp.group54.views.MainView;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
-import java.awt.*;
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 
@@ -25,14 +28,17 @@ public class CopyLinkSceneController extends AbstractApplicationController {
   @FXML
   Button copyStudentLinkButton;
   Boolean copyStudentLinkClaimed = false;
+  
+  @FXML
+  TextField usernameField;
 
   @FXML
   Button goToLectureButton;
+  
 
   Datastore ds = Datastore.getInstance();
   Toolkit toolkit = Toolkit.getDefaultToolkit();
   Clipboard clipboard = toolkit.getSystemClipboard();
-
 
   CreateLectureResponse createLectureResponse;
 
@@ -47,10 +53,37 @@ public class CopyLinkSceneController extends AbstractApplicationController {
     if(this.copyLecturerLinkClaimed
             && this.copyStudentLinkClaimed
             && this.copyModeratorLinkClaimed) {
-      MainView.changeScene(ApplicationScene.LECTUREROOM, true);
+    	
+    	if(usernameField.getText().length() != 0) {
+    		joinLecture();
+    	} else {
+    		this.shakeWidget(usernameField);
+    		this.displayStatusMessage("Please enter a username!");
+    	}
+      
+    } else {
+    	this.displayStatusMessage("You should claim all of the links before proceeding!");
     }
+    
+  }
+  
+  private void joinLecture() {
+	  JoinLectureResponse response = null;
+	    try {
+	      response = ServerCommunication.joinLecture(usernameField.getCharacters().toString(), this.createLectureResponse.getLectureID(), this.createLectureResponse.getLecturerID());
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	      this.displayStatusMessage(e.getMessage());
+	    }
 
-    this.displayStatusMessage("You should claim all of the links before proceeding!");
+	    if(response.getSuccess()) {
+	      this.ds.setJoinLectureResponse(response);
+	      this.ds.setUserId(response.getUserID());
+	      this.ds.setLectureId(this.createLectureResponse.getLectureID());
+	      MainView.changeScene(ApplicationScene.LECTUREROOM, true);
+	    } else {
+	      this.displayStatusMessage(response.getMessage());
+      }
   }
 
   public void copyLecturerLinkButtonClicked() {
