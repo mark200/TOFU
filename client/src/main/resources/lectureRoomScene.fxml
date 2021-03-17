@@ -28,13 +28,14 @@
             <ToolBar fx:id="utilityToolbar" maxHeight="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0">
                <items>
                   <Button fx:id="utilityToolbarBackButton" mnemonicParsing="false" onAction="#utilityToolbarBackButtonPressed" text="Back" />
+                  <Button mnemonicParsing="false" onAction="#refreshButtonClicked" text="Refresh" />
                </items>
             </ToolBar>
-            <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
+            <TabPane tabClosingPolicy="UNAVAILABLE" GridPane.rowIndex="1">
               <tabs>
                 <Tab text="Pending">
                      <content>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                        <AnchorPane>
                            <children>
                               <GridPane prefHeight="333.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <columnConstraints>
@@ -67,7 +68,7 @@
                   </Tab>
                 <Tab text="Answered">
                      <content>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                        <AnchorPane>
                            <children>
                               <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <columnConstraints>
@@ -89,7 +90,6 @@
                   <Font size="14.0" />
                </font>
             </Text>
-            <Button mnemonicParsing="false" onAction="#refreshButtonClicked" prefHeight="30.0" prefWidth="56.0" text="Refresh" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </children>
