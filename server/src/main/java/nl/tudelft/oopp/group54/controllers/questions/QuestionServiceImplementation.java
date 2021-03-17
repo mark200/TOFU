@@ -4,6 +4,7 @@ import nl.tudelft.oopp.group54.entities.Question;
 import nl.tudelft.oopp.group54.entities.QuestionKey;
 import nl.tudelft.oopp.group54.entities.User;
 import nl.tudelft.oopp.group54.entities.UserKey;
+import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.QuestionRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,29 @@ public class QuestionServiceImplementation implements QuestionService {
     }
 
     @Override
-    public List<Question> getAllQuestions(Long lectureId, String userId) {
-        return null;
+    public List<Question> getAllQuestions(Integer lectureId, String userId) {
+
+        if (lectureId == null) {
+            throw new IllegalArgumentException("LectureID cannot be null!");
+        }
+
+        if (userId == null) {
+            throw new IllegalArgumentException("UserID cannot be null!");
+        }
+
+        Optional<User> findUserRow = userRepository.findById(
+                new UserKey(Integer.parseInt(userId), lectureId)
+        );
+
+        if (findUserRow.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Unrecognized user ID or specified lecture does not exist!"
+            );
+        }
+
+        List<Question> test = questionRepository.findByLectureId(lectureId);
+
+
+        return test;
     }
 }

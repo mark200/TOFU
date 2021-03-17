@@ -8,12 +8,15 @@ import nl.tudelft.oopp.group54.util.TextFormatterType;
 import nl.tudelft.oopp.group54.views.ApplicationScene;
 import nl.tudelft.oopp.group54.views.MainView;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -39,13 +42,11 @@ public class DateTimeSceneController extends AbstractApplicationController {
 
   Datastore ds = Datastore.getInstance();
 
-
   public static LocalDate NOW_LOCAL_DATE (){
     String date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
     return LocalDate.parse(date , formatter);
   }
-
 
   public void performControllerSpecificSetup() {
     System.out.println("DateTime controller config");
@@ -148,10 +149,10 @@ public class DateTimeSceneController extends AbstractApplicationController {
             datePickerFormatter.parse(this.datePicker.getValue() + " " + timeString)
     );
 
-    Long timestamp = localDateTime.toEpochSecond(ZoneOffset.UTC) * 1000;
+    Timestamp timestamp = Timestamp.valueOf(localDateTime);
     CreateLectureResponse response = null;
     try {
-      response = ServerCommunication.postLecture(timestamp, lectureName.toString());
+      response = ServerCommunication.postLecture(timestamp.getTime(), lectureName.toString());
     } catch (Exception e) {
       e.printStackTrace();
       this.displayStatusMessage(e.getMessage());
@@ -160,6 +161,8 @@ public class DateTimeSceneController extends AbstractApplicationController {
     if(response.getSuccess()) {
       this.ds.setCreateLectureResponse(response);
       MainView.changeScene(ApplicationScene.COPYLINK, true);
+    } else {
+      this.displayStatusMessage(response.getMessage());
     }
 
 

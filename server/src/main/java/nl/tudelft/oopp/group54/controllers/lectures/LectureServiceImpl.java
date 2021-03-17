@@ -88,7 +88,8 @@ public class LectureServiceImpl implements LectureService {
 
         // FIXME the order of those IDs should be fixed
         toBeReturned.put("success", true);
-        toBeReturned.put("lectureID", studentId);
+        toBeReturned.put("lectureID", newLecture.getId());
+        toBeReturned.put("lecturerID", studentId);
         toBeReturned.put("studentID", moderatorId);
         toBeReturned.put("moderatorID", lecturerId);
 
@@ -148,7 +149,11 @@ public class LectureServiceImpl implements LectureService {
             return toBeReturned;
         }
 
-        User newUser = new User(new UserKey(new Random().nextInt(), lectureId), userName,"127.0.0.1",null,0);
+        int usersWatchingLecture = userRepository.findAll().stream()
+                .filter(x -> x.getKey().getLecture_id() == lectureId.intValue())
+                .collect(Collectors.toList()).size();
+
+        User newUser = new User(new UserKey(usersWatchingLecture, lectureId), userName,"127.0.0.1",null,0);
 
         // Determine role of student
         if (foundLecture.get().getStudentJoinId().equals(roleCode)) {

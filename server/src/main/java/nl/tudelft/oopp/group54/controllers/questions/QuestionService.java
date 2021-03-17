@@ -11,5 +11,5 @@ import java.util.List;
 public interface QuestionService {
     Map<String, Object> postQuestion(Integer lectureId, String userId, String questionText);
 
-    List<Question> getAllQuestions(Long lectureId, String userId);
+    List<Question> getAllQuestions(Integer lectureId, String userId);
 }

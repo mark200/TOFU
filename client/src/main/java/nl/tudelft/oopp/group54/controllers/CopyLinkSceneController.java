@@ -40,7 +40,6 @@ public class CopyLinkSceneController extends AbstractApplicationController {
   Toolkit toolkit = Toolkit.getDefaultToolkit();
   Clipboard clipboard = toolkit.getSystemClipboard();
 
-
   CreateLectureResponse createLectureResponse;
 
   @Override
@@ -82,7 +81,9 @@ public class CopyLinkSceneController extends AbstractApplicationController {
 	      this.ds.setUserId(response.getUserID());
 	      this.ds.setLectureId(this.createLectureResponse.getLectureID());
 	      MainView.changeScene(ApplicationScene.LECTUREROOM, true);
-	    }
+	    } else {
+	      this.displayStatusMessage(response.getMessage());
+      }
   }
 
   public void copyLecturerLinkButtonClicked() {
