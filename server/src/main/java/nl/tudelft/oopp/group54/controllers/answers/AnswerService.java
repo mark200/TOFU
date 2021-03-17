@@ -6,8 +6,8 @@ import java.util.Map;
 
 public interface AnswerService {
 
-    Map<String, Object> answerQuestion(Long lectureId,
+    Map<String, Object> answerQuestion(Integer lectureId,
                                        String userId,
-                                       Long questionId,
+                                       Integer questionId,
                                        @Nullable String answerText);
 }
