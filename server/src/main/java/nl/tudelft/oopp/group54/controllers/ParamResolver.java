@@ -5,16 +5,16 @@ import java.util.Map;
 
 public class ParamResolver {
 
-  public static boolean checkContainsRequiredParams(Map<String, Object> payload, List<String> requiredParams) {
+    public static boolean checkContainsRequiredParams(Map<String, Object> payload, List<String> requiredParams) {
 
-    for(String s: requiredParams) {
-      if (!payload.containsKey(s)) {
-        return false;
-      }
+        for (String s : requiredParams) {
+            if (!payload.containsKey(s)) {
+                return false;
+            }
+        }
+
+        return true;
+
     }
-
-    return true;
-
-  }
 
 }
