@@ -1,15 +1,13 @@
 package nl.tudelft.oopp.group54.widgets;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import nl.tudelft.oopp.group54.models.QuestionModel;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -33,6 +31,7 @@ public class QuestionView extends AnchorPane {
 	Text userName;
 	Button delete;
 
+	ComboBox dropDown;
 
 	Button upvoteButton;
 
@@ -40,7 +39,7 @@ public class QuestionView extends AnchorPane {
 
 	String questionId;
 
-	public QuestionView(String s, String questionId) {
+	public QuestionView(String s, String questionId, String userName) {
 		this.outerGridPane = new GridPane();
 		this.voteGridPane = new GridPane();
 		this.verticalGridPane = new GridPane();
@@ -49,8 +48,9 @@ public class QuestionView extends AnchorPane {
 		this.menuBar = new MenuBar();
 		this.delete = new Button("delete");
 		this.questionTextArea = new TextArea(s);
-		this.userName = new Text("bob");
+		this.userName = new Text(userName);
 		this.questionId = questionId;
+		this.dropDown = new ComboBox();
 
 		this.questionTextArea.setWrapText(true);
 		this.questionTextArea.setEditable(false);
@@ -83,6 +83,14 @@ public class QuestionView extends AnchorPane {
 
 		this.outerGridPane.setStyle("-fx-border-color: red;" + "-fx-border-radius: 3px");
 
+		ObservableList<String> options =
+				FXCollections.observableArrayList(
+						"Option 1",
+						"Option 2",
+						"Option 3"
+				);
+		this.dropDown.getItems().addAll(options);
+
 		//outerGridPane.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 
 		this.verticalGridPane.add(this.horizontalGridPane, 0, 0);
@@ -92,6 +100,7 @@ public class QuestionView extends AnchorPane {
 
 		this.horizontalGridPane.add(this.userName, 0, 0);
 		this.horizontalGridPane.add(this.delete, 1, 0);
+		this.horizontalGridPane.add(this.dropDown,1,0);
 
 
 		this.horizontalGridPane.setStyle("-fx-border-color: aqua;" + "-fx-border-radius: 3px");
@@ -107,8 +116,6 @@ public class QuestionView extends AnchorPane {
 
 		this.horizontalGridPane.getColumnConstraints().addAll(column1, column2);
 		//this.delete.setAlignment(Pos.CENTER_RIGHT);
-
-
 
 
 
