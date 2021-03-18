@@ -29,9 +29,13 @@ public class QuestionView extends AnchorPane {
 
 	TextArea questionTextArea;
 	Text userName;
-	Button delete;
 
-	ComboBox dropDown;
+	MenuButton dropDown;
+	
+	MenuItem delete;
+	MenuItem markAnswer;
+	MenuItem answerText;
+	MenuItem ban;
 
 	Button upvoteButton;
 
@@ -46,11 +50,14 @@ public class QuestionView extends AnchorPane {
 		this.horizontalGridPane = new GridPane();
 		this.innerVBox = new VBox();
 		this.menuBar = new MenuBar();
-		this.delete = new Button("delete");
 		this.questionTextArea = new TextArea(s);
 		this.userName = new Text(userName);
 		this.questionId = questionId;
-		this.dropDown = new ComboBox();
+		this.dropDown = new MenuButton("Options");
+		this.delete = new MenuItem("Delete");
+		this.markAnswer = new MenuItem("Mark answered");
+		this.answerText = new MenuItem("Answer with text");
+		this.ban = new MenuItem("Ban author");
 
 		this.questionTextArea.setWrapText(true);
 		this.questionTextArea.setEditable(false);
@@ -81,15 +88,9 @@ public class QuestionView extends AnchorPane {
 
 		this.outerGridPane.getColumnConstraints().addAll(col1, col2);
 
-		this.outerGridPane.setStyle("-fx-border-color: red;" + "-fx-border-radius: 3px");
+		//this.outerGridPane.setStyle("-fx-border-color: red;" + "-fx-border-radius: 3px");
 
-		ObservableList<String> options =
-				FXCollections.observableArrayList(
-						"Option 1",
-						"Option 2",
-						"Option 3"
-				);
-		this.dropDown.getItems().addAll(options);
+		dropDown.getItems().addAll(delete, markAnswer, answerText, ban);
 
 		//outerGridPane.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 
@@ -99,8 +100,7 @@ public class QuestionView extends AnchorPane {
 
 
 		this.horizontalGridPane.add(this.userName, 0, 0);
-		this.horizontalGridPane.add(this.delete, 1, 0);
-		this.horizontalGridPane.add(this.dropDown,1,0);
+		this.horizontalGridPane.add(this.dropDown, 1, 0);
 
 
 		this.horizontalGridPane.setStyle("-fx-border-color: aqua;" + "-fx-border-radius: 3px");
@@ -129,7 +129,23 @@ public class QuestionView extends AnchorPane {
 		 **/
 
 		upvoteButton.setOnAction(event -> {
-			voteButtonPressed(true);
+			vote();
+		});
+		
+		delete.setOnAction(event -> {
+			delete();
+		});
+		
+		markAnswer.setOnAction(event -> {
+			markAnswered();
+		});
+		
+		answerText.setOnAction(event -> {
+			answerWithText();
+		});
+		
+		ban.setOnAction(event -> {
+			banAuthor();
 		});
 
 
@@ -146,9 +162,26 @@ public class QuestionView extends AnchorPane {
 		setRightAnchor(menuBar, 0.0);
 	}
 
-	private void voteButtonPressed(boolean upvote) {
-
+	private void vote() {
+		System.out.println("upvote question " + questionId);
 	}
+	
+	private void delete() {
+		System.out.println("delete question " + questionId);
+	}
+	
+	private void markAnswered() {
+		System.out.println("mark question " + questionId + " answered");
+	}
+	
+	private void answerWithText() {
+		System.out.println("answer question " + questionId + " with text");
+	}
+	
+	private void banAuthor() {
+		System.out.println("ban author of question " + questionId);
+	}
+
 
 //	public void setQuestionModel() {
 //		this.questionModel = questionModel;
