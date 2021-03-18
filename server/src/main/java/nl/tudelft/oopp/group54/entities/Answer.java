@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Answers")
@@ -72,6 +73,22 @@ public class Answer {
 
     public void setModerator_id(Integer moderator_id) {
         this.moderator_id = moderator_id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Answer answer = (Answer) o;
+        return getPrimaryKey().equals(answer.getPrimaryKey()) &&
+                getAnswer_text().equals(answer.getAnswer_text()) &&
+                getQuestion_id().equals(answer.getQuestion_id()) &&
+                getModerator_id().equals(answer.getModerator_id());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPrimaryKey(), getAnswer_text(), getQuestion_id(), getModerator_id());
     }
 
     @Override
