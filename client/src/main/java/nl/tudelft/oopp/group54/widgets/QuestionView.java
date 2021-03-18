@@ -36,50 +36,30 @@ public class QuestionView extends AnchorPane {
 	String questionId;
 
 	public QuestionView(String s, String questionId) {
-		this.outerGridPane = new GridPane();
-		this.innerGridPane = new GridPane();
-		this.innerVBox = new VBox();
-		this.menuBar = new MenuBar();
-		this.questionTextArea = new TextArea(s);
-		this.questionId = questionId;
+		AnchorPane anchorPane0 = new AnchorPane();
+		anchorPane0.setMinHeight(Long.MIN_VALUE);
+		anchorPane0.setPrefHeight(400.0);
+		anchorPane0.setMaxHeight(Long.MIN_VALUE);
+		anchorPane0.setPrefWidth(600.0);
+		anchorPane0.setMinWidth(Long.MIN_VALUE);
+		anchorPane0.setMaxWidth(Long.MIN_VALUE);
+		Text text1 = new Text();
+		text1.setStrokeWidth(0.0);
+		//text1.setStrokeType(OUTSIDE);
+		text1.setLayoutX(139.0);
+		text1.setLayoutY(43.0);
+		text1.setText(s);
 
-    this.questionTextArea.setWrapText(true);
-    this.questionTextArea.setEditable(false);
-    this.questionTextArea.setPrefRowCount(6);
+		// Adding child to parent
+		anchorPane0.getChildren().add(text1);
+		TextArea textArea2 = new TextArea();
+		textArea2.setPrefHeight(200.0);
+		textArea2.setPrefWidth(200.0);
+		textArea2.setLayoutX(246.0);
+		textArea2.setLayoutY(173.0);
 
-
-		this.upvoteButton = new Button("^");
-		this.currentScore = new Label("0");
-		this.downvoteButton = new Button("v");
-
-		this.innerGridPane.add(this.upvoteButton, 0, 0);
-		this.innerGridPane.add(this.currentScore, 0, 1);
-		this.innerGridPane.add(this.downvoteButton, 0, 2);
-
-		GridPane.setHgrow(this.questionTextArea, Priority.ALWAYS);
-
-		this.questionTextArea.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
-
-		this.outerGridPane.add(this.innerGridPane, 0, 0);
-		this.outerGridPane.add(this.questionTextArea, 1, 0);
-		/**
-		ColumnConstraints cc = new ColumnConstraints();
-		cc.setPercentWidth(10);
-		ColumnConstraints cc2 = new ColumnConstraints();
-		cc.setPercentWidth(90);
-
-		this.outerGridPane.getColumnConstraints().addAll(cc2, cc);
-**/
-		
-		upvoteButton.setOnAction(event -> {
-			voteButtonPressed(true);
-		});
-		
-		downvoteButton.setOnAction(event -> {
-			voteButtonPressed(false);
-		});
-
-		this.getChildren().addAll(this.outerGridPane, this.menuBar);
+		// Adding child to parent
+		anchorPane0.getChildren().add(textArea2);
 	}
 
 	private void childConfiguration() {
