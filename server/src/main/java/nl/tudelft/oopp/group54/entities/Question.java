@@ -19,6 +19,10 @@ public class Question {
     @NotNull
     private Integer student_id;
 
+    @Column(name = "student_ip", columnDefinition = "VARCHAR NOT NULL")
+    @NotNull
+    private String student_ip;
+
     @Column(name = "content", columnDefinition = "VARCHAR(420) NOT NULL")
     @NotNull
     private String content;
@@ -41,6 +45,16 @@ public class Question {
 
     }
 
+
+    public Question(QuestionKey primaryKey, @NotNull Integer student_id, @NotNull String student_ip, @NotNull String content, Integer vote_counter, @NotNull Boolean answered, @NotNull Date created_at) {
+        this.primaryKey = primaryKey;
+        this.student_id = student_id;
+        this.student_ip = student_ip;
+        this.content = content;
+        this.vote_counter = vote_counter;
+        this.answered = answered;
+        this.created_at = created_at;
+    }
 
     /**
      * Create a new Question instance
@@ -88,6 +102,8 @@ public class Question {
         return answerText;
     }
 
+    public String getStudent_ip() { return student_ip; }
+
     public void setPrimaryKey(QuestionKey primaryKey) {
         this.primaryKey = primaryKey;
     }
@@ -116,6 +132,8 @@ public class Question {
         this.answerText = answerText;
     }
 
+    public void setStudent_ip(String student_ip) { this.student_ip = student_ip; }
+
     /**
      * Compare two Question Objects, the idea is to compare their primary keys,
      * because in the context of this application questions with different primary keys
@@ -133,7 +151,7 @@ public class Question {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPrimaryKey(), getStudent_id(), getContent(), getVote_counter(), getAnswered(), getCreated_at(), getAnswerText());
+        return Objects.hash(getPrimaryKey(), getStudent_id(), getStudent_ip(), getContent(), getVote_counter(), getAnswered(), getCreated_at(), getAnswerText());
     }
 
     @Override
@@ -141,10 +159,12 @@ public class Question {
         return "Question{" +
                 "primaryKey=" + primaryKey +
                 ", student_id=" + student_id +
+                ", student_ip='" + student_ip + '\'' +
                 ", content='" + content + '\'' +
                 ", vote_counter=" + vote_counter +
                 ", answered=" + answered +
                 ", created_at=" + created_at +
+                ", answerText='" + answerText + '\'' +
                 '}';
     }
 }
