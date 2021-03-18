@@ -55,9 +55,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 //      ds.addAnsweredQuestion("hello world " + i);
 //    }
 //
-//    questionField.setOnKeyPressed(event -> {
-//    	keyPressed(event);
-//    });
+    questionField.setOnKeyPressed(event -> {
+    	keyPressed(event);
+    });
   }
   
   public void askButtonClicked() {
