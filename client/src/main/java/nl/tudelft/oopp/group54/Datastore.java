@@ -66,12 +66,12 @@ public class Datastore {
   }
 
   public void addUnansweredQuestion(QuestionModel question){
-    QuestionView q = new QuestionView(question.getQuestionText(), question.getQuestionId());
+    QuestionView q = new QuestionView(question.getQuestionText(), question.getQuestionId(), question.getUserName());
     this.currentUnansweredQuestionViews.add(q);
   }
 
   public void addAnsweredQuestion(QuestionModel question){
-	QuestionView q = new QuestionView(question.getQuestionText(), question.getQuestionId());
+	QuestionView q = new QuestionView(question.getQuestionText(), question.getQuestionId(),question.getUserName());
     this.currentAnsweredQuestionViews.add(q);
   }
 

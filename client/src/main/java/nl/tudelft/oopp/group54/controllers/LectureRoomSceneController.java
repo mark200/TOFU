@@ -2,10 +2,16 @@ package nl.tudelft.oopp.group54.controllers;
 
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
+
 import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.models.QuestionModel;
@@ -32,6 +38,15 @@ public class LectureRoomSceneController extends AbstractApplicationController {
   @FXML
   TextField questionField;
 
+  @FXML
+  Button feedbackPanelButton;
+
+  @FXML
+  Accordion feedbackMenu;
+  @FXML
+  ColumnConstraints feedbackMenuContainer;
+  Integer feedbackMenuContainerUnfoldedWidth = 140;
+
   Datastore ds = Datastore.getInstance();
 
 
@@ -55,9 +70,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 //      ds.addAnsweredQuestion("hello world " + i);
 //    }
 //
-//    questionField.setOnKeyPressed(event -> {
-//    	keyPressed(event);
-//    });
+    questionField.setOnKeyPressed(event -> {
+    	keyPressed(event);
+    });
   }
   
   public void askButtonClicked() {
@@ -112,5 +127,16 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     	      this.ds.addUnansweredQuestion(question);
     	  }
       }
+  }
+
+  public void toggleFeedbackPanelVisibility () {
+    boolean vis = !this.feedbackMenu.isVisible();
+    this.feedbackMenu.setVisible(vis);
+
+    if(vis) {
+      this.feedbackMenuContainer.setPrefWidth(feedbackMenuContainerUnfoldedWidth);
+    } else {
+      this.feedbackMenuContainer.setPrefWidth(0);
+    }
   }
 }
