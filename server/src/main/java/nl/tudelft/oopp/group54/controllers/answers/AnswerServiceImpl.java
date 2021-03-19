@@ -73,7 +73,7 @@ public class AnswerServiceImpl implements AnswerService {
         }
 
         // If the user is a student, they cannot answer the question
-        if (foundUser.get().getRoleID() == 1) {
+        if (foundUser.get().getRoleID() == 3) {
             toBeReturned.put("success", false);
             toBeReturned.put("message", "This user is not authorized to provide answers. ");
             return toBeReturned;
