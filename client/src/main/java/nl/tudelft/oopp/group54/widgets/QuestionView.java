@@ -49,15 +49,18 @@ public class QuestionView extends AnchorPane {
 		this.verticalGridPane = new GridPane();
 		this.horizontalGridPane = new GridPane();
 		this.innerVBox = new VBox();
-		this.menuBar = new MenuBar();
 		this.questionTextArea = new TextArea(s);
 		this.userName = new Text(userName);
 		this.questionId = questionId;
+
+		this.menuBar = new MenuBar();
 		this.dropDown = new MenuButton("Options");
 		this.delete = new MenuItem("Delete");
 		this.markAnswer = new MenuItem("Mark answered");
 		this.answerText = new MenuItem("Answer with text");
 		this.ban = new MenuItem("Ban author");
+
+//		this.dropDown.setOpacity(0.0);
 
 		this.questionTextArea.setWrapText(true);
 		this.questionTextArea.setEditable(false);
@@ -97,14 +100,12 @@ public class QuestionView extends AnchorPane {
 		this.verticalGridPane.add(this.horizontalGridPane, 0, 0);
 		this.verticalGridPane.add(this.questionTextArea, 0, 1);
 
-
-
 		this.horizontalGridPane.add(this.userName, 0, 0);
 		this.horizontalGridPane.add(this.dropDown, 1, 0);
 
-
-		this.horizontalGridPane.setStyle("-fx-border-color: aqua;" + "-fx-border-radius: 3px");
-
+		this.horizontalGridPane.setStyle(
+						"-fx-border-color: aqua;" + "-fx-border-radius: 3px"
+		);
 
 		ColumnConstraints column1 = new ColumnConstraints();
 		column1.setPercentWidth(50);
@@ -128,6 +129,8 @@ public class QuestionView extends AnchorPane {
 		 this.outerGridPane.getColumnConstraints().addAll(cc2, cc);
 		 **/
 
+
+
 		upvoteButton.setOnAction(event -> {
 			vote();
 		});
@@ -148,6 +151,13 @@ public class QuestionView extends AnchorPane {
 			banAuthor();
 		});
 
+//		this.setOnMouseClicked(event -> {
+//			this.dropDown.setOpacity(1.0);
+//		});
+//
+//		this.setOnMouseReleased(event -> {
+//			this.dropDown.setOpacity(0.0);
+//		});
 
 		this.getChildren().addAll(this.outerGridPane, this.menuBar);
 	}
