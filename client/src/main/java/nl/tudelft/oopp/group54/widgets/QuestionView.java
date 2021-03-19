@@ -5,7 +5,12 @@ import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.models.QuestionModel;
+import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
+
+import java.io.IOException;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.layout.AnchorPane;
@@ -181,7 +186,19 @@ public class QuestionView extends AnchorPane {
 	}
 	
 	private void markAnswered() {
-		System.out.println("mark question " + questionId + " answered");
+		 PostAnswerResponse response = null;
+
+	      try {
+	          response = ServerCommunication.postAnswer(this.questionId, "");
+	      } catch (IOException e) {
+	          e.printStackTrace();
+	      } catch (InterruptedException e) {
+	          e.printStackTrace();
+	      }
+
+	      if (!response.getSuccess()) {
+	    	  System.out.println(response.getMessage());
+	      }
 	}
 	
 	private void answerWithText() {

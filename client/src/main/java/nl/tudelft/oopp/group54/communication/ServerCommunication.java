@@ -7,10 +7,12 @@ import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.models.requestentities.CreateLectureRequest;
 import nl.tudelft.oopp.group54.models.requestentities.GetAllQuestionsRequest;
 import nl.tudelft.oopp.group54.models.requestentities.JoinLectureRequest;
+import nl.tudelft.oopp.group54.models.requestentities.PostAnswerRequest;
 import nl.tudelft.oopp.group54.models.requestentities.PostQuestionRequest;
 import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
 
 
@@ -77,8 +79,6 @@ public class ServerCommunication {
     	String pqrJson = objectMapper.writeValueAsString(pqr);
     	
     	
-    	System.out.println("sent: " + pqrJson);
-    	
     	HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(pqrJson))
                 .header("content-type", "application/json")
@@ -90,8 +90,6 @@ public class ServerCommunication {
         if (response.statusCode() != 200) {
             System.out.println("Status: " + response.statusCode());
         }
-        
-        System.out.println("recieved: " + response.body());
     	
     	return objectMapper.readValue(response.body(), PostQuestionResponse.class);
     }
@@ -111,5 +109,26 @@ public class ServerCommunication {
         
 
     	return objectMapper.readValue(response.body(), GetAllQuestionsResponse.class);
+    }
+    
+    public static PostAnswerResponse postAnswer(String questionId, String answerText) throws IOException, InterruptedException {
+    	
+    	PostAnswerRequest par = new PostAnswerRequest(ds.getUserId().toString(), answerText);
+    	String parJson = objectMapper.writeValueAsString(par);
+    	
+    	
+    	HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(parJson))
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint()+"/lectures/" + ds.getLectureId() + "/questions/" + questionId + "/answer"))
+                .build();
+    	
+    	HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+    	
+    	return objectMapper.readValue(response.body(), PostAnswerResponse.class);
     }
 }
