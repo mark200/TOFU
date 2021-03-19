@@ -49,7 +49,7 @@ public class UserKey implements Serializable, Comparable {
      * Returns the Identification Number of the User
      * @return
      */
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

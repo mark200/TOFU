@@ -41,11 +41,11 @@ public class LectureServiceImpl implements LectureService {
         Date currentTime = new Date();
 
         // if start time is before the current time
-        if (startTime.before(currentTime)) {
-            toBeReturned.put("success", false);
-            toBeReturned.put("message", "Lecture start time was unacceptable");
-            return toBeReturned;
-        }
+//        if (startTime.before(currentTime)) {
+//            toBeReturned.put("success", false);
+//            toBeReturned.put("message", "Lecture start time was unacceptable");
+//            return toBeReturned;
+//        }
 
         // if start time is null
         if (startTime == null) {
