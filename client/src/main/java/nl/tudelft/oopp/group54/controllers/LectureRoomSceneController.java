@@ -77,6 +77,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
   
   public void askButtonClicked() {
 	  postQuestion();
+	  this.refreshButtonClickedAfter();
   }
   
   public void keyPressed(KeyEvent event) {
@@ -121,13 +122,36 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     	  this.ds.setCurrentUnansweredQuestionViews(null);
     	  this.ds.setCurrentAnsweredQuestionViews(null);
     	  for(QuestionModel question : response.getAnswered()){
-    	      this.ds.addAnsweredQuestion(question);
+    	      this.ds.addAnsweredQuestion(question, this);
     	  }
     	  for(QuestionModel question : response.getUnanswered()){
-    	      this.ds.addUnansweredQuestion(question);
+    	      this.ds.addUnansweredQuestion(question, this);
     	  }
       }
   }
+
+    public void refreshButtonClickedAfter() {
+        GetAllQuestionsResponse response = null;
+
+        try {
+            response = ServerCommunication.getAllQuestions();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if (response.getSuccess()) {
+            this.ds.setCurrentUnansweredQuestionViews(null);
+            this.ds.setCurrentAnsweredQuestionViews(null);
+            for(QuestionModel question : response.getAnswered()){
+                this.ds.addAnsweredQuestion(question, this);
+            }
+            for(QuestionModel question : response.getUnanswered()){
+                this.ds.addUnansweredQuestion(question, this);
+            }
+        }
+    }
 
   public void toggleFeedbackPanelVisibility () {
     boolean vis = !this.feedbackMenu.isVisible();

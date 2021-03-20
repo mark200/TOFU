@@ -163,6 +163,16 @@ public class QuestionServiceImplementation implements QuestionService {
         Optional<Question> questionToBeDeleted = questionRepository.findById(new QuestionKey(questionId, lectureId));
         Optional<User> authorOfTheDeletionRequest = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
 
+        Integer requestAuthorLectureId = authorOfTheDeletionRequest.get().getKey().getLecture_id();
+        Integer questionAuthorLectureId = questionToBeDeleted.get().getPrimaryKey().getLecture_id();
+
+        // If the lectures of user and question do not match.
+        if (!requestAuthorLectureId.equals(questionAuthorLectureId)) {
+            status.put("success", false);
+            status.put("message", "The question in different lecture can't be deleted!");
+            return status;
+        }
+
         if (questionToBeDeleted.isEmpty()) {
             status.put("success", false);
             status.put("message", "Unrecognized question. Incorrect combination of lecture and question ids");
@@ -177,26 +187,17 @@ public class QuestionServiceImplementation implements QuestionService {
         Integer requestAuthorId = authorOfTheDeletionRequest.get().getKey().getId();
         Integer questionAuthorId = questionToBeDeleted.get().getStudent_id();
         Integer requestAuthorRole = authorOfTheDeletionRequest.get().getRoleID();
-        Integer requestAuthorLectureId = authorOfTheDeletionRequest.get().getKey().getLecture_id();
-        Integer questionAuthorLectureId = questionToBeDeleted.get().getPrimaryKey().getLecture_id();
 
-        // 1 - student
-        // 2 - lecturer
-        // 3 - moderator
+        // 1 - lecturer
+        // 2 - moderator
+        // 3 - student
 
-
-        // If the lectures of user and question do not match.
-        if (!requestAuthorLectureId.equals(questionAuthorLectureId)) {
-            status.put("success", false);
-            status.put("message", "The question in different lecture can't be deleted!");
-            return status;
-        }
 
         // If the user who made the request to delete question is not the owner of the question,
         // then delete question only if the user who sent delete request is a moderator/lecturer.
         if (!requestAuthorId.equals(questionAuthorId)) {
             // If request was made by user then he is not authorized to delete other's questions
-            if (requestAuthorRole.equals(1)) {
+            if (requestAuthorRole.equals(3)) {
                 status.put("code", "401 UNAUTHORIZED");
                 status.put("success", false);
                 status.put("message", "You are not authorized to delete this question!");
@@ -204,12 +205,13 @@ public class QuestionServiceImplementation implements QuestionService {
             }
 
             // If it was made by moderator or lecturer
-            if (requestAuthorRole.equals(2) || requestAuthorRole.equals(3)) {
+            if (requestAuthorRole.equals(2) || requestAuthorRole.equals(1)) {
 
                 try {
                     questionRepository.delete(questionToBeDeleted.get());
                     status.put("success", true);
                     status.put("questionId", questionToBeDeleted.get().getPrimaryKey().getId());
+                    status.put("message", "message was deleted successfully!");
                 } catch (Exception e) {
                     status.put("success", false);
                     status.put("message", e.toString());
