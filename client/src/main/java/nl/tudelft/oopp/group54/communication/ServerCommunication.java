@@ -4,16 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nl.tudelft.oopp.group54.Datastore;
-import nl.tudelft.oopp.group54.models.requestentities.CreateLectureRequest;
-import nl.tudelft.oopp.group54.models.requestentities.GetAllQuestionsRequest;
-import nl.tudelft.oopp.group54.models.requestentities.JoinLectureRequest;
-import nl.tudelft.oopp.group54.models.requestentities.PostAnswerRequest;
-import nl.tudelft.oopp.group54.models.requestentities.PostQuestionRequest;
-import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
-import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
-import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
-import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
-import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
+import nl.tudelft.oopp.group54.models.requestentities.*;
+import nl.tudelft.oopp.group54.models.responseentities.*;
 
 
 import java.io.IOException;
@@ -130,5 +122,24 @@ public class ServerCommunication {
         }
     	
     	return objectMapper.readValue(response.body(), PostAnswerResponse.class);
+    }
+
+    public static VoteResponse voteOnQuestion(Integer questionId) throws IOException, InterruptedException {
+        VoteRequest vreq = new VoteRequest(ds.getUserId().toString(), questionId);
+        String vreqJson = objectMapper.writeValueAsString(vreq);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(vreqJson))
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint()+"/lectures/" + ds.getLectureId() + "/questions/" + questionId + "/votes"))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), VoteResponse.class);
     }
 }

@@ -31,4 +31,9 @@ public class VoteRequest implements Serializable {
     public void setQuestionId(Integer questionId) {
         this.questionId = questionId;
     }
+
+    @Override
+    public String toString() {
+        return "VoteRequest [userId=" + userId + ", questionId=" + questionId + ", isUpvote=" + isUpvote + "]";
+    }
 }

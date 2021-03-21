@@ -26,4 +26,8 @@ public class VoteResponse implements Serializable {
     public void setMessage(String message) {
         this.message = message;
     }
+    @Override
+    public String toString() {
+        return "VoteResponse [success=" + success + ", message=" + message + "]";
+    }
 }
