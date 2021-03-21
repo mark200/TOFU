@@ -123,7 +123,7 @@ public class QuestionServiceImplementation implements QuestionService {
 
         String userName = foundUser.get().getName();
 
-        List<Question> allQuestions = questionRepository.findAll();
+        List<Question> allQuestions = questionRepository.findByLectureId(lectureId);
 
         List<Map<String, Object>> answeredQuestions = allQuestions.stream()
                 .filter(x -> x.getAnswered() == true)

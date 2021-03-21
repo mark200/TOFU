@@ -5,8 +5,9 @@ import com.sun.javafx.collections.ImmutableObservableList;
 import nl.tudelft.oopp.group54.models.QuestionModel;
 import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
+import nl.tudelft.oopp.group54.widgets.AnsweredQuestionView;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
-
+import nl.tudelft.oopp.group54.widgets.UnansweredQuestionView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -66,12 +67,12 @@ public class Datastore {
   }
 
   public void addUnansweredQuestion(QuestionModel question){
-    QuestionView q = new QuestionView(question.getQuestionText(), question.getQuestionId(), question.getUserName());
+    QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(), question.getUserName());
     this.currentUnansweredQuestionViews.add(q);
   }
 
   public void addAnsweredQuestion(QuestionModel question){
-	QuestionView q = new QuestionView(question.getQuestionText(), question.getQuestionId(),question.getUserName());
+	QuestionView q = new AnsweredQuestionView(question.getQuestionText(), question.getQuestionId(),question.getUserName());
     this.currentAnsweredQuestionViews.add(q);
   }
 
