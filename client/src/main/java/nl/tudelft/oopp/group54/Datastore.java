@@ -21,6 +21,7 @@ public class Datastore {
   
   Long userId = 0L;
   Long lectureId = 0L;
+  Long userIp = 0L;
 
   private Datastore() {
     this.currentUnansweredQuestionViews = FXCollections.observableArrayList();
@@ -98,5 +99,10 @@ public class Datastore {
   public Long getUserId() {
 	  return userId;
   }
-  
+
+  public Long getUserIp() { return userIp; }
+
+  public void setUserIp(Long userIp) { this.userIp = userIp; }
+
+
 }

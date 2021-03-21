@@ -45,7 +45,16 @@ public class Question {
 
     }
 
-
+    /**
+     * Create a new Question instance
+     * @param primaryKey
+     * @param student_id
+     * @param student_ip
+     * @param content
+     * @param vote_counter
+     * @param answered
+     * @param created_at
+     */
     public Question(QuestionKey primaryKey, @NotNull Integer student_id, @NotNull String student_ip, @NotNull String content, Integer vote_counter, @NotNull Boolean answered, @NotNull Date created_at) {
         this.primaryKey = primaryKey;
         this.student_id = student_id;
@@ -56,23 +65,7 @@ public class Question {
         this.created_at = created_at;
     }
 
-    /**
-     * Create a new Question instance
-     * @param primaryKey
-     * @param student_id
-     * @param content
-     * @param vote_counter
-     * @param answered
-     * @param created_at
-     */
-    public Question(QuestionKey primaryKey, @NotNull Integer student_id, @NotNull String content, Integer vote_counter, @NotNull Boolean answered, @NotNull Date created_at) {
-        this.primaryKey = primaryKey;
-        this.student_id = student_id;
-        this.content = content;
-        this.vote_counter = vote_counter;
-        this.answered = answered;
-        this.created_at = created_at;
-    }
+
 
     public QuestionKey getPrimaryKey() {
         return primaryKey;

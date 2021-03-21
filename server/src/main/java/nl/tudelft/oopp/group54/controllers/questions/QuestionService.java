@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.List;
 
 public interface QuestionService {
-    Map<String, Object> postQuestion(Integer lectureId, String userId, String questionText);
+    Map<String, Object> postQuestion(Integer lectureId, String userId, String questionText, String userIp);
 
     List<Question> getAllQuestions(Long lectureId, String userId);
 }

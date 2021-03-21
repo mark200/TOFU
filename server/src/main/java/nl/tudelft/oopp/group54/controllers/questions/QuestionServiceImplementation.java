@@ -27,7 +27,7 @@ public class QuestionServiceImplementation implements QuestionService {
      * @return status of the request
      */
     @Override
-    public Map<String, Object> postQuestion(Integer lectureId, String userId, String questionText) {
+    public Map<String, Object> postQuestion(Integer lectureId, String userId, String userIp, String questionText) {
         Map<String, Object> status = new TreeMap<>();
 
         if (lectureId == null) {
@@ -39,6 +39,12 @@ public class QuestionServiceImplementation implements QuestionService {
         if (userId == null) {
             status.put("success", false);
             status.put("message", "UserID cannot be null!");
+            return status;
+        }
+
+        if (userIp == null) {
+            status.put("success", false);
+            status.put("message", "UserIP cannot be null!");
             return status;
         }
 

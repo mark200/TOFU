@@ -30,7 +30,7 @@ public class QuestionController {
 
         boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
                 requestPayload,
-                Arrays.asList("userId", "questionText")
+                Arrays.asList("userId", "questionText", "UserIp")
         );
 
         if(!containsNecessaryData){
@@ -38,17 +38,19 @@ public class QuestionController {
             Map<String, Object> toBeReturned = new TreeMap<>();
             toBeReturned.put("success", "false");
             toBeReturned.put("message", "Expected lectureId," +
-                    " userId and question Text to be provided");
+                    " userId, question Text and userIp to be provided");
 
             return toBeReturned;
         }
 
         String userId;
         String questionText;
+        String userIp;
 
         try {
             userId = (String) requestPayload.get("userId");
             questionText = (String) requestPayload.get("questionText");
+            userIp = (String) requestPayload.get("userIp");
         } catch (Exception e){
             Map<String, Object> toBeReturned = new TreeMap<>();
             toBeReturned.put("success", "false");
@@ -57,7 +59,7 @@ public class QuestionController {
             return toBeReturned;
         }
 
-        return questionService.postQuestion(lectureId, userId, questionText);
+        return questionService.postQuestion(lectureId, userId, questionText, userIp);
     }
 
 

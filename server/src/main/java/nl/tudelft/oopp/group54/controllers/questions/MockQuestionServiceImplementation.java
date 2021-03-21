@@ -22,12 +22,12 @@ public class MockQuestionServiceImplementation implements QuestionService {
    * @return status of the request
    */
   @Override
-  public Map<String, Object> postQuestion(Integer lectureId, String userId, String questionText) {
+  public Map<String, Object> postQuestion(Integer lectureId, String userId, String questionText, String userIp) {
 
     Map<String, Object> status = new TreeMap<>();
     QuestionKey mockQuestionKey = new QuestionKey(123, 123);
 
-    Question mockQuestion = new Question(mockQuestionKey, 13, questionText, 0, false, new Date());
+    Question mockQuestion = new Question(mockQuestionKey, 13, "192.158.1.38", questionText, 0, false, new Date());
     questionMap.put(mockQuestionKey, mockQuestion);
 
     status.put("success", true);
