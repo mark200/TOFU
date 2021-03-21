@@ -80,10 +80,7 @@ public class Answer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Answer answer = (Answer) o;
-        return getPrimaryKey().equals(answer.getPrimaryKey()) &&
-                getAnswer_text().equals(answer.getAnswer_text()) &&
-                getQuestion_id().equals(answer.getQuestion_id()) &&
-                getModerator_id().equals(answer.getModerator_id());
+        return getPrimaryKey().equals(answer.getPrimaryKey());
     }
 
     @Override
