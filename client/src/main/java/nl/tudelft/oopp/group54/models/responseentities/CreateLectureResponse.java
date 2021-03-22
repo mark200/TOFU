@@ -6,37 +6,37 @@ public class CreateLectureResponse implements Serializable {
 
   private Boolean success;
 
-  private Integer lectureID;
+  private Integer lectureId;
 
-  private String lecturerID;
-  private String studentID;
-  private String moderatorID;
+  private String lecturerId;
+  private String studentId;
+  private String moderatorId;
 
   private String message;
 
   public CreateLectureResponse() {
     this.success = false;
-    this.lectureID = 0;
+    this.lectureId = 0;
 
-    this.lecturerID = "";
-    this.studentID = "";
-    this.moderatorID = "";
+    this.lecturerId = "";
+    this.studentId = "";
+    this.moderatorId = "";
 
     this.message = "";
   }
 
   public CreateLectureResponse(Boolean success,
-                               Integer lecturerID,
-                               String lectureID,
-                               String studentID,
-                               String moderatorID,
+                               Integer lecturerId,
+                               String lectureId,
+                               String studentId,
+                               String moderatorId,
                                String message) {
     this.success = success;
-    this.lectureID = lecturerID;
+    this.lectureId = lecturerId;
 
-    this.lecturerID = lectureID;
-    this.studentID = studentID;
-    this.moderatorID = moderatorID;
+    this.lecturerId = lectureId;
+    this.studentId = studentId;
+    this.moderatorId = moderatorId;
 
     this.message = message;
   }
@@ -52,28 +52,28 @@ public class CreateLectureResponse implements Serializable {
     this.success = success;
   }
 
-  public Integer getLectureID() {
-    return lectureID;
+  public Integer getLectureId() {
+    return lectureId;
   }
 
-  public void setLectureID(Integer lectureID) {
-    this.lectureID = lectureID;
+  public void setLectureId(Integer lectureId) {
+    this.lectureId = lectureId;
   }
 
-  public String getStudentID() {
-    return studentID;
+  public String getStudentId() {
+    return studentId;
   }
 
-  public void setStudentID(String studentID) {
-    this.studentID = studentID;
+  public void setStudentId(String studentId) {
+    this.studentId = studentId;
   }
 
-  public String getModeratorID() {
-    return moderatorID;
+  public String getModeratorId() {
+    return moderatorId;
   }
 
-  public void setModeratorID(String moderatorID) {
-    this.moderatorID = moderatorID;
+  public void setModeratorId(String moderatorId) {
+    this.moderatorId = moderatorId;
   }
 
   public String getMessage() {
@@ -84,22 +84,22 @@ public class CreateLectureResponse implements Serializable {
     this.message = message;
   }
 
-  public String getLecturerID() {
-    return lecturerID;
+  public String getLecturerId() {
+    return lecturerId;
   }
 
-  public void setLecturerID(String lecturerID) {
-    this.lecturerID = lecturerID;
+  public void setLecturerId(String lecturerId) {
+    this.lecturerId = lecturerId;
   }
 
   @Override
   public String toString() {
     return "CreateLectureResponse{" +
             "success=" + success +
-            ", lectureID=" + lectureID +
-            ", lecturerID=" + lecturerID +
-            ", studentID=" + studentID +
-            ", moderatorID=" + moderatorID +
+            ", lectureId=" + lectureId +
+            ", lecturerId=" + lecturerId +
+            ", studentId=" + studentId +
+            ", moderatorId=" + moderatorId +
             ", message='" + message + '\'' +
             '}';
   }

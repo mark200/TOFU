@@ -39,18 +39,23 @@ public class LectureServiceImpl implements LectureService {
         //FIXME: There might be a bug if lecture needs to be created instantly
         Map<String, Object> toBeReturned = new TreeMap<>();
         Date currentTime = new Date();
-
-        // if start time is before the current time
-//        if (startTime.before(currentTime)) {
-//            toBeReturned.put("success", false);
-//            toBeReturned.put("message", "Lecture start time was unacceptable");
-//            return toBeReturned;
-//        }
-
+        
         // if start time is null
         if (startTime == null) {
             toBeReturned.put("success", false);
             toBeReturned.put("message", "Null is not acceptable as a start time");
+            return toBeReturned;
+        }
+        
+        //"create instant" functionality
+        if(startTime.equals(new Date(0))) {
+        	startTime = currentTime;
+        }
+        
+        // if start time is before the current time
+        if (startTime.before(currentTime)) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "Lecture start time was unacceptable");
             return toBeReturned;
         }
 
@@ -88,10 +93,10 @@ public class LectureServiceImpl implements LectureService {
 
         // FIXME the order of those IDs should be fixed
         toBeReturned.put("success", true);
-        toBeReturned.put("lectureID", newLecture.getId());
-        toBeReturned.put("lecturerID", studentId);
-        toBeReturned.put("studentID", moderatorId);
-        toBeReturned.put("moderatorID", lecturerId);
+        toBeReturned.put("lectureId", newLecture.getId());
+        toBeReturned.put("lecturerId", studentId);
+        toBeReturned.put("studentId", moderatorId);
+        toBeReturned.put("moderatorId", lecturerId);
 
         return toBeReturned;
     }
