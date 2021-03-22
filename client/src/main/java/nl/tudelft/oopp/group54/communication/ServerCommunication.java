@@ -5,7 +5,14 @@ import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.models.requestentities.CreateLectureRequest;
 import nl.tudelft.oopp.group54.models.requestentities.DeleteQuestionRequest;
 import nl.tudelft.oopp.group54.models.requestentities.JoinLectureRequest;
+import nl.tudelft.oopp.group54.models.requestentities.PostAnswerRequest;
 import nl.tudelft.oopp.group54.models.requestentities.PostQuestionRequest;
+import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
+import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
+import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
+
 import nl.tudelft.oopp.group54.models.responseentities.*;
 
 import java.io.IOException;
@@ -18,7 +25,7 @@ public class ServerCommunication {
 
     private static HttpClient client = HttpClient.newBuilder().build();
     private static Datastore ds = Datastore.getInstance();
-    //    private static RequestBuilder requestBuilder = new RequestBuilder();
+//    private static RequestBuilder requestBuilder = new RequestBuilder();
     private static ObjectMapper objectMapper = new ObjectMapper();
 
 
@@ -66,12 +73,9 @@ public class ServerCommunication {
     }
 
     public static PostQuestionResponse postQuestion(String questionText) throws IOException, InterruptedException {
-
-        PostQuestionRequest pqr = new PostQuestionRequest(questionText, ds.getUserId().toString());
-        String pqrJson = objectMapper.writeValueAsString(pqr);
-
-
-        System.out.println("sent: " + pqrJson);
+    	
+    	PostQuestionRequest pqr = new PostQuestionRequest(questionText, ds.getUserId().toString());
+    	String pqrJson = objectMapper.writeValueAsString(pqr);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(pqrJson))
@@ -85,9 +89,7 @@ public class ServerCommunication {
             System.out.println("Status: " + response.statusCode());
         }
 
-        System.out.println("recieved: " + response.body());
-
-        return objectMapper.readValue(response.body(), PostQuestionResponse.class);
+    	return objectMapper.readValue(response.body(), PostQuestionResponse.class);
     }
 
     public static GetAllQuestionsResponse getAllQuestions() throws IOException, InterruptedException {
@@ -105,6 +107,27 @@ public class ServerCommunication {
 
 
         return objectMapper.readValue(response.body(), GetAllQuestionsResponse.class);
+    }
+
+    public static PostAnswerResponse postAnswer(String questionId, String answerText) throws IOException, InterruptedException {
+
+    	PostAnswerRequest par = new PostAnswerRequest(ds.getUserId().toString(), answerText);
+    	String parJson = objectMapper.writeValueAsString(par);
+
+
+    	HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(parJson))
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint()+"/lectures/" + ds.getLectureId() + "/questions/" + questionId + "/answer"))
+                .build();
+
+    	HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+    	return objectMapper.readValue(response.body(), PostAnswerResponse.class);
     }
 
     public static DeleteQuestionResponse deleteQuestion(String questionId) throws IOException, InterruptedException {
