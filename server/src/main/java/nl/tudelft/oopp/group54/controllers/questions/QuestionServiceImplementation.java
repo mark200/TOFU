@@ -121,18 +121,16 @@ public class QuestionServiceImplementation implements QuestionService {
             return toBeReturned;
         }
 
-        String userName = foundUser.get().getName();
-
         List<Question> allQuestions = questionRepository.findByLectureId(lectureId);
 
         List<Map<String, Object>> answeredQuestions = allQuestions.stream()
                 .filter(x -> x.getAnswered() == true)
-                .map(x -> transformQuestion(x, userName))
+                .map(x -> transformQuestion(x, lectureId))
                 .collect(Collectors.toList());
 
         List<Map<String, Object>> unAnsweredQuestions = allQuestions.stream()
                 .filter(x -> x.getAnswered() == false)
-                .map(x -> transformQuestion(x, userName))
+                .map(x -> transformQuestion(x, lectureId))
                 .collect(Collectors.toList());
 
         toBeReturned.put("answered", answeredQuestions);
@@ -244,15 +242,17 @@ public class QuestionServiceImplementation implements QuestionService {
      * @param q an object of type Question
      * @return A JSON representation of the object
      */
-    public Map<String, Object> transformQuestion(Question q, String userName) {
+    public Map<String, Object> transformQuestion(Question q, int lecture_id) {
         if (q == null) {
             return null;
         }
+        
+        Optional<User> author = userRepository.findById(new UserKey(q.getStudent_id(), lecture_id));
 
         Map<String, Object> toBeReturned = new TreeMap<>();
         toBeReturned.put("questionId", q.getPrimaryKey().getId());
         toBeReturned.put("userId", q.getStudent_id());
-        toBeReturned.put("userName", userName);
+        toBeReturned.put("userName", author.get().getName());
         toBeReturned.put("questionText", q.getContent());
         toBeReturned.put("score", q.getVote_counter());
         toBeReturned.put("answered", q.getAnswered());
