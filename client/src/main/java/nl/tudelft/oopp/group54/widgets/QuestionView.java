@@ -198,7 +198,7 @@ public abstract class QuestionView extends AnchorPane {
 	private void vote() {
 		VoteResponse response = null;
 		try {
-			response = ServerCommunication.voteOnQuestion(Integer.parseInt(questionId));
+			response = ServerCommunication.voteOnQuestion(Integer.valueOf(questionId));
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
