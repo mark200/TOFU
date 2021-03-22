@@ -61,9 +61,10 @@ public class QuestionServiceImplementation implements QuestionService {
             return status;
         }
 
+        QuestionKey newQuestionKey = new QuestionKey(new Random().nextInt(), lectureId);
 
         Question newQuestion = new Question();
-        newQuestion.setLecture_id(lectureId);
+        newQuestion.setPrimaryKey(newQuestionKey);
         newQuestion.setStudent_id(findUserRow.get().getKey().getId());
         newQuestion.setContent(questionText);
         newQuestion.setCreated_at(new Date());
@@ -73,7 +74,7 @@ public class QuestionServiceImplementation implements QuestionService {
         try {
             questionRepository.save(newQuestion);
             status.put("success", true);
-            status.put("questionID", newQuestion.getId());
+            status.put("questionID", newQuestion.getPrimaryKey().getId());
         } catch (Exception e) {
             status.put("success", false);
             status.put("message", e.toString());
@@ -161,7 +162,7 @@ public class QuestionServiceImplementation implements QuestionService {
         Optional<User> authorOfTheDeletionRequest = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
 
         Integer requestAuthorLectureId = authorOfTheDeletionRequest.get().getKey().getLecture_id();
-        Integer questionAuthorLectureId = questionToBeDeleted.get().getLecture_id();
+        Integer questionAuthorLectureId = questionToBeDeleted.get().getPrimaryKey().getLecture_id();
 
         // If the lectures of user and question do not match.
         if (!requestAuthorLectureId.equals(questionAuthorLectureId)) {
@@ -207,7 +208,7 @@ public class QuestionServiceImplementation implements QuestionService {
                 try {
                     questionRepository.delete(questionToBeDeleted.get());
                     status.put("success", true);
-                    status.put("questionId", questionToBeDeleted.get().getId());
+                    status.put("questionId", questionToBeDeleted.get().getPrimaryKey().getId());
                     status.put("message", "message was deleted successfully!");
                 } catch (Exception e) {
                     status.put("success", false);
@@ -226,7 +227,7 @@ public class QuestionServiceImplementation implements QuestionService {
         try {
             questionRepository.delete(questionToBeDeleted.get());
             status.put("success", true);
-            status.put("questionId", questionToBeDeleted.get().getId());
+            status.put("questionId", questionToBeDeleted.get().getPrimaryKey().getId());
         } catch (Exception e) {
             status.put("success", false);
             status.put("message", e.toString());
@@ -249,7 +250,7 @@ public class QuestionServiceImplementation implements QuestionService {
         Optional<User> author = userRepository.findById(new UserKey(q.getStudent_id(), lecture_id));
 
         Map<String, Object> toBeReturned = new TreeMap<>();
-        toBeReturned.put("questionId", q.getId());
+        toBeReturned.put("questionId", q.getPrimaryKey().getId());
         toBeReturned.put("userId", q.getStudent_id());
         toBeReturned.put("userName", author.get().getName());
         toBeReturned.put("questionText", q.getContent());
