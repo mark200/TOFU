@@ -39,10 +39,17 @@ public class MockQuestionServiceImplementation implements QuestionService {
   }
 
   @Override
-  public List<Question> getAllQuestions(Long lectureId, String userId) {
+  public Map<String, Object> getAllQuestions(Integer lectureId, String userId) {
 
-    List<Question> questions = new ArrayList<>(questionMap.values());
+    // List<Question> questions = new ArrayList<>(questionMap.values());
 
-    return questions;
+    // return questions;
+
+    return null;
+  }
+
+  @Override
+  public Map<String, Object> deleteQuestion(Integer lectureId, Integer questionId, String userId) {
+    return null;
   }
 }
