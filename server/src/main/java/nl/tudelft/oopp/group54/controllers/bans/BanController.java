@@ -23,7 +23,7 @@ public class BanController {
                                               @RequestBody Map<String, Object> requestPayload) {
         boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
                 requestPayload,
-                Arrays.asList("userIp")git add
+                Arrays.asList("userIp")
         );
 
         if (!containsNecessaryData) {
