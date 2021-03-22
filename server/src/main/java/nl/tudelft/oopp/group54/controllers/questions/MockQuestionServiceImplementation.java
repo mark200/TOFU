@@ -27,7 +27,7 @@ public class MockQuestionServiceImplementation implements QuestionService {
         Map<String, Object> status = new TreeMap<>();
         QuestionKey mockQuestionKey = new QuestionKey(123, 123);
 
-        Question mockQuestion = new Question(mockQuestionKey, 13, questionText, 0, false, new Date());
+        Question mockQuestion = new Question(123, 13, questionText, 0, false, new Date());
         questionMap.put(mockQuestionKey, mockQuestion);
 
         status.put("success", true);

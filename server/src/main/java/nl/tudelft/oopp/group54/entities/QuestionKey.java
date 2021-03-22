@@ -7,13 +7,11 @@ import javax.persistence.GenerationType;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Embeddable
-public class QuestionKey implements Serializable, Comparable {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
 
-    @Column(name = "lecture_id", nullable = false)
+public class QuestionKey implements Serializable, Comparable {
+	
+    
+    private Integer id;
     private Integer lecture_id;
 
     public QuestionKey(Integer id, Integer lecture_id) {

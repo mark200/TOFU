@@ -1,6 +1,10 @@
 package nl.tudelft.oopp.group54.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -11,9 +15,17 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Questions")
+@IdClass(QuestionKey.class)
 public class Question {
-    @EmbeddedId
-    private QuestionKey primaryKey;
+	
+    @Id
+    @Column(name = "id", columnDefinition = "SERIAL")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+    
+    @Id
+    @Column(name = "lecture_id", columnDefinition = "INT NOT NULL")
+    private Integer lecture_id;
 
     @Column(name = "student_id", columnDefinition = "INT NOT NULL")
     @NotNull
@@ -44,24 +56,28 @@ public class Question {
 
     /**
      * Create a new Question instance
-     * @param primaryKey
+     * @param lecture_id
      * @param student_id
      * @param content
      * @param vote_counter
      * @param answered
      * @param created_at
      */
-    public Question(QuestionKey primaryKey, @NotNull Integer student_id, @NotNull String content, Integer vote_counter, @NotNull Boolean answered, @NotNull Date created_at) {
-        this.primaryKey = primaryKey;
+    public Question(@NotNull Integer lecture_id, @NotNull Integer student_id, @NotNull String content, Integer vote_counter, @NotNull Boolean answered, @NotNull Date created_at) {
+    	this.lecture_id = lecture_id;
         this.student_id = student_id;
         this.content = content;
         this.vote_counter = vote_counter;
         this.answered = answered;
         this.created_at = created_at;
     }
-
-    public QuestionKey getPrimaryKey() {
-        return primaryKey;
+    
+    public Integer getId() {
+		return id;
+	}
+    
+    public Integer getLecture_id() {
+        return lecture_id;
     }
 
     public Integer getStudent_id() {
@@ -87,9 +103,13 @@ public class Question {
     public String getAnswerText() {
         return answerText;
     }
-
-    public void setPrimaryKey(QuestionKey primaryKey) {
-        this.primaryKey = primaryKey;
+    
+    public void setId(Integer id) {
+    	this.id = id;
+    }
+    
+    public void setLecture_id(Integer lecture_id) {
+    	this.lecture_id = lecture_id;
     }
 
     public void setStudent_id(Integer student_id) {
@@ -124,27 +144,12 @@ public class Question {
      * @return true if their primaryKey is equal, otherwise false.
      */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Question question = (Question) o;
-        return getPrimaryKey().equals(question.getPrimaryKey());
+    public boolean equals(Object obj) {
+    	if(!(obj instanceof Question)) return false;
+    	Question q = (Question)obj;
+    	return(id == q.getId() && lecture_id == q.getLecture_id());
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getPrimaryKey(), getStudent_id(), getContent(), getVote_counter(), getAnswered(), getCreated_at(), getAnswerText());
-    }
 
-    @Override
-    public String toString() {
-        return "Question{" +
-                "primaryKey=" + primaryKey +
-                ", student_id=" + student_id +
-                ", content='" + content + '\'' +
-                ", vote_counter=" + vote_counter +
-                ", answered=" + answered +
-                ", created_at=" + created_at +
-                '}';
-    }
+	
 }
