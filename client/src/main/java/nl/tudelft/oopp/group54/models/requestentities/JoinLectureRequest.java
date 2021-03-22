@@ -5,10 +5,10 @@ import java.io.Serializable;
 public class JoinLectureRequest implements Serializable {
 
   private String userName;
-  private Long lectureID;
-  private Long userID;
+  private Integer lectureID;
+  private String userID;
 
-  public JoinLectureRequest(String userName, Long lectureID, Long userID) {
+  public JoinLectureRequest(String userName, Integer lectureID, String userID) {
     this.userName = userName;
     this.lectureID = lectureID;
     this.userID = userID;
@@ -22,19 +22,19 @@ public class JoinLectureRequest implements Serializable {
     this.userName = userName;
   }
 
-  public Long getLectureID() {
+  public Integer getLectureID() {
     return lectureID;
   }
 
-  public void setLectureID(Long lectureID) {
+  public void setLectureID(Integer lectureID) {
     this.lectureID = lectureID;
   }
 
-  public Long getUserID() {
+  public String getUserID() {
     return userID;
   }
 
-  public void setUserID(Long userID) {
+  public void setUserID(String userID) {
     this.userID = userID;
   }
 

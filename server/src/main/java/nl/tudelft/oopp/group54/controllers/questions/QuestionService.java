@@ -1,15 +1,11 @@
 package nl.tudelft.oopp.group54.controllers.questions;
 
-import nl.tudelft.oopp.group54.entities.Question;
-
-import nl.tudelft.oopp.group54.entities.QuestionKey;
-import org.springframework.lang.Nullable;
-
 import java.util.Map;
-import java.util.List;
 
 public interface QuestionService {
     Map<String, Object> postQuestion(Integer lectureId, String userId, String questionText, String userIp);
 
-    List<Question> getAllQuestions(Long lectureId, String userId);
+    Map<String, Object> getAllQuestions(Integer lectureId, String userId);
+
+    Map<String, Object> deleteQuestion(Integer lectureId, Integer questionId, String userId);
 }

@@ -21,13 +21,13 @@ public class ModeratorController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> banStudentIP(@PathVariable("lectureID") Long lectureID,
-                                                  @RequestBody Map<String, Object> requestPayload) {
+                                            @RequestBody Map<String, Object> requestPayload) {
         boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
                 requestPayload,
                 Arrays.asList("userID")
         );
 
-        if(!containsNecessaryData) {
+        if (!containsNecessaryData) {
 
             // FIXME: This logic can be abstracted to an object that returns
             //  predefined errors. Better yet, we can have Error entities

@@ -23,7 +23,7 @@ public class User {
 
     @Column(name = "Role_id", columnDefinition = "INT NOT NULL")
     @NotNull
-    private int roleID;
+    private Integer roleID;
 
     public User() {
 
@@ -113,7 +113,7 @@ public class User {
      * Returns the role
      * @return
      */
-    public int getRoleID() {
+    public Integer getRoleID() {
         return roleID;
     }
 

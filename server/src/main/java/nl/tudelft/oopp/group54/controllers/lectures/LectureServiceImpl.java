@@ -2,6 +2,7 @@ package nl.tudelft.oopp.group54.controllers.lectures;
 
 import nl.tudelft.oopp.group54.entities.Lecture;
 import nl.tudelft.oopp.group54.entities.User;
+import nl.tudelft.oopp.group54.entities.UserKey;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,18 +39,23 @@ public class LectureServiceImpl implements LectureService {
         //FIXME: There might be a bug if lecture needs to be created instantly
         Map<String, Object> toBeReturned = new TreeMap<>();
         Date currentTime = new Date();
-
-        // if start time is before the current time
-        if (startTime.before(currentTime)) {
-            toBeReturned.put("success", false);
-            toBeReturned.put("message", "Lecture start time was unacceptable");
-            return toBeReturned;
-        }
-
+        
         // if start time is null
         if (startTime == null) {
             toBeReturned.put("success", false);
             toBeReturned.put("message", "Null is not acceptable as a start time");
+            return toBeReturned;
+        }
+        
+        //"create instant" functionality
+        if(startTime.equals(new Date(0))) {
+        	startTime = currentTime;
+        }
+        
+        // if start time is before the current time
+        if (startTime.before(currentTime)) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "Lecture start time was unacceptable");
             return toBeReturned;
         }
 
@@ -85,28 +91,107 @@ public class LectureServiceImpl implements LectureService {
                 Lecture(null, lectureName, startTime, studentId, moderatorId, lecturerId);
         repository.save(newLecture);
 
+        // FIXME the order of those IDs should be fixed
         toBeReturned.put("success", true);
-        toBeReturned.put("lectureID", studentId);
-        toBeReturned.put("studentID", moderatorId);
-        toBeReturned.put("moderatorID", lecturerId);
+        toBeReturned.put("lectureId", newLecture.getId());
+        toBeReturned.put("lecturerId", studentId);
+        toBeReturned.put("studentId", moderatorId);
+        toBeReturned.put("moderatorId", lecturerId);
 
         return toBeReturned;
     }
 
+    /**
+     * Creates a new User when joining the specified lecture
+     * and assigns them a role
+     * @param lectureId
+     * @param roleCode
+     * @param userName
+     * @return
+     */
     @Override
-    public Map<String, Object> joinOngoingLecture(Integer lectureId, Long joinId, String userName) {
+    public Map<String, Object> joinOngoingLecture(Integer lectureId, String roleCode, String userName) {
         Map<String, Object> toBeReturned = new TreeMap<>();
 
-        toBeReturned.put("success", true);
-        toBeReturned.put("userID", 123456);
-        toBeReturned.put("userName", userName);
-        toBeReturned.put("role", "Student");
+        if (lectureId == null) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "LectureId cannot be null.");
+            return toBeReturned;
+        }
+
+        if (roleCode == null) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "JoinId cannot be null.");
+            return toBeReturned;
+        }
+
+        if (userName == null) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "UserName cannot be null.");
+            return toBeReturned;
+        }
+
+        if (userName.length() > 40) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "UserName is unacceptable.");
+            return toBeReturned;
+        }
+
+        Optional<Lecture> foundLecture = repository.findById(lectureId);
+        Date timeNow = new Date();
+
+        // Lecture does not exist
+        if (foundLecture.isEmpty()) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "Lecture by this ID does not exist.");
+            return toBeReturned;
+        }
+
+        // Lecture has not started yet
+        if (foundLecture.get().getStartTime().compareTo(timeNow) > 0) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "The lecture has not started yet.");
+            return toBeReturned;
+        }
+
+        int usersWatchingLecture = userRepository.findAll().stream()
+                .filter(x -> x.getKey().getLecture_id() == lectureId.intValue())
+                .collect(Collectors.toList()).size();
+
+        User newUser = new User(new UserKey(usersWatchingLecture, lectureId), userName,"127.0.0.1",null,0);
+
+        // Determine role of student
+        if (foundLecture.get().getStudentJoinId().equals(roleCode)) {
+            newUser.setRoleID(1);
+        } else if (foundLecture.get().getLecturerJoinId().equals(roleCode)) {
+            newUser.setRoleID(2);
+        } else if (foundLecture.get().getModeratorJoinId().equals(roleCode)) {
+            newUser.setRoleID(3);
+        } else {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "Unrecognized roleCode/user ID.");
+            return toBeReturned;
+        }
+
+        userRepository.flush();
+
+        try {
+            userRepository.save(newUser);
+            toBeReturned.put("success", true);
+            toBeReturned.put("userID", newUser.getKey().getId());
+            toBeReturned.put("userName", newUser.getName());
+            toBeReturned.put("role", (newUser.getRoleID() == 1) ? "Student" : ((newUser.getRoleID() == 2) ? "Lecturer" : "Moderator"));
+        } catch (Exception e) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", e.toString());
+        }
 
         return toBeReturned;
     }
 
     /**
      * For now this method only returns the number of people watching the lecture
+     * (meaning only this new functionality is implemented)
      * @param lectureId
      * @return
      */

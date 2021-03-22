@@ -40,7 +40,6 @@ public class CopyLinkSceneController extends AbstractApplicationController {
   Toolkit toolkit = Toolkit.getDefaultToolkit();
   Clipboard clipboard = toolkit.getSystemClipboard();
 
-
   CreateLectureResponse createLectureResponse;
 
   @Override
@@ -71,7 +70,7 @@ public class CopyLinkSceneController extends AbstractApplicationController {
   private void joinLecture() {
 	  JoinLectureResponse response = null;
 	    try {
-	      response = ServerCommunication.joinLecture(usernameField.getCharacters().toString(), this.createLectureResponse.getLectureID(), this.createLectureResponse.getLecturerID());
+	      response = ServerCommunication.joinLecture(usernameField.getCharacters().toString(), this.createLectureResponse.getLectureId(), this.createLectureResponse.getLecturerId());
 	    } catch (Exception e) {
 	      e.printStackTrace();
 	      this.displayStatusMessage(e.getMessage());
@@ -80,13 +79,15 @@ public class CopyLinkSceneController extends AbstractApplicationController {
 	    if(response.getSuccess()) {
 	      this.ds.setJoinLectureResponse(response);
 	      this.ds.setUserId(response.getUserID());
-	      this.ds.setLectureId(this.createLectureResponse.getLectureID());
+	      this.ds.setLectureId(this.createLectureResponse.getLectureId());
 	      MainView.changeScene(ApplicationScene.LECTUREROOM, true);
-	    }
+	    } else {
+	      this.displayStatusMessage(response.getMessage());
+      }
   }
 
   public void copyLecturerLinkButtonClicked() {
-    String lecturerLink = "/j/" + this.createLectureResponse.getLectureID() + "/" + String.valueOf(this.createLectureResponse.getLecturerID());
+    String lecturerLink = "/j/" + this.createLectureResponse.getLectureId() + "/" + String.valueOf(this.createLectureResponse.getLecturerId());
     StringSelection strSel = new StringSelection(lecturerLink);
     clipboard.setContents(strSel, null);
     this.copyLecturerLinkClaimed = true;
@@ -94,7 +95,7 @@ public class CopyLinkSceneController extends AbstractApplicationController {
   }
 
   public void copyStudentLinkButtonClicked() {
-    String lecturerLink = "/j/" + this.createLectureResponse.getLectureID() + "/" + String.valueOf(this.createLectureResponse.getStudentID());
+    String lecturerLink = "/j/" + this.createLectureResponse.getLectureId() + "/" + String.valueOf(this.createLectureResponse.getStudentId());
     StringSelection strSel = new StringSelection(lecturerLink);
     clipboard.setContents(strSel, null);
     this.copyStudentLinkClaimed = true;
@@ -103,7 +104,7 @@ public class CopyLinkSceneController extends AbstractApplicationController {
   }
 
   public void copyModeratorLinkButtonClicked() {
-    String lecturerLink = "/j/" + this.createLectureResponse.getLectureID() + "/" + String.valueOf(this.createLectureResponse.getModeratorID());
+    String lecturerLink = "/j/" + this.createLectureResponse.getLectureId() + "/" + String.valueOf(this.createLectureResponse.getModeratorId());
     StringSelection strSel = new StringSelection(lecturerLink);
     clipboard.setContents(strSel, null);
     this.copyModeratorLinkClaimed = true;

@@ -52,7 +52,7 @@ public class LectureController {
         try {
             // Fixme: The Date constructor expects milliseconds. We should be able
             //   to differentiate between input given in milliseconds and seconds!
-            long startTimeTimestamp = (long) requestPayload.get("startTime");
+            long startTimeTimestamp = Long.parseLong(requestPayload.get("startTime").toString());
             startTime = new Date(startTimeTimestamp);
             lectureName = (String) requestPayload.get("lectureName");
 
@@ -70,11 +70,11 @@ public class LectureController {
     }
 
     @PostMapping(
-            value = "/j/{lectureID}/{userID}",
+            value = "/j/{lectureID}/{roleCode}",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> joinOngoingLecture(@PathVariable(value = "lectureID") Integer lectureID,
-                                                  @PathVariable(value = "userID") Long userID,
+                                                  @PathVariable(value = "roleCode") String roleCode,
                                                   @RequestBody Map<String, Object> requestPayload) {
 
         boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
@@ -100,7 +100,7 @@ public class LectureController {
             return toBeReturned;
         }
 
-        return lectureService.joinOngoingLecture(lectureID, userID, userName);
+        return lectureService.joinOngoingLecture(lectureID, roleCode, userName);
     }
 
     @GetMapping(

@@ -13,11 +13,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import static java.lang.Long.parseLong;
-
 public class JoinLectureSceneController extends AbstractApplicationController {
 
   @FXML
@@ -67,21 +62,22 @@ public class JoinLectureSceneController extends AbstractApplicationController {
     }
     
     String joinIdTextFieldString = joinIdTextFieldText.toString();
-    
-    
-    Long lectureId = Long.parseLong(joinIdTextFieldString.substring(3, 9));
-    Long joinId = Long.parseLong(joinIdTextFieldString.substring(10, 16));
-    
 
-    JoinLectureResponse response = null;
-    String userIp = null;
+    String[] textFieldParts = joinIdTextFieldString.split("/");
 
-    try {
-      userIp = InetAddress.getLocalHost().getHostAddress();
-    } catch (UnknownHostException e) {
-      e.printStackTrace();
+    Integer lectureId = 0;
+    String joinId = "";
+
+    for(int i = 0; i < textFieldParts.length; i++) {
+      if(textFieldParts[i].matches("-?\\d+")) {
+        lectureId = Integer.parseInt(textFieldParts[i]);
+      }
+      if(textFieldParts[i].matches(".{2,50}")) {
+        joinId = textFieldParts[i];
+      }
     }
 
+    JoinLectureResponse response = null;
     try {
       response = ServerCommunication.joinLecture(enterNameTextFieldText.toString(), lectureId, joinId);
     } catch (Exception e) {
@@ -90,14 +86,15 @@ public class JoinLectureSceneController extends AbstractApplicationController {
     }
 
     if(response.getSuccess()) {
+
+      System.out.println(response);
+
       this.ds.setJoinLectureResponse(response);
       this.ds.setUserId(response.getUserID());
       this.ds.setLectureId(lectureId);
-      this.ds.setUserIp(parseLong(userIp));
-      MainView.changeScene(ApplicationScene.COPYLINK, true);
+      MainView.changeScene(ApplicationScene.LECTUREROOM, true);
+    } else {
+      this.displayStatusMessage(response.getMessage());
     }
-
-
-    MainView.changeScene(ApplicationScene.LECTUREROOM, true);
   }
 }
