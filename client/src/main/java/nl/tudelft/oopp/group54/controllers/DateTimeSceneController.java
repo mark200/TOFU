@@ -174,7 +174,7 @@ public class DateTimeSceneController extends AbstractApplicationController {
   public void instantButtonClicked(){
 	  CharSequence lectureName = lectureNamePrompt.getCharacters();
 	  
-	  if(lectureName.isEmpty()) {
+	  if(lectureName.length() <= 0) {
 		  this.shakeWidget(this.lectureNamePrompt);
 		  this.displayStatusMessage("Please fill in the lecture name.");
 		  return;
