@@ -18,12 +18,12 @@ public class BanController {
     @PostMapping(value = "{lectureID}/questions/{questionID}/ban",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> answerQuestion(@PathVariable(value = "lectureID") Integer lectureId,
+    public Map<String, Object> banIp(@PathVariable(value = "lectureID") Integer lectureId,
                                               @PathVariable(value = "questionID") Integer questionId,
                                               @RequestBody Map<String, Object> requestPayload) {
         boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
                 requestPayload,
-                Arrays.asList("userIp")
+                Arrays.asList("userIp")git add
         );
 
         if (!containsNecessaryData) {

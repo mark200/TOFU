@@ -16,7 +16,7 @@ public class BanIpResponse implements Serializable {
         this.message = message;
     }
 
-    public boolean isSuccess() {
+    public boolean getSuccess() {
         return success;
     }
 
