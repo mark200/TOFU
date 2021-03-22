@@ -36,9 +36,12 @@ public class DateTimeSceneController extends AbstractApplicationController {
 
   @FXML
   TextField lectureNamePrompt;
+  
+  @FXML
+  Button instantButton;
 
   @FXML
-  Button confirmationButton;
+  Button scheduleButton;
 
   Datastore ds = Datastore.getInstance();
 
@@ -114,7 +117,7 @@ public class DateTimeSceneController extends AbstractApplicationController {
 
   }
 
-  public void confirmationButtonClicked() {
+  public void scheduleButtonClicked() {
     CharSequence timeText = timePrompt.getCharacters();
     CharSequence lectureName = lectureNamePrompt.getCharacters();
 
@@ -166,6 +169,35 @@ public class DateTimeSceneController extends AbstractApplicationController {
     }
 
 
+  }
+  
+  public void instantButtonClicked(){
+	  CharSequence lectureName = lectureNamePrompt.getCharacters();
+	  
+	  if(lectureName.length() <= 0) {
+		  this.shakeWidget(this.lectureNamePrompt);
+		  this.displayStatusMessage("Please fill in the lecture name.");
+		  return;
+	  }
+
+	  
+	    Timestamp timestamp = new Timestamp(0L);
+	    CreateLectureResponse response = null;
+	    try {
+	      response = ServerCommunication.postLecture(timestamp.getTime(), lectureName.toString());
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	      this.displayStatusMessage(e.getMessage());
+	    }
+
+	    if(response.getSuccess()) {
+	      this.ds.setCreateLectureResponse(response);
+	      MainView.changeScene(ApplicationScene.COPYLINK, true);
+	    } else {
+	    	System.out.println(response.getMessage());
+	      this.displayStatusMessage(response.getMessage());
+	    }
+	  
   }
 
 }

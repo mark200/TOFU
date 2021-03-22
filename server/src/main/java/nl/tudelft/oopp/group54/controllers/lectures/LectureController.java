@@ -52,7 +52,7 @@ public class LectureController {
         try {
             // Fixme: The Date constructor expects milliseconds. We should be able
             //   to differentiate between input given in milliseconds and seconds!
-            long startTimeTimestamp = (long) requestPayload.get("startTime");
+            long startTimeTimestamp = Long.parseLong(requestPayload.get("startTime").toString());
             startTime = new Date(startTimeTimestamp);
             lectureName = (String) requestPayload.get("lectureName");
 
