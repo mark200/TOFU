@@ -1,7 +1,10 @@
 package nl.tudelft.oopp.group54.models.responseentities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateLectureResponse implements Serializable {
 
   private Boolean success;
