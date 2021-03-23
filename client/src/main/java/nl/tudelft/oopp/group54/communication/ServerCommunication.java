@@ -146,9 +146,10 @@ public class ServerCommunication {
         HttpRequest request = HttpRequest.newBuilder()
                 .PUT(HttpRequest.BodyPublishers.ofString(""))
                 .header("content-type", "application/json")
-                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/e" +
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/e/" +
                         ds.getLectureId() + "?userId=" + ds.getUserId()))
                 .build();
+
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
