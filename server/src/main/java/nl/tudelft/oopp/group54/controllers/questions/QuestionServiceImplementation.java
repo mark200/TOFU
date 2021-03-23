@@ -59,12 +59,28 @@ public class QuestionServiceImplementation implements QuestionService {
         }
 
         Optional<User> findUserRow = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
 
         if (findUserRow.isEmpty()) {
             status.put("code", "401 UNAUTHORIZED");
             status.put("success", false);
             status.put("message", "Unrecognized user ID or specified lecture does not exist!");
             return status;
+        }
+
+        if (foundLecture.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "There does not exist a lecture with this id.");
+            return status;
+        }
+
+        // don't let students post questions once the lecture has ended
+        if (findUserRow.get().getRoleID().equals(3)) {
+            if (!foundLecture.get().isLectureOngoing()) {
+                status.put("success", false);
+                status.put("message", "The lecture has ended.");
+                return status;
+            }
         }
 
         QuestionKey newQuestionKey = new QuestionKey(new Random().nextInt(), lectureId);
@@ -166,6 +182,7 @@ public class QuestionServiceImplementation implements QuestionService {
         // get question and author of request from database.
         Optional<Question> questionToBeDeleted = questionRepository.findById(new QuestionKey(questionId, lectureId));
         Optional<User> authorOfTheDeletionRequest = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
 
         Integer requestAuthorLectureId = authorOfTheDeletionRequest.get().getKey().getLecture_id();
         Integer questionAuthorLectureId = questionToBeDeleted.get().getPrimaryKey().getLecture_id();
@@ -186,6 +203,12 @@ public class QuestionServiceImplementation implements QuestionService {
         if (authorOfTheDeletionRequest.isEmpty()) {
             status.put("success", false);
             status.put("message", "Unrecognized user id or specified lecture does not exist!");
+            return status;
+        }
+
+        if (foundLecture.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized lecture.");
         }
 
         Integer requestAuthorId = authorOfTheDeletionRequest.get().getKey().getId();
@@ -196,6 +219,14 @@ public class QuestionServiceImplementation implements QuestionService {
         // 2 - moderator
         // 3 - student
 
+        // don't let students post questions once the lecture has ended
+        if(authorOfTheDeletionRequest.get().getRoleID().equals(3)){
+            if(!foundLecture.get().isLectureOngoing()){
+                status.put("success", false);
+                status.put("message", "The lecture has ended.");
+                return status;
+            }
+        }
 
         // If the user who made the request to delete question is not the owner of the question,
         // then delete question only if the user who sent delete request is a moderator/lecturer.
@@ -229,7 +260,6 @@ public class QuestionServiceImplementation implements QuestionService {
 
         // The last case: the author of request is the owner of the question,
         // just delete the question.
-
         try {
             questionRepository.delete(questionToBeDeleted.get());
             status.put("success", true);
@@ -252,7 +282,7 @@ public class QuestionServiceImplementation implements QuestionService {
         if (q == null) {
             return null;
         }
-        
+
         Optional<User> author = userRepository.findById(new UserKey(q.getStudent_id(), lecture_id));
 
         Map<String, Object> toBeReturned = new TreeMap<>();

@@ -118,7 +118,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
             //should anything(like storing the response) happen here?
             //this.ds.addUnansweredQuestion(questionText);
-            this.ds.setUserIp(parseLong(userIp));
+            this.ds.setUserIp(parseLong(userIp.replaceAll(",", "")));
             questionField.clear();
         }
     }

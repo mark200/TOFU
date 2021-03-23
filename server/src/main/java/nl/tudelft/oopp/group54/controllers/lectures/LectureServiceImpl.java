@@ -165,6 +165,9 @@ public class LectureServiceImpl implements LectureService {
         User newUser = new User(new UserKey(usersWatchingLecture, lectureId), userName, "127.0.0.1", null, 0);
 
         // Determine role of student
+        // 1 - lecturer
+        // 2 - moderator
+        // 3 - student
         if (foundLecture.get().getStudentJoinId().equals(roleCode)) {
             newUser.setRoleID(1);
         } else if (foundLecture.get().getLecturerJoinId().equals(roleCode)) {
@@ -175,6 +178,15 @@ public class LectureServiceImpl implements LectureService {
             toBeReturned.put("success", false);
             toBeReturned.put("message", "Unrecognized roleCode/user ID.");
             return toBeReturned;
+        }
+
+        // if the lecture has ended don't let students join it.
+        if(newUser.getRoleID().equals(3)){
+            if(!foundLecture.get().isLectureOngoing()){
+                toBeReturned.put("success", false);
+                toBeReturned.put("message", "The lecture has ended.");
+                return toBeReturned;
+            }
         }
 
         userRepository.flush();

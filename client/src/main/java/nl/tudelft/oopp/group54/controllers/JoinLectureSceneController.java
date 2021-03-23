@@ -105,7 +105,7 @@ public class JoinLectureSceneController extends AbstractApplicationController {
       this.ds.setJoinLectureResponse(response);
       this.ds.setUserId(response.getUserID());
       this.ds.setLectureId(lectureId);
-      //this.ds.setUserIp(parseLong(userIp));
+      this.ds.setUserIp(parseLong(userIp.replaceAll(",", "")));
       this.ds.setPrivilegeId(response.getPrivilegeId());
       MainView.changeScene(ApplicationScene.LECTUREROOM, true);
     } else {
