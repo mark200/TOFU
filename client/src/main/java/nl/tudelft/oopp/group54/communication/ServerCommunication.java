@@ -64,7 +64,7 @@ public class ServerCommunication {
 
     public static PostQuestionResponse postQuestion(String questionText) throws IOException, InterruptedException {
 
-        PostQuestionRequest pqr = new PostQuestionRequest(questionText, ds.getUserId().toString());
+        PostQuestionRequest pqr = new PostQuestionRequest(questionText, ds.getUserId().toString(), ds.getUserIp().toString());
         String pqrJson = objectMapper.writeValueAsString(pqr);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -174,5 +174,26 @@ public class ServerCommunication {
         }
 
         return objectMapper.readValue(response.body(), VoteResponse.class);
+    }
+
+    public static BanIpResponse banIp(String questionId) throws IOException, InterruptedException {
+        BanIpRequest bir = new BanIpRequest(ds.getUserIp().toString());
+
+        String birJson = objectMapper.writeValueAsString(bir);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" +
+                        ds.getLectureId() + "/questions/" + questionId))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status:" + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), BanIpResponse.class);
     }
 }
