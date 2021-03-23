@@ -71,34 +71,8 @@ public class QuestionController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> deleteQuestion(@PathVariable(value = "lectureId") Integer lectureId,
                                               @PathVariable(value = "questionId") Integer questionId,
-                                              @RequestBody Map<String, Object> requestPayload) {
-
-        boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
-                requestPayload,
-                Arrays.asList("userId")
-        );
-
-        if (!containsNecessaryData) {
-
-            Map<String, Object> toBeReturned = new TreeMap<>();
-            toBeReturned.put("success", "false");
-            toBeReturned.put("message", "Expected userId to be provided");
-
-            return toBeReturned;
-        }
-
-        String userId;
-
-        try {
-            userId = (String) requestPayload.get("userId");
-        } catch (Exception e) {
-            Map<String, Object> toBeReturned = new TreeMap<>();
-            toBeReturned.put("success", "false");
-            toBeReturned.put("message", e.getMessage());
-
-            return toBeReturned;
-        }
-
+                                              @RequestParam String userId) {
+        System.out.println("requested");
         return questionService.deleteQuestion(lectureId, questionId, userId);
     }
 }
