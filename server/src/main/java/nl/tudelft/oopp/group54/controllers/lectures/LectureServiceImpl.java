@@ -20,6 +20,7 @@ public class LectureServiceImpl implements LectureService {
     @Autowired
     private UserRepository userRepository;
 
+
     public void setRepository(LectureRepository repository) {
         this.repository = repository;
     }
@@ -40,17 +41,22 @@ public class LectureServiceImpl implements LectureService {
         Map<String, Object> toBeReturned = new TreeMap<>();
         Date currentTime = new Date();
 
-        // if start time is before the current time
-        if (startTime.before(currentTime)) {
-            toBeReturned.put("success", false);
-            toBeReturned.put("message", "Lecture start time was unacceptable");
-            return toBeReturned;
-        }
-
         // if start time is null
         if (startTime == null) {
             toBeReturned.put("success", false);
             toBeReturned.put("message", "Null is not acceptable as a start time");
+            return toBeReturned;
+        }
+
+        //"create instant" functionality
+        if (startTime.equals(new Date(0))) {
+            startTime = currentTime;
+        }
+
+        // if start time is before the current time
+        if (startTime.before(currentTime)) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "Lecture start time was unacceptable");
             return toBeReturned;
         }
 
@@ -76,22 +82,25 @@ public class LectureServiceImpl implements LectureService {
         }
 
 
-        String studentId = UUID.nameUUIDFromBytes((currentTime.toString() + "s").getBytes())
+        String studentJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "s").getBytes())
                 .toString().replaceAll("-", "");
-        String moderatorId = UUID.nameUUIDFromBytes((currentTime.toString() + "m").getBytes())
+        String moderatorJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "m").getBytes())
                 .toString().replaceAll("-", "");
-        String lecturerId = UUID.nameUUIDFromBytes((currentTime.toString() + "l").getBytes())
+        String lecturerJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "l").getBytes())
                 .toString().replaceAll("-", "");
         Lecture newLecture = new
-                Lecture(null, lectureName, startTime, studentId, moderatorId, lecturerId);
+                Lecture(null, lectureName, startTime, studentJoinId, moderatorJoinId, lecturerJoinId, true);
+        newLecture.setLectureOngoing(true);
+
+        repository.flush();
         repository.save(newLecture);
 
         // FIXME the order of those IDs should be fixed
         toBeReturned.put("success", true);
-        toBeReturned.put("lectureID", newLecture.getId());
-        toBeReturned.put("lecturerID", studentId);
-        toBeReturned.put("studentID", moderatorId);
-        toBeReturned.put("moderatorID", lecturerId);
+        toBeReturned.put("lectureId", newLecture.getId());
+        toBeReturned.put("lecturerId", studentJoinId);
+        toBeReturned.put("studentId", moderatorJoinId);
+        toBeReturned.put("moderatorId", lecturerJoinId);
 
         return toBeReturned;
     }
@@ -99,6 +108,7 @@ public class LectureServiceImpl implements LectureService {
     /**
      * Creates a new User when joining the specified lecture
      * and assigns them a role
+     *
      * @param lectureId
      * @param roleCode
      * @param userName
@@ -153,7 +163,7 @@ public class LectureServiceImpl implements LectureService {
                 .filter(x -> x.getKey().getLecture_id() == lectureId.intValue())
                 .collect(Collectors.toList()).size();
 
-        User newUser = new User(new UserKey(usersWatchingLecture, lectureId), userName,"127.0.0.1",null,0);
+        User newUser = new User(new UserKey(usersWatchingLecture, lectureId), userName, "127.0.0.1", null, 0);
 
         // Determine role of student
         if (foundLecture.get().getStudentJoinId().equals(roleCode)) {
@@ -187,6 +197,7 @@ public class LectureServiceImpl implements LectureService {
     /**
      * For now this method only returns the number of people watching the lecture
      * (meaning only this new functionality is implemented)
+     *
      * @param lectureId
      * @return
      */
@@ -209,8 +220,8 @@ public class LectureServiceImpl implements LectureService {
         }
 
         int usersWatchingLecture = userRepository.findAll().stream()
-                                        .filter(x -> x.getKey().getLecture_id() == lectureId.intValue())
-                                        .collect(Collectors.toList()).size();
+                .filter(x -> x.getKey().getLecture_id() == lectureId.intValue())
+                .collect(Collectors.toList()).size();
 
         toBeReturned.put("success", true);
         toBeReturned.put("lectureID", lectureId);
@@ -220,5 +231,68 @@ public class LectureServiceImpl implements LectureService {
         toBeReturned.put("lecturerJoinID", foundLecture.get().getLecturerJoinId());
 
         return toBeReturned;
+    }
+
+    /**
+     * Changes lecture's lectureOngoing value to false.
+     * @param userId - Id of the user
+     * @param lectureId - Id of the lecture
+     * @return status of the request
+     */
+    public Map<String, Object> endLecture(Integer userId, Integer lectureId) {
+        Map<String, Object> status = new LinkedHashMap<>();
+
+        if (lectureId == null) {
+            status.put("success", false);
+            status.put("message", "LectureID cannot be null!");
+            return status;
+        }
+
+        if (userId == null) {
+            status.put("success", false);
+            status.put("message", "UserID cannot be null!");
+            return status;
+        }
+
+        Optional<Lecture> lectureToBeEnded = repository.findById(lectureId);
+        Optional<User> requestAuthor = userRepository.findById(new UserKey(userId, lectureId));
+
+        if (lectureToBeEnded.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized lecture. Incorrect combination of lecture and question ids");
+            return status;
+        }
+
+        if (requestAuthor.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized user id or specified lecture does not exist!");
+            return status;
+        }
+
+        if (!requestAuthor.get().getRoleID().equals(1)) {
+            status.put("success", false);
+            status.put("message", "You are not authorized to end this lecture!");
+            return status;
+        }
+
+        if(!lectureToBeEnded.get().isLectureOngoing()){
+            status.put("success", false);
+            status.put("message", "The lecture has already been ended.");
+            return status;
+        }
+
+        repository.flush();
+
+        try {
+            lectureToBeEnded.get().setLectureOngoing(false);
+            repository.save(lectureToBeEnded.get());
+            status.put("success", true);
+            status.put("message", "The lecture was successfully ended.");
+        } catch (Exception e) {
+            status.put("success", false);
+            status.put("message", e.toString());
+        }
+
+        return status;
     }
 }
