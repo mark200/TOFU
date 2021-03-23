@@ -9,14 +9,15 @@ import java.util.Objects;
 
 @Embeddable
 public class AnswerKey implements Serializable, Comparable {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+	
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", columnDefinition = "INT AUTO_INCREMENT")
     private Integer id;
 
     @Column(name = "lecture_id", nullable = false)
     private Integer lecture_id;
 
-    public AnswerKey(int id, int lecture_id) {
+    public AnswerKey(Integer id, int lecture_id) {
         this.id = id;
         this.lecture_id = lecture_id;
     }
