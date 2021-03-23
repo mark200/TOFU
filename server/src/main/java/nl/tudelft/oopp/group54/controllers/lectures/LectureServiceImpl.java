@@ -95,7 +95,6 @@ public class LectureServiceImpl implements LectureService {
         repository.flush();
         repository.save(newLecture);
 
-        // FIXME the order of those IDs should be fixed
         toBeReturned.put("success", true);
         toBeReturned.put("lectureId", newLecture.getId());
         toBeReturned.put("lecturerId", studentJoinId);
@@ -186,6 +185,7 @@ public class LectureServiceImpl implements LectureService {
             toBeReturned.put("userID", newUser.getKey().getId());
             toBeReturned.put("userName", newUser.getName());
             toBeReturned.put("role", (newUser.getRoleID() == 1) ? "Student" : ((newUser.getRoleID() == 2) ? "Lecturer" : "Moderator"));
+            toBeReturned.put("privilegeId", newUser.getRoleID());
         } catch (Exception e) {
             toBeReturned.put("success", false);
             toBeReturned.put("message", e.toString());
@@ -229,6 +229,7 @@ public class LectureServiceImpl implements LectureService {
         toBeReturned.put("studentJoinID", foundLecture.get().getStudentJoinId());
         toBeReturned.put("moderatorJoinID", foundLecture.get().getModeratorJoinId());
         toBeReturned.put("lecturerJoinID", foundLecture.get().getLecturerJoinId());
+        toBeReturned.put("lectureOngoing", foundLecture.get().isLectureOngoing());
 
         return toBeReturned;
     }

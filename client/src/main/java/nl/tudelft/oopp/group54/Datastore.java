@@ -23,10 +23,11 @@ public class Datastore {
   JoinLectureResponse joinLectureResponse;
 
   String serviceEndpoint = "http://localhost:8080";
-  
+
   Long userId = 0L;
   Integer lectureId = 0;
   Long userIp = 0L;
+  Integer privilegeId = 0;
 
   private Datastore() {
     this.currentUnansweredQuestionViews = FXCollections.observableArrayList();
@@ -96,19 +97,19 @@ public class Datastore {
   public void setJoinLectureResponse(JoinLectureResponse joinLectureResponse) {
 	  this.joinLectureResponse = joinLectureResponse;
   }
-  
+
   public void setLectureId(Integer lectureId) {
 	  this.lectureId = lectureId;
   }
-  
+
   public Integer getLectureId() {
 	  return lectureId;
   }
-  
+
   public void setUserId(Long userId) {
 	  this.userId = userId;
   }
-  
+
   public Long getUserId() {
 	  return userId;
   }
@@ -116,5 +117,12 @@ public class Datastore {
   public Long getUserIp() { return userIp; }
 
   public void setUserIp(Long userIp) { this.userIp = userIp; }
-  
+
+  public Integer getPrivilegeId() {
+    return privilegeId;
+  }
+
+  public void setPrivilegeId(Integer privilegeId) {
+    this.privilegeId = privilegeId;
+  }
 }
