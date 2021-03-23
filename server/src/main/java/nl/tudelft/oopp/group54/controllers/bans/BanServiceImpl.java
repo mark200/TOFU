@@ -56,7 +56,7 @@ public class BanServiceImpl implements BanService {
             return status;
         }
 
-        BanKey newBanKey = new BanKey(userIp, new Random().nextInt());
+        BanKey newBanKey = new BanKey(userIp, lectureId);
 
         Ban newBan = new Ban();
         newBan.setPrimaryKey(newBanKey);
