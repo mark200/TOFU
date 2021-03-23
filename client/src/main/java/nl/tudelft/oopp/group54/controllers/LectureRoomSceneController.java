@@ -15,6 +15,7 @@ import javafx.scene.layout.ColumnConstraints;
 import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.models.QuestionModel;
+import nl.tudelft.oopp.group54.models.responseentities.EndLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
@@ -79,6 +80,10 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 	  postQuestion();
 	  this.refreshButtonClickedAfter();
   }
+
+  public void endLectureButtonClicked(){
+      endLecture();
+  }
   
   public void keyPressed(KeyEvent event) {
 	  if(event.getCode() == KeyCode.ENTER) {
@@ -127,6 +132,26 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     	  for(QuestionModel question : response.getUnanswered()){
     	      this.ds.addUnansweredQuestion(question, this);
     	  }
+      }
+  }
+
+  public void endLecture(){
+      EndLectureResponse response = null;
+
+      try {
+          response = ServerCommunication.endLecture();
+      } catch (IOException | InterruptedException e) {
+          e.printStackTrace();
+      }
+
+      if(response == null){
+          this.displayStatusMessage("Could not end the lecture!");
+          return;
+      }
+
+      if (response.getSuccess()){
+          this.displayStatusMessage(response.getMessage());
+          // disable end lecture button
       }
   }
 
