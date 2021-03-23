@@ -7,7 +7,9 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import nl.tudelft.oopp.group54.communication.ServerCommunication;
+import nl.tudelft.oopp.group54.controllers.LectureRoomSceneController;
 import nl.tudelft.oopp.group54.models.QuestionModel;
+import nl.tudelft.oopp.group54.models.responseentities.DeleteQuestionResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
 
@@ -53,6 +55,8 @@ public abstract class QuestionView extends AnchorPane {
 	private String questionId;
 	private String userNameString;
 
+	private LectureRoomSceneController owner;
+
 	public QuestionView(String text, String questionId, String userName) {
 		this.innerVBox = new VBox();
 		
@@ -71,6 +75,8 @@ public abstract class QuestionView extends AnchorPane {
 		addHorizontalGridPane();
 		
 		this.getChildren().addAll(this.outerGridPane, this.menuBar);
+
+		this.owner = null;
 	}
 
 
@@ -185,6 +191,13 @@ public abstract class QuestionView extends AnchorPane {
 		});
 	}
 
+	public void setOwner(LectureRoomSceneController owner) {
+		this.owner = owner;
+	}
+
+	public LectureRoomSceneController getOwner() {
+		return owner;
+	}
 
 	private void childConfiguration() {
 		setBottomAnchor(outerGridPane, 0.0);
@@ -207,11 +220,27 @@ public abstract class QuestionView extends AnchorPane {
 		if(!response.isSuccess())
 			System.out.println(response.getMessage());
 	}
-	
+
 	private void delete() {
-		System.out.println("delete question " + questionId);
+		DeleteQuestionResponse response = null;
+		System.out.println("requesting");
+		try {
+			response = ServerCommunication.deleteQuestion(this.questionId);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		if (!response.getSuccess()) {
+			owner.displayStatusMessage(response.getMessage());
+		}
+
+		owner.refreshButtonClickedAfter();
+
 	}
-	
+
+
 	private void markAnswered() {
 		 PostAnswerResponse response = null;
 

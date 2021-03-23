@@ -121,18 +121,16 @@ public class QuestionServiceImplementation implements QuestionService {
             return toBeReturned;
         }
 
-        String userName = foundUser.get().getName();
-
         List<Question> allQuestions = questionRepository.findByLectureId(lectureId);
 
         List<Map<String, Object>> answeredQuestions = allQuestions.stream()
                 .filter(x -> x.getAnswered() == true)
-                .map(x -> transformQuestion(x, userName))
+                .map(x -> transformQuestion(x, lectureId))
                 .collect(Collectors.toList());
 
         List<Map<String, Object>> unAnsweredQuestions = allQuestions.stream()
                 .filter(x -> x.getAnswered() == false)
-                .map(x -> transformQuestion(x, userName))
+                .map(x -> transformQuestion(x, lectureId))
                 .collect(Collectors.toList());
 
         toBeReturned.put("answered", answeredQuestions);
@@ -163,6 +161,16 @@ public class QuestionServiceImplementation implements QuestionService {
         Optional<Question> questionToBeDeleted = questionRepository.findById(new QuestionKey(questionId, lectureId));
         Optional<User> authorOfTheDeletionRequest = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
 
+        Integer requestAuthorLectureId = authorOfTheDeletionRequest.get().getKey().getLecture_id();
+        Integer questionAuthorLectureId = questionToBeDeleted.get().getPrimaryKey().getLecture_id();
+
+        // If the lectures of user and question do not match.
+        if (!requestAuthorLectureId.equals(questionAuthorLectureId)) {
+            status.put("success", false);
+            status.put("message", "The question in different lecture can't be deleted!");
+            return status;
+        }
+
         if (questionToBeDeleted.isEmpty()) {
             status.put("success", false);
             status.put("message", "Unrecognized question. Incorrect combination of lecture and question ids");
@@ -177,26 +185,17 @@ public class QuestionServiceImplementation implements QuestionService {
         Integer requestAuthorId = authorOfTheDeletionRequest.get().getKey().getId();
         Integer questionAuthorId = questionToBeDeleted.get().getStudent_id();
         Integer requestAuthorRole = authorOfTheDeletionRequest.get().getRoleID();
-        Integer requestAuthorLectureId = authorOfTheDeletionRequest.get().getKey().getLecture_id();
-        Integer questionAuthorLectureId = questionToBeDeleted.get().getPrimaryKey().getLecture_id();
 
-        // 1 - student
-        // 2 - lecturer
-        // 3 - moderator
+        // 1 - lecturer
+        // 2 - moderator
+        // 3 - student
 
-
-        // If the lectures of user and question do not match.
-        if (!requestAuthorLectureId.equals(questionAuthorLectureId)) {
-            status.put("success", false);
-            status.put("message", "The question in different lecture can't be deleted!");
-            return status;
-        }
 
         // If the user who made the request to delete question is not the owner of the question,
         // then delete question only if the user who sent delete request is a moderator/lecturer.
         if (!requestAuthorId.equals(questionAuthorId)) {
             // If request was made by user then he is not authorized to delete other's questions
-            if (requestAuthorRole.equals(1)) {
+            if (requestAuthorRole.equals(3)) {
                 status.put("code", "401 UNAUTHORIZED");
                 status.put("success", false);
                 status.put("message", "You are not authorized to delete this question!");
@@ -204,12 +203,13 @@ public class QuestionServiceImplementation implements QuestionService {
             }
 
             // If it was made by moderator or lecturer
-            if (requestAuthorRole.equals(2) || requestAuthorRole.equals(3)) {
+            if (requestAuthorRole.equals(2) || requestAuthorRole.equals(1)) {
 
                 try {
                     questionRepository.delete(questionToBeDeleted.get());
                     status.put("success", true);
                     status.put("questionId", questionToBeDeleted.get().getPrimaryKey().getId());
+                    status.put("message", "message was deleted successfully!");
                 } catch (Exception e) {
                     status.put("success", false);
                     status.put("message", e.toString());
@@ -242,15 +242,17 @@ public class QuestionServiceImplementation implements QuestionService {
      * @param q an object of type Question
      * @return A JSON representation of the object
      */
-    public Map<String, Object> transformQuestion(Question q, String userName) {
+    public Map<String, Object> transformQuestion(Question q, int lecture_id) {
         if (q == null) {
             return null;
         }
+        
+        Optional<User> author = userRepository.findById(new UserKey(q.getStudent_id(), lecture_id));
 
         Map<String, Object> toBeReturned = new TreeMap<>();
         toBeReturned.put("questionId", q.getPrimaryKey().getId());
         toBeReturned.put("userId", q.getStudent_id());
-        toBeReturned.put("userName", userName);
+        toBeReturned.put("userName", author.get().getName());
         toBeReturned.put("questionText", q.getContent());
         toBeReturned.put("score", q.getVote_counter());
         toBeReturned.put("answered", q.getAnswered());
