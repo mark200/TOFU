@@ -14,102 +14,102 @@ import javafx.collections.ObservableList;
 
 public class Datastore {
 
-  static Datastore instance;
+    static Datastore instance;
 
-  ObservableList<QuestionView> currentUnansweredQuestionViews;
-  ObservableList<QuestionView> currentAnsweredQuestionViews;
+    ObservableList<QuestionView> currentUnansweredQuestionViews;
+    ObservableList<QuestionView> currentAnsweredQuestionViews;
 
-  CreateLectureResponse createLectureResponse;
-  JoinLectureResponse joinLectureResponse;
+    CreateLectureResponse createLectureResponse;
+    JoinLectureResponse joinLectureResponse;
 
-  String serviceEndpoint = "http://localhost:8080";
-  
-  Long userId = 0L;
-  Integer lectureId = 0;
+    String serviceEndpoint = "http://localhost:8080";
 
-  private Datastore() {
-    this.currentUnansweredQuestionViews = FXCollections.observableArrayList();
-    this.currentAnsweredQuestionViews = FXCollections.observableArrayList();
-    createLectureResponse = null;
-    joinLectureResponse = null;
-  }
+    Long userId = 0L;
+    Integer lectureId = 0;
 
-  public static Datastore getInstance() {
-    if (instance == null) {
-      instance = new Datastore();
+    private Datastore() {
+        this.currentUnansweredQuestionViews = FXCollections.observableArrayList();
+        this.currentAnsweredQuestionViews = FXCollections.observableArrayList();
+        createLectureResponse = null;
+        joinLectureResponse = null;
     }
-    return instance;
-  }
 
-  public String getServiceEndpoint() {
-    return this.serviceEndpoint;
-  }
+    public static Datastore getInstance() {
+        if (instance == null) {
+            instance = new Datastore();
+        }
+        return instance;
+    }
 
-  public ObservableList<QuestionView> getCurrentUnansweredQuestionViews() {
-    return currentUnansweredQuestionViews;
-  }
+    public String getServiceEndpoint() {
+        return this.serviceEndpoint;
+    }
 
-  public void setCurrentUnansweredQuestionViews(ObservableList<QuestionView> currentUnansweredQuestionViews) {
-    if(currentUnansweredQuestionViews == null)
-        this.currentUnansweredQuestionViews.clear();
-    else
-        this.currentUnansweredQuestionViews = currentUnansweredQuestionViews;
-  }
+    public ObservableList<QuestionView> getCurrentUnansweredQuestionViews() {
+        return currentUnansweredQuestionViews;
+    }
 
-  public ObservableList<QuestionView> getCurrentAnsweredQuestionViews() {
-    return currentAnsweredQuestionViews;
-  }
+    public void setCurrentUnansweredQuestionViews(ObservableList<QuestionView> currentUnansweredQuestionViews) {
+        if (currentUnansweredQuestionViews == null)
+            this.currentUnansweredQuestionViews.clear();
+        else
+            this.currentUnansweredQuestionViews = currentUnansweredQuestionViews;
+    }
 
-  public void setCurrentAnsweredQuestionViews(ObservableList<QuestionView> currentAnsweredQuestionViews) {
-    if(currentAnsweredQuestionViews == null)
-        this.currentAnsweredQuestionViews.clear();
-    else
-        this.currentAnsweredQuestionViews = currentAnsweredQuestionViews;
-  }
+    public ObservableList<QuestionView> getCurrentAnsweredQuestionViews() {
+        return currentAnsweredQuestionViews;
+    }
 
-  public void addUnansweredQuestion(QuestionModel question, LectureRoomSceneController sceneController){
-    QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(), question.getUserName());
-    q.setOwner(sceneController);
-    this.currentUnansweredQuestionViews.add(q);
-  }
+    public void setCurrentAnsweredQuestionViews(ObservableList<QuestionView> currentAnsweredQuestionViews) {
+        if (currentAnsweredQuestionViews == null)
+            this.currentAnsweredQuestionViews.clear();
+        else
+            this.currentAnsweredQuestionViews = currentAnsweredQuestionViews;
+    }
 
-  public void addAnsweredQuestion(QuestionModel question, LectureRoomSceneController sceneController){
-	QuestionView q = new AnsweredQuestionView(question.getQuestionText(), question.getQuestionId(),question.getUserName());
-	q.setOwner(sceneController);
-    this.currentAnsweredQuestionViews.add(q);
-  }
+    public void addUnansweredQuestion(QuestionModel question, LectureRoomSceneController sceneController) {
+        QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(), question.getUserName(), question.getScore());
+        q.setOwner(sceneController);
+        this.currentUnansweredQuestionViews.add(q);
+    }
+
+    public void addAnsweredQuestion(QuestionModel question, LectureRoomSceneController sceneController) {
+        QuestionView q = new AnsweredQuestionView(question.getQuestionText(), question.getQuestionId(), question.getUserName(), question.getScore());
+        q.setOwner(sceneController);
+        this.currentAnsweredQuestionViews.add(q);
+    }
 
 
-  public CreateLectureResponse getCreateLectureResponse() {
-    return createLectureResponse;
-  }
+    public CreateLectureResponse getCreateLectureResponse() {
+        return createLectureResponse;
+    }
 
-  public void setCreateLectureResponse(CreateLectureResponse createLectureResponse) {
-    this.createLectureResponse = createLectureResponse;
-  }
+    public void setCreateLectureResponse(CreateLectureResponse createLectureResponse) {
+        this.createLectureResponse = createLectureResponse;
+    }
 
-  public JoinLectureResponse getJoinLectureResponse() {
-	  return joinLectureResponse;
-  }
+    public JoinLectureResponse getJoinLectureResponse() {
+        return joinLectureResponse;
+    }
 
-  public void setJoinLectureResponse(JoinLectureResponse joinLectureResponse) {
-	  this.joinLectureResponse = joinLectureResponse;
-  }
-  
-  public void setLectureId(Integer lectureId) {
-	  this.lectureId = lectureId;
-  }
-  
-  public Integer getLectureId() {
-	  return lectureId;
-  }
-  
-  public void setUserId(Long userId) {
-	  this.userId = userId;
-  }
-  
-  public Long getUserId() {
-	  return userId;
-  }
-  
+    public void setJoinLectureResponse(JoinLectureResponse joinLectureResponse) {
+        this.joinLectureResponse = joinLectureResponse;
+    }
+
+    public void setLectureId(Integer lectureId) {
+        this.lectureId = lectureId;
+    }
+
+    public Integer getLectureId() {
+        return lectureId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
 }
