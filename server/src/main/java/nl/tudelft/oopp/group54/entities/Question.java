@@ -19,6 +19,10 @@ public class Question {
     @NotNull
     private Integer student_id;
 
+    @Column(name = "studentIp", columnDefinition = "VARCHAR NOT NULL")
+    @NotNull
+    private String studentIp;
+
     @Column(name = "content", columnDefinition = "VARCHAR(420) NOT NULL")
     @NotNull
     private String content;
@@ -41,24 +45,27 @@ public class Question {
 
     }
 
-
     /**
      * Create a new Question instance
      * @param primaryKey
      * @param student_id
+     * @param studentIp
      * @param content
      * @param vote_counter
      * @param answered
      * @param created_at
      */
-    public Question(QuestionKey primaryKey, @NotNull Integer student_id, @NotNull String content, Integer vote_counter, @NotNull Boolean answered, @NotNull Date created_at) {
+    public Question(QuestionKey primaryKey, @NotNull Integer student_id, @NotNull String studentIp, @NotNull String content, Integer vote_counter, @NotNull Boolean answered, @NotNull Date created_at) {
         this.primaryKey = primaryKey;
         this.student_id = student_id;
+        this.studentIp = studentIp;
         this.content = content;
         this.vote_counter = vote_counter;
         this.answered = answered;
         this.created_at = created_at;
     }
+
+
 
     public QuestionKey getPrimaryKey() {
         return primaryKey;
@@ -88,6 +95,8 @@ public class Question {
         return answerText;
     }
 
+    public String getStudentIp() { return studentIp; }
+
     public void setPrimaryKey(QuestionKey primaryKey) {
         this.primaryKey = primaryKey;
     }
@@ -116,6 +125,8 @@ public class Question {
         this.answerText = answerText;
     }
 
+    public void setStudentIp(String studentIp) { this.studentIp = studentIp; }
+
     /**
      * Compare two Question Objects, the idea is to compare their primary keys,
      * because in the context of this application questions with different primary keys
@@ -133,7 +144,7 @@ public class Question {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPrimaryKey(), getStudent_id(), getContent(), getVote_counter(), getAnswered(), getCreated_at(), getAnswerText());
+        return Objects.hash(getPrimaryKey(), getStudent_id(), getStudentIp(), getContent(), getVote_counter(), getAnswered(), getCreated_at(), getAnswerText());
     }
 
     @Override
@@ -141,10 +152,12 @@ public class Question {
         return "Question{" +
                 "primaryKey=" + primaryKey +
                 ", student_id=" + student_id +
+                ", studentIp='" + studentIp + '\'' +
                 ", content='" + content + '\'' +
                 ", vote_counter=" + vote_counter +
                 ", answered=" + answered +
                 ", created_at=" + created_at +
+                ", answerText='" + answerText + '\'' +
                 '}';
     }
 }

@@ -35,6 +35,19 @@ public class Ban {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ban ban = (Ban) o;
+        return getPrimaryKey().equals(ban.getPrimaryKey());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPrimaryKey());
+    }
+
+    @Override
     public String toString() {
         return "Ban{" +
                 "primaryKey=" + primaryKey +

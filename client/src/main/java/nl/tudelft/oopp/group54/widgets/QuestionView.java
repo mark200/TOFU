@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.controllers.LectureRoomSceneController;
 import nl.tudelft.oopp.group54.models.QuestionModel;
+import nl.tudelft.oopp.group54.models.responseentities.BanIpResponse;
 import nl.tudelft.oopp.group54.models.responseentities.DeleteQuestionResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
@@ -27,6 +28,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import nl.tudelft.oopp.group54.models.responseentities.VoteResponse;
+
+import static java.lang.Long.parseLong;
 
 public abstract class QuestionView extends AnchorPane {
 
@@ -262,7 +265,19 @@ public abstract class QuestionView extends AnchorPane {
 	}
 	
 	private void banAuthor() {
-		System.out.println("ban author of question " + questionId);
+		BanIpResponse response = null;
+
+		try {
+			response = ServerCommunication.banIp(this.questionId);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		if (response.getSuccess()) {
+
+		}
 	}
 	
 
