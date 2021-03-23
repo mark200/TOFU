@@ -80,7 +80,7 @@ public class AnswerServiceImpl implements AnswerService {
         }
 
         // Create the new answer
-        Answer newAnswer = new Answer(new AnswerKey(new Random().nextInt(), lectureId),
+        Answer newAnswer = new Answer(new AnswerKey(null, lectureId),
                                         answerText,
                                         questionId,
                                         Integer.parseInt(userId));
