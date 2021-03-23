@@ -20,7 +20,7 @@ public class VoteController {
     @PostMapping(value = "votes",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> answerQuestion(@PathVariable(value = "lectureID") Integer lectureId,
+    public Map<String, Object> voteOnQuestion(@PathVariable(value = "lectureID") Integer lectureId,
                                               @PathVariable(value = "questionID") Integer questionId,
                                               @RequestBody Map<String, Object> requestPayload){
         boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(

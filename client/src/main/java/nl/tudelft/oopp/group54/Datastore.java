@@ -13,7 +13,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Datastore {
-
   static Datastore instance;
 
   ObservableList<QuestionView> currentUnansweredQuestionViews;
@@ -69,13 +68,13 @@ public class Datastore {
   }
 
   public void addUnansweredQuestion(QuestionModel question, LectureRoomSceneController sceneController){
-    QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(), question.getUserName());
+    QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(), question.getUserName(), question.getScore());
     q.setOwner(sceneController);
     this.currentUnansweredQuestionViews.add(q);
   }
 
   public void addAnsweredQuestion(QuestionModel question, LectureRoomSceneController sceneController){
-	QuestionView q = new AnsweredQuestionView(question.getQuestionText(), question.getQuestionId(),question.getUserName());
+	QuestionView q = new AnsweredQuestionView(question.getQuestionText(), question.getQuestionId(),question.getUserName(), question.getScore());
 	q.setOwner(sceneController);
     this.currentAnsweredQuestionViews.add(q);
   }
