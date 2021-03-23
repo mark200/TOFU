@@ -19,9 +19,9 @@ public class Question {
     @NotNull
     private Integer student_id;
 
-    @Column(name = "student_ip", columnDefinition = "VARCHAR NOT NULL")
+    @Column(name = "studentIp", columnDefinition = "VARCHAR NOT NULL")
     @NotNull
-    private String student_ip;
+    private String studentIp;
 
     @Column(name = "content", columnDefinition = "VARCHAR(420) NOT NULL")
     @NotNull
@@ -49,16 +49,16 @@ public class Question {
      * Create a new Question instance
      * @param primaryKey
      * @param student_id
-     * @param student_ip
+     * @param studentIp
      * @param content
      * @param vote_counter
      * @param answered
      * @param created_at
      */
-    public Question(QuestionKey primaryKey, @NotNull Integer student_id, @NotNull String student_ip, @NotNull String content, Integer vote_counter, @NotNull Boolean answered, @NotNull Date created_at) {
+    public Question(QuestionKey primaryKey, @NotNull Integer student_id, @NotNull String studentIp, @NotNull String content, Integer vote_counter, @NotNull Boolean answered, @NotNull Date created_at) {
         this.primaryKey = primaryKey;
         this.student_id = student_id;
-        this.student_ip = student_ip;
+        this.studentIp = studentIp;
         this.content = content;
         this.vote_counter = vote_counter;
         this.answered = answered;
@@ -95,7 +95,7 @@ public class Question {
         return answerText;
     }
 
-    public String getStudent_ip() { return student_ip; }
+    public String getStudentIp() { return studentIp; }
 
     public void setPrimaryKey(QuestionKey primaryKey) {
         this.primaryKey = primaryKey;
@@ -125,7 +125,7 @@ public class Question {
         this.answerText = answerText;
     }
 
-    public void setStudent_ip(String student_ip) { this.student_ip = student_ip; }
+    public void setStudentIp(String studentIp) { this.studentIp = studentIp; }
 
     /**
      * Compare two Question Objects, the idea is to compare their primary keys,
@@ -144,7 +144,7 @@ public class Question {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPrimaryKey(), getStudent_id(), getStudent_ip(), getContent(), getVote_counter(), getAnswered(), getCreated_at(), getAnswerText());
+        return Objects.hash(getPrimaryKey(), getStudent_id(), getStudentIp(), getContent(), getVote_counter(), getAnswered(), getCreated_at(), getAnswerText());
     }
 
     @Override
@@ -152,7 +152,7 @@ public class Question {
         return "Question{" +
                 "primaryKey=" + primaryKey +
                 ", student_id=" + student_id +
-                ", student_ip='" + student_ip + '\'' +
+                ", studentIp='" + studentIp + '\'' +
                 ", content='" + content + '\'' +
                 ", vote_counter=" + vote_counter +
                 ", answered=" + answered +
