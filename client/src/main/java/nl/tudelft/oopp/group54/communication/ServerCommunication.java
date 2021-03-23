@@ -155,4 +155,24 @@ public class ServerCommunication {
 
         return objectMapper.readValue(response.body(), EndLectureResponse.class);
     }
+
+
+    public static VoteResponse voteOnQuestion(Integer questionId) throws IOException, InterruptedException {
+        VoteRequest vreq = new VoteRequest(ds.getUserId().toString(), questionId);
+        String vreqJson = objectMapper.writeValueAsString(vreq);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(vreqJson))
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint()+"/lectures/" + ds.getLectureId() + "/questions/" + questionId + "/votes"))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), VoteResponse.class);
+    }
 }
