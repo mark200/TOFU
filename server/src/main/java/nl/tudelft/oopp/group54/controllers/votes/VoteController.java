@@ -25,7 +25,7 @@ public class VoteController {
                                               @RequestBody Map<String, Object> requestPayload){
         boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
                 requestPayload,
-                Arrays.asList("userID", "isUpvote")
+                Arrays.asList("userId")
         );
 
         if(!containsNecessaryData){
@@ -42,8 +42,8 @@ public class VoteController {
         Boolean isUpvote;
 
         try {
-            userId = (String) requestPayload.get("userID");
-            isUpvote = (Boolean) requestPayload.get("isUpvote");
+            userId = (String) requestPayload.get("userId");
+            isUpvote = (Boolean) requestPayload.get("upvote");
         } catch (Exception e){
             Map<String, Object> toBeReturned = new TreeMap<>();
             toBeReturned.put("success", "false");

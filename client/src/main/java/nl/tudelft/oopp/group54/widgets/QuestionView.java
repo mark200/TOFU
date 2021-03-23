@@ -26,6 +26,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import nl.tudelft.oopp.group54.models.responseentities.VoteResponse;
 
 public abstract class QuestionView extends AnchorPane {
 
@@ -203,13 +204,21 @@ public abstract class QuestionView extends AnchorPane {
 		setTopAnchor(outerGridPane, 0.0);
 		setLeftAnchor(outerGridPane, 0.0);
 		setRightAnchor(outerGridPane, 0.0);
-
 		setLeftAnchor(menuBar, 0.0);
 		setRightAnchor(menuBar, 0.0);
 	}
 
 	private void vote() {
-		System.out.println("upvote question " + questionId);
+		VoteResponse response = null;
+		try {
+			response = ServerCommunication.voteOnQuestion(Integer.valueOf(questionId));
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		if(!response.isSuccess())
+			System.out.println(response.getMessage());
 	}
 
 	private void delete() {
