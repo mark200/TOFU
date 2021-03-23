@@ -2,11 +2,7 @@ package nl.tudelft.oopp.group54.communication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nl.tudelft.oopp.group54.Datastore;
-import nl.tudelft.oopp.group54.models.requestentities.CreateLectureRequest;
-import nl.tudelft.oopp.group54.models.requestentities.DeleteQuestionRequest;
-import nl.tudelft.oopp.group54.models.requestentities.JoinLectureRequest;
-import nl.tudelft.oopp.group54.models.requestentities.PostAnswerRequest;
-import nl.tudelft.oopp.group54.models.requestentities.PostQuestionRequest;
+import nl.tudelft.oopp.group54.models.requestentities.*;
 import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
@@ -149,5 +145,26 @@ public class ServerCommunication {
         }
 
         return objectMapper.readValue(response.body(), DeleteQuestionResponse.class);
+    }
+
+    public static BanIpResponse banIp(String questionId) throws IOException, InterruptedException {
+        BanIpRequest bir = new BanIpRequest(ds.getUserIp().toString());
+
+        String birJson = objectMapper.writeValueAsString(bir);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" +
+                        ds.getLectureId() + "/questions/" + questionId))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status:" + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), BanIpResponse.class);
     }
 }
