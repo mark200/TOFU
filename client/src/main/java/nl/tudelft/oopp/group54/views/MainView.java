@@ -83,6 +83,33 @@ public class MainView extends Application {
     controller.performControllerSpecificSetup();
   }
 
+  public static void changeSceneClearHistory(ApplicationScene newSceneName, boolean recordInHistory, boolean clearHistory) {
+    FXMLLoader loader = new FXMLLoader();
+    loader.setLocation(sceneGraphMap.get(newSceneName));
+
+    Parent root = null;
+    try {
+      root = loader.load();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    rootScene = new Scene(root);
+    stage.setScene(rootScene);
+
+    if(recordInHistory) {
+      history.push(currentScene);
+      currentScene = newSceneName;
+    }
+
+    if(clearHistory){
+      history.clear();
+    }
+
+    AbstractApplicationController controller = loader.getController();
+    controller.performControllerSpecificSetup();
+  }
+
 
   public static void main(String[] args) {
     launch(args);

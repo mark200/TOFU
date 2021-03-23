@@ -237,7 +237,7 @@ public class LectureServiceImpl implements LectureService {
 
         toBeReturned.put("success", true);
         toBeReturned.put("lectureID", lectureId);
-        toBeReturned.put("People", usersWatchingLecture);
+        toBeReturned.put("people", usersWatchingLecture);
         toBeReturned.put("studentJoinID", foundLecture.get().getStudentJoinId());
         toBeReturned.put("moderatorJoinID", foundLecture.get().getModeratorJoinId());
         toBeReturned.put("lecturerJoinID", foundLecture.get().getLecturerJoinId());

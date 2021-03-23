@@ -196,4 +196,24 @@ public class ServerCommunication {
 
         return objectMapper.readValue(response.body(), BanIpResponse.class);
     }
+
+
+    /**
+     * Get metadata about the lecture.
+     * @return - GetLectureMetadataResponse
+     * @throws IOException -
+     * @throws InterruptedException -
+     */
+    public static GetLectureMetadataResponse getLectureMetadata() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/"
+                        + ds.getLectureId()))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return objectMapper.readValue(response.body(), GetLectureMetadataResponse.class);
+    }
 }
