@@ -1,13 +1,13 @@
 package nl.tudelft.oopp.group54.controllers.questions;
 
-import nl.tudelft.oopp.group54.controllers.ParamResolver;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+        import nl.tudelft.oopp.group54.controllers.ParamResolver;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.http.MediaType;
+        import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.TreeMap;
+        import java.util.Arrays;
+        import java.util.Map;
+        import java.util.TreeMap;
 
 @RestController
 @RequestMapping(value = "/lectures")
@@ -28,7 +28,7 @@ public class QuestionController {
 
         boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
                 requestPayload,
-                Arrays.asList("userId", "questionText")
+                Arrays.asList("userId", "questionText", "UserIp")
         );
 
         if (!containsNecessaryData) {
@@ -43,10 +43,12 @@ public class QuestionController {
 
         String userId;
         String questionText;
+        String userIp;
 
         try {
             userId = (String) requestPayload.get("userId");
             questionText = (String) requestPayload.get("questionText");
+            userIp = (String) requestPayload.get("userIp");
         } catch (Exception e) {
             Map<String, Object> toBeReturned = new TreeMap<>();
             toBeReturned.put("success", "false");
@@ -55,7 +57,7 @@ public class QuestionController {
             return toBeReturned;
         }
 
-        return questionService.postQuestion(lectureId, userId, questionText);
+        return questionService.postQuestion(lectureId, userId, questionText, userIp);
     }
 
 

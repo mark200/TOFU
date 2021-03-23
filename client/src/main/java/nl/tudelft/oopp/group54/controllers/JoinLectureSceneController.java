@@ -13,6 +13,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import static java.lang.Long.parseLong;
+
 public class JoinLectureSceneController extends AbstractApplicationController {
 
   @FXML
@@ -78,6 +83,14 @@ public class JoinLectureSceneController extends AbstractApplicationController {
     }
 
     JoinLectureResponse response = null;
+    String userIp = null;
+
+    try {
+      userIp = InetAddress.getLocalHost().getHostAddress();
+    } catch (UnknownHostException e) {
+      e.printStackTrace();
+    }
+
     try {
       response = ServerCommunication.joinLecture(enterNameTextFieldText.toString(), lectureId, joinId);
     } catch (Exception e) {
@@ -92,6 +105,7 @@ public class JoinLectureSceneController extends AbstractApplicationController {
       this.ds.setJoinLectureResponse(response);
       this.ds.setUserId(response.getUserID());
       this.ds.setLectureId(lectureId);
+      this.ds.setUserIp(parseLong(userIp));
       MainView.changeScene(ApplicationScene.LECTUREROOM, true);
     } else {
       this.displayStatusMessage(response.getMessage());

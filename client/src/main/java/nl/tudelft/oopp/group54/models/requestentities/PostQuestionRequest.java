@@ -5,11 +5,17 @@ import java.io.Serializable;
 public class PostQuestionRequest implements Serializable {
 	String questionText;
 	String userId;
+	String userIp;
 	
-	public PostQuestionRequest(String questionText, String userId) {
+	public PostQuestionRequest(String questionText, String userId, String userIp) {
 		this.questionText = questionText;
 		this.userId = userId;
+		this.userIp = userIp;
 	}
+
+	public String getUserIp() { return userIp; }
+
+	public void setUserIp(String userIp) { this.userIp = userIp; }
 
 	public String getQuestionText() {
 		return questionText;
@@ -29,9 +35,10 @@ public class PostQuestionRequest implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PostQuestionRequest [questionText=" + questionText + ", userId=" + userId + "]";
+		return "PostQuestionRequest{" +
+				"questionText='" + questionText + '\'' +
+				", userId='" + userId + '\'' +
+				", userIp='" + userIp + '\'' +
+				'}';
 	}
-	
-	
-
 }
