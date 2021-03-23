@@ -64,20 +64,26 @@ public class VoteServiceImpl implements VoteService {
         Vote newVote = null;
 
         if (foundVote.isEmpty()) {
-            newVote = new Vote(new VoteKey(Integer.parseInt(userId), lectureId, questionId), 0);
-        } else {
-            newVote = foundVote.get();
-            if (isUpvote) {
-                newVote.setVoteValue(newVote.getVoteValue() + 1);
-            } else {
-                newVote.setVoteValue(newVote.getVoteValue() - 1);
+            // This handles the case where users vote on their own question.
+            if (userId.equals(foundQuestion.get().getStudent_id().toString())){
+                toBeReturned.put("success", false);
+                toBeReturned.put("message", "Users cannot vote on their own question");
+                return toBeReturned;
             }
+            newVote = new Vote(new VoteKey(Integer.parseInt(userId), lectureId, questionId), 1);
+        } else {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "Cannot vote more than once on the same question");
+            return toBeReturned;
         }
 
         voteRepository.flush();
+        questionRepository.flush();
+        foundQuestion.get().setVote_counter(foundQuestion.get().getVote_counter() + 1);
 
         try {
             voteRepository.save(newVote);
+            questionRepository.save(foundQuestion.get());
             toBeReturned.put("success", true);
         } catch (Exception e) {
             toBeReturned.put("success", false);
