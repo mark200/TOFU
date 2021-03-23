@@ -20,8 +20,8 @@ public class LectureTest {
     @BeforeAll
     public static void init(){
         Date date = new Date();
-        lecture1 = new Lecture(123, "312", date, "123", "132", "123");
-        lecture2 = new Lecture(123, "312", date, "123", "132", "123");
+        lecture1 = new Lecture(123, "312", date, "123", "132", "123", true);
+        lecture2 = new Lecture(123, "312", date, "123", "132", "123", true);
     }
 
     @Test

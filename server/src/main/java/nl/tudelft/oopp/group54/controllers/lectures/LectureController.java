@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 
 
@@ -21,6 +20,14 @@ public class LectureController {
 
     public void setLectureService(LectureServiceImpl service) {
         this.lectureService = service;
+    }
+
+
+    @PutMapping(
+            value = "/e/{lectureId}",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> endLecture(@RequestParam String userId, @PathVariable String lectureId) {
+        return lectureService.endLecture(Integer.parseInt(userId), Integer.parseInt(lectureId));
     }
 
     @PostMapping(
@@ -109,5 +116,6 @@ public class LectureController {
     public Map<String, Object> getLectureMetadata(@PathVariable("lectureID") Integer lectureID) {
         return lectureService.getLectureMetadata(lectureID);
     }
+
 
 }
