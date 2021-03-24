@@ -30,7 +30,7 @@ public class QuestionServiceImplementation implements QuestionService {
      * @return status of the request
      */
     @Override
-    public Map<String, Object> postQuestion(Integer lectureId, String userId, String questionText) {
+    public Map<String, Object> postQuestion(Integer lectureId, String userId, String userIp, String questionText) {
         Map<String, Object> status = new TreeMap<>();
 
         if (lectureId == null) {
@@ -45,6 +45,12 @@ public class QuestionServiceImplementation implements QuestionService {
             return status;
         }
 
+        if (userIp == null) {
+            status.put("success", false);
+            status.put("message", "UserIP cannot be null!");
+            return status;
+        }
+
         if (questionText == null || questionText.length() <= 0 || questionText.length() > 420) {
             status.put("code", "422 UNPROCESSABLE ENTRY");
             status.put("success", false);
@@ -53,12 +59,28 @@ public class QuestionServiceImplementation implements QuestionService {
         }
 
         Optional<User> findUserRow = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
 
         if (findUserRow.isEmpty()) {
             status.put("code", "401 UNAUTHORIZED");
             status.put("success", false);
             status.put("message", "Unrecognized user ID or specified lecture does not exist!");
             return status;
+        }
+
+        if (foundLecture.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "There does not exist a lecture with this id.");
+            return status;
+        }
+
+        // don't let students post questions once the lecture has ended
+        if (findUserRow.get().getRoleID().equals(3)) {
+            if (!foundLecture.get().isLectureOngoing()) {
+                status.put("success", false);
+                status.put("message", "The lecture has ended.");
+                return status;
+            }
         }
 
         QuestionKey newQuestionKey = new QuestionKey(null, lectureId);
@@ -68,13 +90,14 @@ public class QuestionServiceImplementation implements QuestionService {
         newQuestion.setStudent_id(findUserRow.get().getKey().getId());
         newQuestion.setContent(questionText);
         newQuestion.setCreated_at(new Date());
+        newQuestion.setStudentIp(userIp);
 
         questionRepository.flush();
 
         try {
             questionRepository.save(newQuestion);
             status.put("success", true);
-            status.put("message", "question was posted");
+            status.put("message", "question has been posted");
         } catch (Exception e) {
             status.put("success", false);
             status.put("message", e.toString());
@@ -160,6 +183,7 @@ public class QuestionServiceImplementation implements QuestionService {
         // get question and author of request from database.
         Optional<Question> questionToBeDeleted = questionRepository.findById(new QuestionKey(questionId, lectureId));
         Optional<User> authorOfTheDeletionRequest = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
 
         Integer requestAuthorLectureId = authorOfTheDeletionRequest.get().getKey().getLecture_id();
         Integer questionAuthorLectureId = questionToBeDeleted.get().getPrimaryKey().getLecture_id();
@@ -180,6 +204,12 @@ public class QuestionServiceImplementation implements QuestionService {
         if (authorOfTheDeletionRequest.isEmpty()) {
             status.put("success", false);
             status.put("message", "Unrecognized user id or specified lecture does not exist!");
+            return status;
+        }
+
+        if (foundLecture.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized lecture.");
         }
 
         Integer requestAuthorId = authorOfTheDeletionRequest.get().getKey().getId();
@@ -190,6 +220,14 @@ public class QuestionServiceImplementation implements QuestionService {
         // 2 - moderator
         // 3 - student
 
+        // don't let students post questions once the lecture has ended
+        if(authorOfTheDeletionRequest.get().getRoleID().equals(3)){
+            if(!foundLecture.get().isLectureOngoing()){
+                status.put("success", false);
+                status.put("message", "The lecture has ended.");
+                return status;
+            }
+        }
 
         // If the user who made the request to delete question is not the owner of the question,
         // then delete question only if the user who sent delete request is a moderator/lecturer.
@@ -223,7 +261,6 @@ public class QuestionServiceImplementation implements QuestionService {
 
         // The last case: the author of request is the owner of the question,
         // just delete the question.
-
         try {
             questionRepository.delete(questionToBeDeleted.get());
             status.put("success", true);
@@ -246,12 +283,13 @@ public class QuestionServiceImplementation implements QuestionService {
         if (q == null) {
             return null;
         }
-        
+
         Optional<User> author = userRepository.findById(new UserKey(q.getStudent_id(), lecture_id));
 
         Map<String, Object> toBeReturned = new TreeMap<>();
         toBeReturned.put("questionId", q.getPrimaryKey().getId());
         toBeReturned.put("userId", q.getStudent_id());
+        toBeReturned.put("userIp", q.getStudentIp());
         toBeReturned.put("userName", author.get().getName());
         toBeReturned.put("questionText", q.getContent());
         toBeReturned.put("score", q.getVote_counter());

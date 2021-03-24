@@ -6,8 +6,8 @@ public class UnansweredQuestionView extends QuestionView {
 	private Button markAnsweredButton;
 	
 
-	public UnansweredQuestionView(String s, String questionId, String userName) {
-		super(s, questionId, userName);
+	public UnansweredQuestionView(String s, String questionId, String userName, String userIp, Integer voteCount) {
+		super(s, questionId, userName, userIp, voteCount);
 		super.addDropDown();
 		this.addMarkAnsweredButton();
 		super.horizontalGridPane.add(markAnsweredButton, 1, 0);

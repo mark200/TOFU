@@ -7,6 +7,7 @@ public class JoinLectureResponse {
   private String userName;
   private String role;
   private String message;
+  private Integer privilegeId;
 
 
   public JoinLectureResponse() {
@@ -15,18 +16,21 @@ public class JoinLectureResponse {
     this.userName = "";
     this.role = "";
     this.message = "";
+    this.privilegeId = 0;
   }
 
   public JoinLectureResponse(Boolean success,
                              Long userID,
                              String userName,
                              String role,
-                             String message) {
+                             String message,
+                             Integer privilegeId) {
     this.success = success;
     this.userID = userID;
     this.userName = userName;
     this.role = role;
     this.message = message;
+    this.privilegeId = privilegeId;
   }
 
   public Boolean getSuccess() {
@@ -67,6 +71,14 @@ public class JoinLectureResponse {
 
   public void setMessage(String message) {
     this.message = message;
+  }
+
+  public Integer getPrivilegeId() {
+    return privilegeId;
+  }
+
+  public void setPrivilegeId(Integer privilegeId) {
+    this.privilegeId = privilegeId;
   }
 
   @Override

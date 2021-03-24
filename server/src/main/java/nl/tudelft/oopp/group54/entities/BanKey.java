@@ -11,21 +11,19 @@ import java.util.Objects;
 public class BanKey implements Serializable, Comparable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "banned_ip", nullable = false)
-    private int banned_ip;
+    private String banned_ip;
 
     @Column(name = "lecture_id", nullable = false)
     private int lecture_id;
 
-    public BanKey(int id, int lecture_id) {
+    public BanKey(String banned_ip, int lecture_id) {
         this.banned_ip = banned_ip;
         this.lecture_id = lecture_id;
     }
 
-    public BanKey() {
+    public BanKey() {}
 
-    }
-
-    public int getBanned_ip() {
+    public String getBanned_ip() {
         return banned_ip;
     }
 
@@ -33,7 +31,7 @@ public class BanKey implements Serializable, Comparable {
         return lecture_id;
     }
 
-    public void setBanned_ip(int banned_ip) {
+    public void setBanned_ip(String banned_ip) {
         this.banned_ip = banned_ip;
     }
 
@@ -54,8 +52,8 @@ public class BanKey implements Serializable, Comparable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BanKey banKey = (BanKey) o;
-        return getBanned_ip() == banKey.getBanned_ip() &&
-                getLecture_id() == banKey.getLecture_id();
+        return getLecture_id() == banKey.getLecture_id() &&
+                Objects.equals(getBanned_ip(), banKey.getBanned_ip());
     }
 
     @Override

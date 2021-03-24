@@ -1,13 +1,15 @@
 package nl.tudelft.oopp.group54.controllers.questions;
 
-import nl.tudelft.oopp.group54.controllers.ParamResolver;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+        import nl.tudelft.oopp.group54.controllers.ParamResolver;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.http.MediaType;
+        import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.TreeMap;
+        import java.util.Arrays;
+        import java.util.Map;
+        import java.util.TreeMap;
+
+        import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping(value = "/lectures")
@@ -24,7 +26,8 @@ public class QuestionController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> postQuestion(@PathVariable(value = "lectureID") Integer lectureId,
-                                            @RequestBody Map<String, Object> requestPayload) {
+                                            @RequestBody Map<String, Object> requestPayload,
+                                            HttpServletRequest request) {
 
         boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
                 requestPayload,
@@ -43,6 +46,7 @@ public class QuestionController {
 
         String userId;
         String questionText;
+        String userIp = request.getRemoteAddr();
 
         try {
             userId = (String) requestPayload.get("userId");
@@ -55,7 +59,7 @@ public class QuestionController {
             return toBeReturned;
         }
 
-        return questionService.postQuestion(lectureId, userId, questionText);
+        return questionService.postQuestion(lectureId, userId, userIp, questionText);
     }
 
 

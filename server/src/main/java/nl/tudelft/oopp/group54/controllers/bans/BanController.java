@@ -1,7 +1,6 @@
-package nl.tudelft.oopp.group54.controllers.votes;
+package nl.tudelft.oopp.group54.controllers.bans;
 
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
-import nl.tudelft.oopp.group54.controllers.questions.MockQuestionServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -11,39 +10,36 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @RestController
-@RequestMapping(value = "/lectures/{lectureID}/questions/{questionID}/")
-public class VoteController {
-
+@RequestMapping(value = "/lectures")
+public class BanController {
     @Autowired
-    VoteServiceImpl voteService;
+    BanServiceImpl banService;
 
-    @PostMapping(value = "votes",
+    @PostMapping(value = "{lectureID}/questions/{questionID}/ban",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public Map<String, Object> voteOnQuestion(@PathVariable(value = "lectureID") Integer lectureId,
+    public Map<String, Object> banIp(@PathVariable(value = "lectureID") Integer lectureId,
                                               @PathVariable(value = "questionID") Integer questionId,
-                                              @RequestBody Map<String, Object> requestPayload){
+                                              @RequestBody Map<String, Object> requestPayload) {
         boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
                 requestPayload,
-                Arrays.asList("userId")
+                Arrays.asList("userIp")
         );
 
-        if(!containsNecessaryData){
+        if (!containsNecessaryData) {
 
             Map<String, Object> toBeReturned = new TreeMap<>();
             toBeReturned.put("success", "false");
-            toBeReturned.put("message", "Expected isUpvote," +
-                    " userId to be provided");
+            toBeReturned.put("message", "Expected userIp" +
+                    " to be provided");
 
             return toBeReturned;
         }
 
-        String userId;
-        Boolean isUpvote;
+        String userIp;
 
         try {
-            userId = (String) requestPayload.get("userId");
-            isUpvote = (Boolean) requestPayload.get("upvote");
+            userIp = (String) requestPayload.get("userIp");
         } catch (Exception e){
             Map<String, Object> toBeReturned = new TreeMap<>();
             toBeReturned.put("success", "false");
@@ -52,6 +48,6 @@ public class VoteController {
             return toBeReturned;
         }
 
-        return voteService.voteOnQuestion(lectureId, userId, questionId, isUpvote);
+        return banService.banIp(lectureId, questionId, userIp);
     }
 }

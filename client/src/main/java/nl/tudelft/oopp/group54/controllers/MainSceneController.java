@@ -32,4 +32,12 @@ public class MainSceneController extends AbstractApplicationController {
     public void performControllerSpecificSetup() {
         System.out.println("Main controller config");
     }
+
+    /**
+     * display the message that lecture has been ended when students gets kicked out of the room
+     */
+    @Override
+    public void switchToMainFromLecture() {
+        super.switchToMainFromLecture();
+    }
 }

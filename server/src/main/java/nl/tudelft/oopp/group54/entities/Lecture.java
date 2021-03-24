@@ -33,70 +33,94 @@ public class Lecture {
     @NotNull
     private String lecturerJoinId;
 
-    public Lecture(){
+    @Column(name = "lecture_ongoing", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean lectureOngoing;
+
+
+    public Lecture() {
 
     }
 
     /**
      * Constructor for Lecture Entity
-     * @param id - Integer
-     * @param lectureName - String
-     * @param startTime - Date
-     * @param studentJoinId - Integer
+     *
+     * @param id              - Integer
+     * @param lectureName     - String
+     * @param startTime       - Date
+     * @param studentJoinId   - Integer
      * @param moderatorJoinId - Integer
-     * @param lecturerJoinId - Integer
+     * @param lecturerJoinId  - Integer
      */
-    public Lecture(Integer id, @NotNull String lectureName, @NotNull Date startTime, @NotNull String studentJoinId, @NotNull String moderatorJoinId, @NotNull String lecturerJoinId) {
+    public Lecture(Integer id, @NotNull String lectureName, @NotNull Date startTime, @NotNull String studentJoinId, @NotNull String moderatorJoinId, @NotNull String lecturerJoinId, Boolean lectureOngoing) {
         this.id = id;
         this.lectureName = lectureName;
         this.startTime = startTime;
         this.studentJoinId = studentJoinId;
         this.moderatorJoinId = moderatorJoinId;
         this.lecturerJoinId = lecturerJoinId;
+        this.lectureOngoing = lectureOngoing;
+    }
+
+
+    public Boolean isLectureOngoing() {
+        return lectureOngoing;
+    }
+
+    public Boolean isLectureStarted() {
+        Date current = new Date();
+        return !(getStartTime().compareTo(current) > 0);
+    }
+
+    public Boolean isJoinable() {
+        return isLectureOngoing() && isLectureStarted();
+    }
+
+    public void setLectureOngoing(Boolean lectureOngoing) {
+        this.lectureOngoing = lectureOngoing;
     }
 
     public Integer getId() {
         return id;
     }
 
-    public String getLectureName() {
-        return lectureName;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public String getStudentJoinId() {
-        return studentJoinId;
-    }
-
-    public String getModeratorJoinId() {
-        return moderatorJoinId;
-    }
-
-    public String getLecturerJoinId() {
-        return lecturerJoinId;
-    }
-
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getLectureName() {
+        return lectureName;
     }
 
     public void setLectureName(String lectureName) {
         this.lectureName = lectureName;
     }
 
+    public Date getStartTime() {
+        return startTime;
+    }
+
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
+    }
+
+    public String getStudentJoinId() {
+        return studentJoinId;
     }
 
     public void setStudentJoinId(String studentJoinId) {
         this.studentJoinId = studentJoinId;
     }
 
+    public String getModeratorJoinId() {
+        return moderatorJoinId;
+    }
+
     public void setModeratorJoinId(String moderatorJoinId) {
         this.moderatorJoinId = moderatorJoinId;
+    }
+
+    public String getLecturerJoinId() {
+        return lecturerJoinId;
     }
 
     public void setLecturerJoinId(String lecturerJoinId) {
@@ -116,7 +140,7 @@ public class Lecture {
                 getLecturerJoinId().equals(lecture.getLecturerJoinId());
     }
 
-    public boolean equalsPrimaryKeys(Object o){
+    public boolean equalsPrimaryKeys(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Lecture lecture = (Lecture) o;
