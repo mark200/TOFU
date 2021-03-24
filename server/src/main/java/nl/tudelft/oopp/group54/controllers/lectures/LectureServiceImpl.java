@@ -165,7 +165,7 @@ public class LectureServiceImpl implements LectureService {
         }
 
         int usersWatchingLecture = userRepository.findAll().stream()
-                .filter(x -> x.getKey().getLecture_id() == lectureId.intValue())
+                .filter(x -> x.getKey().getLectureID() == lectureId.intValue())
                 .collect(Collectors.toList()).size();
 
         User newUser = new User(new UserKey(usersWatchingLecture, lectureId), userName, "127.0.0.1", null, 0);
@@ -226,7 +226,7 @@ public class LectureServiceImpl implements LectureService {
         }
 
         int usersWatchingLecture = userRepository.findAll().stream()
-                .filter(x -> x.getKey().getLecture_id() == lectureId.intValue())
+                .filter(x -> x.getKey().getLectureID() == lectureId.intValue())
                 .collect(Collectors.toList()).size();
 
         toBeReturned.put("success", true);

@@ -167,7 +167,7 @@ public class QuestionServiceImplementation implements QuestionService {
         Optional<Question> questionToBeDeleted = questionRepository.findById(new QuestionKey(questionId, lectureId));
         Optional<User> authorOfTheDeletionRequest = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
 
-        Integer requestAuthorLectureId = authorOfTheDeletionRequest.get().getKey().getLecture_id();
+        Integer requestAuthorLectureId = authorOfTheDeletionRequest.get().getKey().getLectureID();
         Integer questionAuthorLectureId = questionToBeDeleted.get().getPrimaryKey().getLecture_id();
 
         // If the lectures of user and question do not match.

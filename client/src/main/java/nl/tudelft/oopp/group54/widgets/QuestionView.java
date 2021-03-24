@@ -1,22 +1,23 @@
 package nl.tudelft.oopp.group54.widgets;
 
+import static java.lang.Long.parseLong;
+
+import java.io.IOException;
+
+import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.control.*;
-import nl.tudelft.oopp.group54.communication.ServerCommunication;
-import nl.tudelft.oopp.group54.controllers.LectureRoomSceneController;
-import nl.tudelft.oopp.group54.models.QuestionModel;
-import nl.tudelft.oopp.group54.models.responseentities.BanIpResponse;
-import nl.tudelft.oopp.group54.models.responseentities.DeleteQuestionResponse;
-import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
-import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
 
-import java.io.IOException;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 
-import javafx.beans.property.DoubleProperty;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -25,11 +26,19 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
+
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import nl.tudelft.oopp.group54.models.responseentities.VoteResponse;
 
-import static java.lang.Long.parseLong;
+import nl.tudelft.oopp.group54.communication.ServerCommunication;
+import nl.tudelft.oopp.group54.controllers.LectureRoomSceneController;
+import nl.tudelft.oopp.group54.models.QuestionModel;
+import nl.tudelft.oopp.group54.models.responseentities.BanIpResponse;
+import nl.tudelft.oopp.group54.models.responseentities.DeleteQuestionResponse;
+import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
+
+import nl.tudelft.oopp.group54.models.responseentities.VoteResponse;
 
 public abstract class QuestionView extends AnchorPane {
 
@@ -61,6 +70,13 @@ public abstract class QuestionView extends AnchorPane {
 
     private LectureRoomSceneController owner;
 
+    /**
+     * Constructor.
+     * @param text content
+     * @param questionId ID
+     * @param userName person who asks
+     * @param voteCount times the question has been voted
+     */
     public QuestionView(String text, String questionId, String userName, Integer voteCount) {
         this.innerVBox = new VBox();
 
@@ -222,8 +238,10 @@ public abstract class QuestionView extends AnchorPane {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (!response.isSuccess())
+
+        if (!response.isSuccess()) {
             System.out.println(response.getMessage());
+        }
     }
 
     private void delete() {
@@ -267,25 +285,23 @@ public abstract class QuestionView extends AnchorPane {
     }
 
     private void banAuthor() {
-		BanIpResponse response = null;
+        BanIpResponse response = null;
 
-		try {
-			response = ServerCommunication.banIp(this.questionId);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+        try {
+            response = ServerCommunication.banIp(this.questionId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-		if (response.getSuccess()) {
+        // if (response.getSuccess()) {
 
-		}
-	}
+        // }
+    }
 
-
-//	public void setQuestionModel() {
-//		this.questionModel = questionModel;
-//	}
-
+    // public void setQuestionModel() {
+    //    this.questionModel = questionModel;
+    // }
 }
 
