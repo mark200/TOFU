@@ -84,7 +84,7 @@ public class VoteServiceImpl implements VoteService {
 
         if (foundVote.isEmpty()) {
             // This handles the case where users vote on their own question.
-            if (userId.equals(foundQuestion.get().getStudent_id().toString())) {
+            if (userId.equals(foundQuestion.get().getStudentId().toString())) {
                 toBeReturned.put("success", false);
                 toBeReturned.put("message", "Users cannot vote on their own question");
                 return toBeReturned;
@@ -98,7 +98,7 @@ public class VoteServiceImpl implements VoteService {
 
         voteRepository.flush();
         questionRepository.flush();
-        foundQuestion.get().setVote_counter(foundQuestion.get().getVote_counter() + 1);
+        foundQuestion.get().setVoteCounter(foundQuestion.get().getVoteCounter() + 1);
 
         try {
             voteRepository.save(newVote);
