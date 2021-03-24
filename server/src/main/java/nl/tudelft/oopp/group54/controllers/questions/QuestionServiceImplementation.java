@@ -83,20 +83,21 @@ public class QuestionServiceImplementation implements QuestionService {
             }
         }
 
-        QuestionKey newQuestionKey = new QuestionKey(new Random().nextInt(), lectureId);
+        QuestionKey newQuestionKey = new QuestionKey(null, lectureId);
 
         Question newQuestion = new Question();
         newQuestion.setPrimaryKey(newQuestionKey);
         newQuestion.setStudent_id(findUserRow.get().getKey().getId());
         newQuestion.setContent(questionText);
         newQuestion.setCreated_at(new Date());
+        newQuestion.setStudentIp(userIp);
 
         questionRepository.flush();
 
         try {
             questionRepository.save(newQuestion);
             status.put("success", true);
-            status.put("questionID", newQuestion.getPrimaryKey().getId());
+            status.put("message", "question has been posted");
         } catch (Exception e) {
             status.put("success", false);
             status.put("message", e.toString());
@@ -288,6 +289,7 @@ public class QuestionServiceImplementation implements QuestionService {
         Map<String, Object> toBeReturned = new TreeMap<>();
         toBeReturned.put("questionId", q.getPrimaryKey().getId());
         toBeReturned.put("userId", q.getStudent_id());
+        toBeReturned.put("userIp", q.getStudentIp());
         toBeReturned.put("userName", author.get().getName());
         toBeReturned.put("questionText", q.getContent());
         toBeReturned.put("score", q.getVote_counter());

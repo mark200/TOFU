@@ -1,14 +1,32 @@
 package nl.tudelft.oopp.group54.widgets;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.controllers.LectureRoomSceneController;
+import nl.tudelft.oopp.group54.models.QuestionModel;
 import nl.tudelft.oopp.group54.models.responseentities.BanIpResponse;
 import nl.tudelft.oopp.group54.models.responseentities.DeleteQuestionResponse;
+import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
+
+import java.io.IOException;
+
+import javafx.beans.property.DoubleProperty;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import nl.tudelft.oopp.group54.models.responseentities.VoteResponse;
 
 import java.io.IOException;
@@ -39,15 +57,19 @@ public abstract class QuestionView extends AnchorPane {
     private String text;
     private String questionId;
     private String userNameString;
+    private Integer voteCount;
+    private String userIp;
 
     private LectureRoomSceneController owner;
 
-    public QuestionView(String text, String questionId, String userName) {
+    public QuestionView(String text, String questionId, String userName, String userIp, Integer voteCount) {
         this.innerVBox = new VBox();
 
         this.text = text;
         this.userNameString = userName;
         this.questionId = questionId;
+        this.voteCount = voteCount;
+        this.userIp = userIp;
 
         this.menuBar = new MenuBar();
 
@@ -96,7 +118,7 @@ public abstract class QuestionView extends AnchorPane {
         this.voteGridPane = new GridPane();
 
         this.upvoteButton = new Button("^");
-        this.currentScore = new Label("0");
+        this.currentScore = new Label(this.voteCount.toString());
 
         this.voteGridPane.add(this.upvoteButton, 0, 0);
         this.voteGridPane.add(this.currentScore, 0, 1);
@@ -188,13 +210,14 @@ public abstract class QuestionView extends AnchorPane {
         });
     }
 
+    public void setOwner(LectureRoomSceneController owner) {
+        this.owner = owner;
+    }
+
     public LectureRoomSceneController getOwner() {
         return owner;
     }
 
-    public void setOwner(LectureRoomSceneController owner) {
-        this.owner = owner;
-    }
 
     private void childConfiguration() {
         setBottomAnchor(outerGridPane, 0.0);
@@ -237,6 +260,13 @@ public abstract class QuestionView extends AnchorPane {
 
     }
 
+    public String getUserIp() {
+        return userIp;
+    }
+
+    public void setUserIp(String userIp) {
+        this.userIp = userIp;
+    }
 
     private void markAnswered() {
         PostAnswerResponse response = null;
@@ -258,21 +288,6 @@ public abstract class QuestionView extends AnchorPane {
         System.out.println("answer question " + questionId + " with text");
     }
 
-    private void banAuthor() {
-        BanIpResponse response = null;
-
-        try {
-            response = ServerCommunication.banIp(this.questionId);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        if (response.getSuccess()) {
-
-        }
-    }
 
     /**
      * Update the Options dropdown for Lecturer
@@ -301,6 +316,22 @@ public abstract class QuestionView extends AnchorPane {
 //	public void setQuestionModel() {
 //		this.questionModel = questionModel;
 //	}
+        private void banAuthor() {
+            BanIpResponse response = null;
+
+            try {
+                response = ServerCommunication.banIp(this.questionId, this.userIp);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (response.getSuccess()) {
+                owner.displayStatusMessage("Users with this question's author's IP " +
+                        "have been banned from posting anymore questions.");
+            }
+        }
 
 }
 

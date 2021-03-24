@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+
 public class LectureRoomSceneController extends AbstractApplicationController {
 
 //  @FXML
@@ -100,7 +101,6 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     }
 
     public void askButtonClicked() {
-        System.out.println("haha");
         postQuestion();
         this.refreshButtonClickedAfter();
     }
@@ -118,14 +118,6 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     private void postQuestion() {
         String questionText = questionField.getCharacters().toString();
         PostQuestionResponse response = null;
-        String userIp = null;
-
-        try {
-            userIp = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-
         try {
             response = ServerCommunication.postQuestion(questionText);
         } catch (IOException e) {
@@ -133,13 +125,10 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println(response);
-        if (response.getSuccess()) {
 
-            //should anything(like storing the response) happen here?
-            //this.ds.addUnansweredQuestion(questionText);
-            //this.ds.setUserIp(parseLong(userIp.replaceAll(",", "")));
+        if (response.getSuccess()) {
             questionField.clear();
+            this.refreshButtonClicked();
         }
     }
 
