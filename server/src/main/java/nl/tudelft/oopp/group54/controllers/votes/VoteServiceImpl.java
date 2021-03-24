@@ -72,14 +72,13 @@ public class VoteServiceImpl implements VoteService {
             return toBeReturned;
         }
 
-        // if the lecture has ended don't let students vote.
-        if (foundUser.get().getRoleID().equals(3)) {
-            if (!foundLecture.get().isLectureOngoing()) {
-                toBeReturned.put("success", false);
-                toBeReturned.put("message", "The lecture has ended.");
-                return toBeReturned;
-            }
+        // if the lecture has ended don't let users vote
+        if (!foundLecture.get().isLectureOngoing()) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "The lecture has ended.");
+            return toBeReturned;
         }
+
 
         Vote newVote = null;
 

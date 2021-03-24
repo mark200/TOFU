@@ -95,6 +95,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             this.endLectureButton.setVisible(false);
         }
 
+        updateOnQuestions(false);
+        updateOnMetadata();
+
         questionField.setOnKeyPressed(event -> {
             keyPressed(event);
         });

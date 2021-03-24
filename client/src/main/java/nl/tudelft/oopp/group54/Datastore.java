@@ -71,12 +71,14 @@ public class Datastore {
   public void addUnansweredQuestion(QuestionModel question, LectureRoomSceneController sceneController){
     QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(), question.getUserName(), question.getUserIp(), question.getScore());
     q.setOwner(sceneController);
+    q.updateQuestionView();
     this.currentUnansweredQuestionViews.add(q);
   }
 
   public void addAnsweredQuestion(QuestionModel question, LectureRoomSceneController sceneController){
 	QuestionView q = new AnsweredQuestionView(question.getQuestionText(), question.getQuestionId(),question.getUserName(), question.getUserIp(), question.getScore());
 	q.setOwner(sceneController);
+	q.updateQuestionView();
     this.currentAnsweredQuestionViews.add(q);
   }
 

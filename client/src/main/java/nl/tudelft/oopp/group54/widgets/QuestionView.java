@@ -85,17 +85,6 @@ public abstract class QuestionView extends AnchorPane {
 
         this.owner = null;
 
-        if (this.owner.getDs().getPrivilegeId().equals(1)) {
-            updateLecturer();
-        }
-
-        if (this.owner.getDs().getPrivilegeId().equals(2)) {
-            updateModerator();
-        }
-
-        if (this.owner.getDs().getPrivilegeId().equals(3)) {
-            updateStudent();
-        }
     }
 
 
@@ -239,6 +228,12 @@ public abstract class QuestionView extends AnchorPane {
         }
         if (!response.isSuccess())
             System.out.println(response.getMessage());
+
+        if(response != null){
+            owner.displayStatusMessage(response.getMessage());
+        }
+
+        owner.refreshButtonClickedAfter();
     }
 
     private void delete() {
@@ -252,7 +247,10 @@ public abstract class QuestionView extends AnchorPane {
             e.printStackTrace();
         }
 
-        if (!response.getSuccess()) {
+        if (!response.getSuccess())
+            System.out.println(response.getMessage());
+
+        if(response != null){
             owner.displayStatusMessage(response.getMessage());
         }
 
@@ -279,9 +277,14 @@ public abstract class QuestionView extends AnchorPane {
             e.printStackTrace();
         }
 
-        if (!response.getSuccess()) {
+        if (!response.getSuccess())
             System.out.println(response.getMessage());
+
+        if(response != null){
+            owner.displayStatusMessage(response.getMessage());
         }
+
+        owner.refreshButtonClickedAfter();
     }
 
     private void answerWithText() {
@@ -312,6 +315,20 @@ public abstract class QuestionView extends AnchorPane {
 
     }
 
+    public void updateQuestionView(){
+        if (this.owner.getDs().getPrivilegeId().equals(1)) {
+            updateLecturer();
+        }
+
+        if (this.owner.getDs().getPrivilegeId().equals(2)) {
+            updateModerator();
+        }
+
+        if (this.owner.getDs().getPrivilegeId().equals(3)) {
+            updateStudent();
+        }
+    }
+
 
 //	public void setQuestionModel() {
 //		this.questionModel = questionModel;
@@ -331,6 +348,9 @@ public abstract class QuestionView extends AnchorPane {
                 owner.displayStatusMessage("Users with this question's author's IP " +
                         "have been banned from posting anymore questions.");
             }
+
+            owner.refreshButtonClickedAfter();
+
         }
 
 }
