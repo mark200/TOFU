@@ -22,6 +22,9 @@ import nl.tudelft.oopp.group54.widgets.QuestionView;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 
 public class LectureRoomSceneController extends AbstractApplicationController {
@@ -196,12 +199,20 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             if (statusDisplay) {
                 this.displayStatusMessage("Refreshed succesfully.");
             }
+            // The questions are already sorted by time so only sorting by score is required.
+            List<QuestionModel> sorted= response.getUnanswered();
+            Collections.sort(sorted, new Comparator<QuestionModel>() {
+                @Override
+                public int compare(QuestionModel o1, QuestionModel o2) {
+                    return Integer.compare(o2.getScore(), o1.getScore());
+                }
+            });
             this.ds.setCurrentUnansweredQuestionViews(null);
             this.ds.setCurrentAnsweredQuestionViews(null);
             for (QuestionModel question : response.getAnswered()) {
                 this.ds.addAnsweredQuestion(question, this);
             }
-            for (QuestionModel question : response.getUnanswered()) {
+            for (QuestionModel question : sorted) {
                 this.ds.addUnansweredQuestion(question, this);
             }
         }
