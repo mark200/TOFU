@@ -29,7 +29,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import nl.tudelft.oopp.group54.models.responseentities.VoteResponse;
 
-import static java.lang.Long.parseLong;
+import java.io.IOException;
 
 public abstract class QuestionView extends AnchorPane {
 
@@ -84,6 +84,7 @@ public abstract class QuestionView extends AnchorPane {
         this.getChildren().addAll(this.outerGridPane, this.menuBar);
 
         this.owner = null;
+
     }
 
 
@@ -206,6 +207,7 @@ public abstract class QuestionView extends AnchorPane {
         return owner;
     }
 
+
     private void childConfiguration() {
         setBottomAnchor(outerGridPane, 0.0);
         setTopAnchor(outerGridPane, 0.0);
@@ -226,6 +228,12 @@ public abstract class QuestionView extends AnchorPane {
         }
         if (!response.isSuccess())
             System.out.println(response.getMessage());
+
+        if(response != null){
+            owner.displayStatusMessage(response.getMessage());
+        }
+
+        owner.refreshButtonClickedAfter();
     }
 
     private void delete() {
@@ -239,7 +247,10 @@ public abstract class QuestionView extends AnchorPane {
             e.printStackTrace();
         }
 
-        if (!response.getSuccess()) {
+        if (!response.getSuccess())
+            System.out.println(response.getMessage());
+
+        if(response != null){
             owner.displayStatusMessage(response.getMessage());
         }
 
@@ -266,31 +277,81 @@ public abstract class QuestionView extends AnchorPane {
             e.printStackTrace();
         }
 
-        if (!response.getSuccess()) {
+        if (!response.getSuccess())
             System.out.println(response.getMessage());
+
+        if(response != null){
+            owner.displayStatusMessage(response.getMessage());
         }
+
+        owner.refreshButtonClickedAfter();
     }
 
     private void answerWithText() {
         System.out.println("answer question " + questionId + " with text");
     }
 
-    private void banAuthor() {
-		BanIpResponse response = null;
 
-		try {
-			response = ServerCommunication.banIp(this.questionId, this.userIp);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+    /**
+     * Update the Options dropdown for Lecturer
+     */
+    private void updateLecturer() {
 
-		if (response.getSuccess()) {
-        owner.displayStatusMessage("Users with this question's author's IP " +
-                "have been banned from posting anymore questions.");
-		}
-	}
+    }
+
+    /**
+     * Update the Options dropdown for student
+     */
+    private void updateStudent() {
+        markAnswer.setVisible(false);
+        answerText.setVisible(false);
+        ban.setVisible(false);
+    }
+
+    /**
+     * Update the Options dropdown for Moderator
+     */
+    private void updateModerator() {
+
+    }
+
+    public void updateQuestionView(){
+        if (this.owner.getDs().getPrivilegeId().equals(1)) {
+            updateLecturer();
+        }
+
+        if (this.owner.getDs().getPrivilegeId().equals(2)) {
+            updateModerator();
+        }
+
+        if (this.owner.getDs().getPrivilegeId().equals(3)) {
+            updateStudent();
+        }
+    }
+
+
+//	public void setQuestionModel() {
+//		this.questionModel = questionModel;
+//	}
+        private void banAuthor() {
+            BanIpResponse response = null;
+
+            try {
+                response = ServerCommunication.banIp(this.questionId, this.userIp);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (response.getSuccess()) {
+                owner.displayStatusMessage("Users with this question's author's IP " +
+                        "have been banned from posting anymore questions.");
+            }
+
+            owner.refreshButtonClickedAfter();
+
+        }
 
 }
 

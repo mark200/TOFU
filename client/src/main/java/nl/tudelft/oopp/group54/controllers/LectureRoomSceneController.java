@@ -13,10 +13,16 @@ import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.models.QuestionModel;
 import nl.tudelft.oopp.group54.models.responseentities.EndLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
+import nl.tudelft.oopp.group54.models.responseentities.GetLectureMetadataResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
+import nl.tudelft.oopp.group54.views.ApplicationScene;
+import nl.tudelft.oopp.group54.views.MainView;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 
 public class LectureRoomSceneController extends AbstractApplicationController {
 
@@ -50,6 +56,8 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
     Datastore ds = Datastore.getInstance();
 
+    private Boolean ended = false;
+
 
     @Override
     public void performControllerSpecificSetup() {
@@ -71,6 +79,25 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 //      ds.addAnsweredQuestion("hello world " + i);
 //    }
 //
+        // lecturer
+        if (this.ds.getPrivilegeId().equals(1)) {
+            //TODO: GUI elements for the lecturer
+        }
+
+        // moderator
+        if (this.ds.getPrivilegeId().equals(2)) {
+            //TODO: GUI elements for the moderator
+        }
+
+        // student
+        if (this.ds.getPrivilegeId().equals(3)) {
+            //TODO: GUI elements for the student
+            this.endLectureButton.setVisible(false);
+        }
+
+        updateOnQuestions(false);
+        updateOnMetadata();
+
         questionField.setOnKeyPressed(event -> {
             keyPressed(event);
         });
@@ -110,6 +137,16 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
 
     public void refreshButtonClicked() {
+        updateOnQuestions(true);
+        updateOnMetadata();
+    }
+
+    public void refreshButtonClickedAfter() {
+        updateOnQuestions(false);
+        updateOnMetadata();
+    }
+
+    public void updateOnQuestions(Boolean statusDisplay) {
         GetAllQuestionsResponse response = null;
 
         try {
@@ -121,7 +158,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         }
 
         if (response.getSuccess()) {
-            this.displayStatusMessage("Refreshed succesfully.");
+            if (statusDisplay) {
+                this.displayStatusMessage("Refreshed succesfully.");
+            }
             this.ds.setCurrentUnansweredQuestionViews(null);
             this.ds.setCurrentAnsweredQuestionViews(null);
             for (QuestionModel question : response.getAnswered()) {
@@ -131,6 +170,34 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                 this.ds.addUnansweredQuestion(question, this);
             }
         }
+    }
+
+    public void updateOnMetadata() {
+        GetLectureMetadataResponse metadataResponse = null;
+
+        try {
+            metadataResponse = ServerCommunication.getLectureMetadata();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if (metadataResponse != null) {
+            if (metadataResponse.getSuccess()) {
+                if (!metadataResponse.getLectureOngoing()) {
+                    //TODO: stuff when lecture has ended change to main menu view
+                    endLectureGUI();
+                    //TODO: update status bar to ended
+                    if (!ended) {
+                        ended = true;
+                        this.displayStatusMessage("The Lecture has been ended.");
+                    }
+                    if (ds.getPrivilegeId().equals(3)) {
+                        MainView.changeSceneClearHistory(ApplicationScene.MAINVIEW, false, true);
+                    }
+                }
+            }
+        }
+
     }
 
     public void endLecture() {
@@ -150,35 +217,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         this.displayStatusMessage(response.getMessage());
 
         if (response.getSuccess()) {
-
-            this.questionField.setEditable(false);
-            this.questionField.setDisable(true);
-            this.askButton.setDisable(true);
-            this.endLectureButton.setVisible(false);
-
-        }
-    }
-
-    public void refreshButtonClickedAfter() {
-        GetAllQuestionsResponse response = null;
-
-        try {
-            response = ServerCommunication.getAllQuestions();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        if (response.getSuccess()) {
-            this.ds.setCurrentUnansweredQuestionViews(null);
-            this.ds.setCurrentAnsweredQuestionViews(null);
-            for (QuestionModel question : response.getAnswered()) {
-                this.ds.addAnsweredQuestion(question, this);
-            }
-            for (QuestionModel question : response.getUnanswered()) {
-                this.ds.addUnansweredQuestion(question, this);
-            }
+            endLectureGUI();
         }
     }
 
@@ -191,5 +230,20 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         } else {
             this.feedbackMenuContainer.setPrefWidth(0);
         }
+    }
+
+    /**
+     * sets GUI element to the state of lecture has finished
+     */
+    public void endLectureGUI() {
+        this.questionField.setEditable(false);
+        this.questionField.setDisable(true);
+        this.askButton.setDisable(true);
+        this.endLectureButton.setVisible(false);
+    }
+
+
+    public Datastore getDs() {
+        return ds;
     }
 }

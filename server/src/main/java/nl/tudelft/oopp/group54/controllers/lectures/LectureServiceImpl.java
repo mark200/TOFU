@@ -95,7 +95,6 @@ public class LectureServiceImpl implements LectureService {
         repository.flush();
         repository.save(newLecture);
 
-        // FIXME the order of those IDs should be fixed
         toBeReturned.put("success", true);
         toBeReturned.put("lectureId", newLecture.getId());
         toBeReturned.put("lecturerId", studentJoinId);
@@ -166,6 +165,9 @@ public class LectureServiceImpl implements LectureService {
         User newUser = new User(new UserKey(usersWatchingLecture, lectureId), userName, "127.0.0.1", null, 0);
 
         // Determine role of student
+        // 1 - lecturer
+        // 2 - moderator
+        // 3 - student
         if (foundLecture.get().getStudentJoinId().equals(roleCode)) {
             newUser.setRoleID(1);
         } else if (foundLecture.get().getLecturerJoinId().equals(roleCode)) {
@@ -178,6 +180,15 @@ public class LectureServiceImpl implements LectureService {
             return toBeReturned;
         }
 
+        // if the lecture has ended don't let students join it.
+        if(newUser.getRoleID().equals(3)){
+            if(!foundLecture.get().isLectureOngoing()){
+                toBeReturned.put("success", false);
+                toBeReturned.put("message", "The lecture has ended.");
+                return toBeReturned;
+            }
+        }
+
         userRepository.flush();
 
         try {
@@ -186,6 +197,7 @@ public class LectureServiceImpl implements LectureService {
             toBeReturned.put("userID", newUser.getKey().getId());
             toBeReturned.put("userName", newUser.getName());
             toBeReturned.put("role", (newUser.getRoleID() == 1) ? "Student" : ((newUser.getRoleID() == 2) ? "Lecturer" : "Moderator"));
+            toBeReturned.put("privilegeId", newUser.getRoleID());
         } catch (Exception e) {
             toBeReturned.put("success", false);
             toBeReturned.put("message", e.toString());
@@ -225,10 +237,11 @@ public class LectureServiceImpl implements LectureService {
 
         toBeReturned.put("success", true);
         toBeReturned.put("lectureID", lectureId);
-        toBeReturned.put("People", usersWatchingLecture);
+        toBeReturned.put("people", usersWatchingLecture);
         toBeReturned.put("studentJoinID", foundLecture.get().getStudentJoinId());
         toBeReturned.put("moderatorJoinID", foundLecture.get().getModeratorJoinId());
         toBeReturned.put("lecturerJoinID", foundLecture.get().getLecturerJoinId());
+        toBeReturned.put("lectureOngoing", foundLecture.get().isLectureOngoing());
 
         return toBeReturned;
     }

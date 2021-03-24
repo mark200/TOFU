@@ -13,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Datastore {
+
   static Datastore instance;
 
   ObservableList<QuestionView> currentUnansweredQuestionViews;
@@ -25,6 +26,7 @@ public class Datastore {
   
   Long userId = 0L;
   Integer lectureId = 0;
+  Integer privilegeId = 0;
 
   private Datastore() {
     this.currentUnansweredQuestionViews = FXCollections.observableArrayList();
@@ -69,12 +71,14 @@ public class Datastore {
   public void addUnansweredQuestion(QuestionModel question, LectureRoomSceneController sceneController){
     QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(), question.getUserName(), question.getUserIp(), question.getScore());
     q.setOwner(sceneController);
+    q.updateQuestionView();
     this.currentUnansweredQuestionViews.add(q);
   }
 
   public void addAnsweredQuestion(QuestionModel question, LectureRoomSceneController sceneController){
 	QuestionView q = new AnsweredQuestionView(question.getQuestionText(), question.getQuestionId(),question.getUserName(), question.getUserIp(), question.getScore());
 	q.setOwner(sceneController);
+	q.updateQuestionView();
     this.currentAnsweredQuestionViews.add(q);
   }
 
@@ -94,21 +98,28 @@ public class Datastore {
   public void setJoinLectureResponse(JoinLectureResponse joinLectureResponse) {
 	  this.joinLectureResponse = joinLectureResponse;
   }
-  
+
   public void setLectureId(Integer lectureId) {
 	  this.lectureId = lectureId;
   }
-  
+
   public Integer getLectureId() {
 	  return lectureId;
   }
-  
+
   public void setUserId(Long userId) {
 	  this.userId = userId;
   }
-  
+
   public Long getUserId() {
 	  return userId;
   }
 
+  public Integer getPrivilegeId() {
+    return privilegeId;
+  }
+
+  public void setPrivilegeId(Integer privilegeId) {
+    this.privilegeId = privilegeId;
+  }
 }
