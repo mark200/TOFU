@@ -72,4 +72,11 @@ public abstract class AbstractApplicationController {
 
   public abstract void performControllerSpecificSetup();
 
+  /**
+   * display the message that lecture has been ended when students gets kicked out of the room
+   */
+  public void switchToMainFromLecture(){
+    this.displayStatusMessage("The Lecture has ended.");
+  }
+
 }

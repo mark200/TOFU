@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import static java.lang.Long.parseLong;
-
 public class LectureRoomSceneController extends AbstractApplicationController {
 
 //  @FXML
@@ -56,6 +54,8 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     Integer feedbackMenuContainerUnfoldedWidth = 140;
 
     Datastore ds = Datastore.getInstance();
+
+    private Boolean ended = false;
 
 
     @Override
@@ -133,7 +133,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        System.out.println(response);
         if (response.getSuccess()) {
 
             //should anything(like storing the response) happen here?
@@ -145,6 +145,16 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
 
     public void refreshButtonClicked() {
+        updateOnQuestions(true);
+        updateOnMetadata();
+    }
+
+    public void refreshButtonClickedAfter() {
+        updateOnQuestions(false);
+        updateOnMetadata();
+    }
+
+    public void updateOnQuestions(Boolean statusDisplay) {
         GetAllQuestionsResponse response = null;
 
         try {
@@ -155,17 +165,10 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             e.printStackTrace();
         }
 
-        GetLectureMetadataResponse metadataResponse = null;
-
-        try {
-            metadataResponse = ServerCommunication.getLectureMetadata();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
         if (response.getSuccess()) {
-            this.displayStatusMessage("Refreshed succesfully.");
+            if (statusDisplay) {
+                this.displayStatusMessage("Refreshed succesfully.");
+            }
             this.ds.setCurrentUnansweredQuestionViews(null);
             this.ds.setCurrentAnsweredQuestionViews(null);
             for (QuestionModel question : response.getAnswered()) {
@@ -175,19 +178,30 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                 this.ds.addUnansweredQuestion(question, this);
             }
         }
+    }
+
+    public void updateOnMetadata() {
+        GetLectureMetadataResponse metadataResponse = null;
+
+        try {
+            metadataResponse = ServerCommunication.getLectureMetadata();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if (metadataResponse != null) {
             if (metadataResponse.getSuccess()) {
                 if (!metadataResponse.getLectureOngoing()) {
                     //TODO: stuff when lecture has ended change to main menu view
                     endLectureGUI();
                     //TODO: update status bar to ended
-                    if(ds.getPrivilegeId().equals(3)){
-                        MainView.changeSceneClearHistory(ApplicationScene.MAINVIEW, false, true);
+                    if (!ended) {
+                        ended = true;
                         this.displayStatusMessage("The Lecture has been ended.");
                     }
-
-
-
+                    if (ds.getPrivilegeId().equals(3)) {
+                        MainView.changeSceneClearHistory(ApplicationScene.MAINVIEW, false, true);
+                    }
                 }
             }
         }
@@ -215,29 +229,6 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         }
     }
 
-    public void refreshButtonClickedAfter() {
-        GetAllQuestionsResponse response = null;
-
-        try {
-            response = ServerCommunication.getAllQuestions();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        if (response.getSuccess()) {
-            this.ds.setCurrentUnansweredQuestionViews(null);
-            this.ds.setCurrentAnsweredQuestionViews(null);
-            for (QuestionModel question : response.getAnswered()) {
-                this.ds.addAnsweredQuestion(question, this);
-            }
-            for (QuestionModel question : response.getUnanswered()) {
-                this.ds.addUnansweredQuestion(question, this);
-            }
-        }
-    }
-
     public void toggleFeedbackPanelVisibility() {
         boolean vis = !this.feedbackMenu.isVisible();
         this.feedbackMenu.setVisible(vis);
@@ -257,5 +248,10 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         this.questionField.setDisable(true);
         this.askButton.setDisable(true);
         this.endLectureButton.setVisible(false);
+    }
+
+
+    public Datastore getDs() {
+        return ds;
     }
 }

@@ -108,6 +108,8 @@ public class MainView extends Application {
 
     AbstractApplicationController controller = loader.getController();
     controller.performControllerSpecificSetup();
+    // switch from main from lecture.
+    controller.switchToMainFromLecture();
   }
 
 
