@@ -8,26 +8,28 @@ import java.util.TreeMap;
 
 public class RequestBuilder {
 
-  private Map<String, Object> toBeReturned = new TreeMap<>();
-  private ObjectMapper objectMapper = new ObjectMapper();
+    private Map<String, Object> toBeReturned = new TreeMap<>();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
-  public RequestBuilder add(String key, Object value) {
-    this.toBeReturned.put(key, value);
-    return this;
-  }
-
-  public String build() {
-    String json = "";
-    try {
-      json = objectMapper.writeValueAsString(this.toBeReturned);
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
+    public RequestBuilder add(String key, Object value) {
+        this.toBeReturned.put(key, value);
+        return this;
     }
 
-    this.toBeReturned.clear();
+    /**
+     * Transforms JSON into String.
+     * @return A String based representation
+     */
+    public String build() {
+        String json = "";
+        try {
+            json = objectMapper.writeValueAsString(this.toBeReturned);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
 
-    return json;
-  }
+        this.toBeReturned.clear();
 
-
+        return json;
+    }
 }
