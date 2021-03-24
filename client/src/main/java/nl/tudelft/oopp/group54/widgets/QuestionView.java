@@ -58,16 +58,18 @@ public abstract class QuestionView extends AnchorPane {
     private String questionId;
     private String userNameString;
     private Integer voteCount;
+    private String userIp;
 
     private LectureRoomSceneController owner;
 
-    public QuestionView(String text, String questionId, String userName, Integer voteCount) {
+    public QuestionView(String text, String questionId, String userName, String userIp, Integer voteCount) {
         this.innerVBox = new VBox();
 
         this.text = text;
         this.userNameString = userName;
         this.questionId = questionId;
         this.voteCount = voteCount;
+        this.userIp = userIp;
 
         this.menuBar = new MenuBar();
 
@@ -245,6 +247,13 @@ public abstract class QuestionView extends AnchorPane {
 
     }
 
+    public String getUserIp() {
+        return userIp;
+    }
+
+    public void setUserIp(String userIp) {
+        this.userIp = userIp;
+    }
 
     private void markAnswered() {
         PostAnswerResponse response = null;
@@ -270,7 +279,7 @@ public abstract class QuestionView extends AnchorPane {
 		BanIpResponse response = null;
 
 		try {
-			response = ServerCommunication.banIp(this.questionId);
+			response = ServerCommunication.banIp(this.questionId, this.userIp);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
@@ -278,14 +287,10 @@ public abstract class QuestionView extends AnchorPane {
 		}
 
 		if (response.getSuccess()) {
-
+        owner.displayStatusMessage("Users with this question's author's IP " +
+                "have been banned from posting anymore questions.");
 		}
 	}
-
-
-//	public void setQuestionModel() {
-//		this.questionModel = questionModel;
-//	}
 
 }
 

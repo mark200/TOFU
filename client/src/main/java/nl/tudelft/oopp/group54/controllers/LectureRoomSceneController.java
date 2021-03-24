@@ -17,10 +17,6 @@ import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import static java.lang.Long.parseLong;
 
 public class LectureRoomSceneController extends AbstractApplicationController {
 
@@ -98,14 +94,6 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     private void postQuestion() {
         String questionText = questionField.getCharacters().toString();
         PostQuestionResponse response = null;
-        String userIp = null;
-
-        try {
-            userIp = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-
         try {
             response = ServerCommunication.postQuestion(questionText);
         } catch (IOException e) {
@@ -115,11 +103,8 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         }
 
         if (response.getSuccess()) {
-
-            //should anything(like storing the response) happen here?
-            //this.ds.addUnansweredQuestion(questionText);
-            this.ds.setUserIp(parseLong(userIp));
             questionField.clear();
+            this.refreshButtonClicked();
         }
     }
 

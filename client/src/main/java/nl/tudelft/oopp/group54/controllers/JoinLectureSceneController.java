@@ -16,8 +16,6 @@ import javafx.scene.control.TextField;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import static java.lang.Long.parseLong;
-
 public class JoinLectureSceneController extends AbstractApplicationController {
 
   @FXML
@@ -105,7 +103,6 @@ public class JoinLectureSceneController extends AbstractApplicationController {
       this.ds.setJoinLectureResponse(response);
       this.ds.setUserId(response.getUserID());
       this.ds.setLectureId(lectureId);
-      this.ds.setUserIp(parseLong(userIp));
       MainView.changeScene(ApplicationScene.LECTUREROOM, true);
     } else {
       this.displayStatusMessage(response.getMessage());

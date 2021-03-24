@@ -6,6 +6,7 @@ import java.util.Date;
 public class QuestionModel implements Serializable{
 	private String userId;
 	private String questionId;
+	private String userIp;
 	private String userName;
 	private String questionText;
 	private int score;
@@ -16,7 +17,14 @@ public class QuestionModel implements Serializable{
 	private QuestionModel() {
 		
 	}
-	
+
+	public String getUserIp() {
+		return userIp;
+	}
+
+	public void setUserIp(String userIp) {
+		this.userIp = userIp;
+	}
 
 	public String getQuestionId() {
 		return questionId;

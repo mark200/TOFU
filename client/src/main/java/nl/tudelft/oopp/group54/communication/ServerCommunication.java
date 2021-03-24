@@ -64,7 +64,7 @@ public class ServerCommunication {
 
     public static PostQuestionResponse postQuestion(String questionText) throws IOException, InterruptedException {
 
-        PostQuestionRequest pqr = new PostQuestionRequest(questionText, ds.getUserId().toString(), ds.getUserIp().toString());
+        PostQuestionRequest pqr = new PostQuestionRequest(questionText, ds.getUserId().toString());
         String pqrJson = objectMapper.writeValueAsString(pqr);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -176,16 +176,26 @@ public class ServerCommunication {
         return objectMapper.readValue(response.body(), VoteResponse.class);
     }
 
-    public static BanIpResponse banIp(String questionId) throws IOException, InterruptedException {
-        BanIpRequest bir = new BanIpRequest(ds.getUserIp().toString());
+    public static BanIpResponse banIp(String questionId, String userIp) throws IOException, InterruptedException {
+
+
+
+        BanIpRequest bir = new BanIpRequest(userIp);
 
         String birJson = objectMapper.writeValueAsString(bir);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .GET()
+                .POST(HttpRequest.BodyPublishers.ofString(birJson))
                 .header("content-type", "application/json")
-                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" +
-                        ds.getLectureId() + "/questions/" + questionId))
+                .uri(URI.create(
+                        ds.getServiceEndpoint() +
+                                "/lectures/" +
+                                ds.getLectureId() +
+                                "/questions/" +
+                                questionId +
+                                "/ban"
+                        )
+                )
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

@@ -25,7 +25,6 @@ public class Datastore {
   
   Long userId = 0L;
   Integer lectureId = 0;
-  Long userIp = 0L;
 
   private Datastore() {
     this.currentUnansweredQuestionViews = FXCollections.observableArrayList();
@@ -68,13 +67,13 @@ public class Datastore {
   }
 
   public void addUnansweredQuestion(QuestionModel question, LectureRoomSceneController sceneController){
-    QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(), question.getUserName(), question.getScore());
+    QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(), question.getUserName(), question.getUserIp(), question.getScore());
     q.setOwner(sceneController);
     this.currentUnansweredQuestionViews.add(q);
   }
 
   public void addAnsweredQuestion(QuestionModel question, LectureRoomSceneController sceneController){
-	QuestionView q = new AnsweredQuestionView(question.getQuestionText(), question.getQuestionId(),question.getUserName(), question.getScore());
+	QuestionView q = new AnsweredQuestionView(question.getQuestionText(), question.getQuestionId(),question.getUserName(), question.getUserIp(), question.getScore());
 	q.setOwner(sceneController);
     this.currentAnsweredQuestionViews.add(q);
   }
@@ -112,8 +111,4 @@ public class Datastore {
 	  return userId;
   }
 
-  public Long getUserIp() { return userIp; }
-
-  public void setUserIp(Long userIp) { this.userIp = userIp; }
-  
 }
