@@ -41,6 +41,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
     @FXML
     Button askButton;
+    
+    @FXML
+    Button lecturerModeButton;
 
     @FXML
     Button endLectureButton;
@@ -57,6 +60,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     Datastore ds = Datastore.getInstance();
 
     private Boolean ended = false;
+    private Boolean inLecturerMode = false;
 
 
     @Override
@@ -87,6 +91,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         // moderator
         if (this.ds.getPrivilegeId().equals(2)) {
             //TODO: GUI elements for the moderator
+            this.endLectureButton.setVisible(false);
         }
 
         // student
@@ -106,6 +111,36 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     public void askButtonClicked() {
         postQuestion();
         this.refreshButtonClickedAfter();
+    }
+    
+    public void lecturerModeButtonClicked() {
+        if(inLecturerMode) {
+            exitLecturerMode();
+        } else {
+            enterLecturerMode();
+        }
+    }
+
+    private void enterLecturerMode() {
+        inLecturerMode = true;
+        this.lecturerModeButton.setStyle("-fx-background-color: linear-gradient(#cccccc, #aaaaaa);");
+        this.feedbackMenu.setVisible(false);
+        this.feedbackMenuContainer.setPrefWidth(0);
+        this.feedbackPanelButton.setDisable(true);
+        for(QuestionView q : unansweredQuestionView.getItems()) {
+            q.toggleLecturerMode(true);
+        }
+    }
+
+    private void exitLecturerMode() {
+        inLecturerMode = false;
+        this.lecturerModeButton.setStyle("");
+        this.feedbackMenu.setVisible(true);
+        this.feedbackMenuContainer.setPrefWidth(feedbackMenuContainerUnfoldedWidth);
+        this.feedbackPanelButton.setDisable(false);
+        for(QuestionView q : unansweredQuestionView.getItems()) {
+            q.toggleLecturerMode(false);
+        }
     }
 
     public void endLectureButtonClicked() {
