@@ -33,13 +33,13 @@ public abstract class QuestionView extends AnchorPane {
 	private GridPane outerGridPane;
 	private GridPane voteGridPane;
 	private GridPane verticalGridPane;
-	private GridPane horizontalGridPane;
+	protected GridPane horizontalGridPane;
 	private MenuBar menuBar;
 
 	private TextArea questionTextArea;
 	private Text userName;
 
-	private MenuButton dropDown;
+	protected MenuButton dropDown;
 	
 	private MenuItem delete;
 	private MenuItem markAnswer;
@@ -232,7 +232,7 @@ public abstract class QuestionView extends AnchorPane {
 	}
 
 
-	private void markAnswered() {
+	protected void markAnswered() {
 		 PostAnswerResponse response = null;
 
 	      try {
@@ -254,6 +254,10 @@ public abstract class QuestionView extends AnchorPane {
 	
 	private void banAuthor() {
 		System.out.println("ban author of question " + questionId);
+	}
+	
+	public void toggleLecturerMode(boolean b) {
+		//implemented in child class
 	}
 	
 

@@ -11,7 +11,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
-
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.models.QuestionModel;
@@ -36,18 +37,30 @@ public class LectureRoomSceneController extends AbstractApplicationController {
   ListView<QuestionView> unansweredQuestionView;
   
   @FXML
+  GridPane pendingGridPane;
+  
+  @FXML
   TextField questionField;
+  
+  @FXML
+  Button askButton;
 
   @FXML
   Button feedbackPanelButton;
 
   @FXML
   Accordion feedbackMenu;
+  
   @FXML
   ColumnConstraints feedbackMenuContainer;
   Integer feedbackMenuContainerUnfoldedWidth = 140;
 
   Datastore ds = Datastore.getInstance();
+  
+  
+  @FXML
+  Button lecturerModeButton;
+  boolean inLecturerMode = false;
 
 
   @Override
@@ -78,6 +91,36 @@ public class LectureRoomSceneController extends AbstractApplicationController {
   public void askButtonClicked() {
 	  postQuestion();
 	  this.refreshButtonClickedAfter();
+  }
+  
+  public void lecturerModeButtonClicked() {
+	  if(inLecturerMode) {
+		  exitLecturerMode();
+	  } else {
+		  enterLecturerMode();
+	  }
+  }
+  
+  private void enterLecturerMode() {
+	  inLecturerMode = true;
+	  this.lecturerModeButton.setStyle("-fx-background-color: linear-gradient(#cccccc, #aaaaaa);");
+	  this.feedbackMenu.setVisible(false);
+	  this.feedbackMenuContainer.setPrefWidth(0);
+	  this.feedbackPanelButton.setDisable(true);
+	  for(QuestionView q : unansweredQuestionView.getItems()) {
+		  q.toggleLecturerMode(true);
+	  }
+  }
+  
+  private void exitLecturerMode() {
+	  inLecturerMode = false;
+	  this.lecturerModeButton.setStyle("");
+	  this.feedbackMenu.setVisible(true);
+	  this.feedbackMenuContainer.setPrefWidth(feedbackMenuContainerUnfoldedWidth);
+	  this.feedbackPanelButton.setDisable(false);
+	  for(QuestionView q : unansweredQuestionView.getItems()) {
+		  q.toggleLecturerMode(false);
+	  }
   }
   
   public void keyPressed(KeyEvent event) {
@@ -163,4 +206,5 @@ public class LectureRoomSceneController extends AbstractApplicationController {
       this.feedbackMenuContainer.setPrefWidth(0);
     }
   }
+  
 }
