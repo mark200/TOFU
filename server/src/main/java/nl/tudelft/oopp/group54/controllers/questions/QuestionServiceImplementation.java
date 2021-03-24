@@ -71,9 +71,9 @@ public class QuestionServiceImplementation implements QuestionService {
 
         Question newQuestion = new Question();
         newQuestion.setPrimaryKey(newQuestionKey);
-        newQuestion.setStudent_id(findUserRow.get().getKey().getId());
+        newQuestion.setStudentId(findUserRow.get().getKey().getId());
         newQuestion.setContent(questionText);
-        newQuestion.setCreated_at(new Date());
+        newQuestion.setCreatedAt(new Date());
 
         questionRepository.flush();
 
@@ -189,7 +189,7 @@ public class QuestionServiceImplementation implements QuestionService {
         }
 
         Integer requestAuthorId = authorOfTheDeletionRequest.get().getKey().getId();
-        Integer questionAuthorId = questionToBeDeleted.get().getStudent_id();
+        Integer questionAuthorId = questionToBeDeleted.get().getStudentId();
         Integer requestAuthorRole = authorOfTheDeletionRequest.get().getRoleID();
 
         // 1 - lecturer
@@ -253,14 +253,14 @@ public class QuestionServiceImplementation implements QuestionService {
             return null;
         }
         
-        Optional<User> author = userRepository.findById(new UserKey(q.getStudent_id(), lecture_id));
+        Optional<User> author = userRepository.findById(new UserKey(q.getStudentId(), lecture_id));
 
         Map<String, Object> toBeReturned = new TreeMap<>();
         toBeReturned.put("questionId", q.getPrimaryKey().getId());
-        toBeReturned.put("userId", q.getStudent_id());
+        toBeReturned.put("userId", q.getStudentId());
         toBeReturned.put("userName", author.get().getName());
         toBeReturned.put("questionText", q.getContent());
-        toBeReturned.put("score", q.getVote_counter());
+        toBeReturned.put("score", q.getVoteCounter());
         toBeReturned.put("answered", q.getAnswered());
 
         if (q.getAnswered())

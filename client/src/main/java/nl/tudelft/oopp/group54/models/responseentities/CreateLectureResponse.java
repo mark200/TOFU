@@ -7,103 +7,121 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateLectureResponse implements Serializable {
 
-  private Boolean success;
+    private Boolean success;
 
-  private Integer lectureId;
+    private Integer lectureId;
 
-  private String lecturerId;
-  private String studentId;
-  private String moderatorId;
+    private String lecturerId;
+    private String studentId;
+    private String moderatorId;
 
-  private String message;
+    private String message;
 
-  public CreateLectureResponse() {
-    this.success = false;
-    this.lectureId = 0;
+    /**
+     * Instantiates a new Create lecture response.
+     */
+    public CreateLectureResponse() {
+        this.success = false;
+        this.lectureId = 0;
 
-    this.lecturerId = "";
-    this.studentId = "";
-    this.moderatorId = "";
+        this.lecturerId = "";
+        this.studentId = "";
+        this.moderatorId = "";
 
-    this.message = "";
-  }
-
-  public CreateLectureResponse(Boolean success,
-                               Integer lecturerId,
-                               String lectureId,
-                               String studentId,
-                               String moderatorId,
-                               String message) {
-    this.success = success;
-    this.lectureId = lecturerId;
-
-    this.lecturerId = lectureId;
-    this.studentId = studentId;
-    this.moderatorId = moderatorId;
-
-    this.message = message;
-  }
-
-  public Boolean getSuccess() {
-    if (this.success == null) {
-      return false;
+        this.message = "";
     }
-    return success;
-  }
 
-  public void setSuccess(Boolean success) {
-    this.success = success;
-  }
+    /**
+     * Instantiates a new Create lecture response.
+     *
+     * @param success     the success
+     * @param lecturerId  the lecturer id
+     * @param lectureId   the lecture id
+     * @param studentId   the student id
+     * @param moderatorId the moderator id
+     * @param message     the message
+     */
+    public CreateLectureResponse(Boolean success,
+                                 Integer lecturerId,
+                                 String lectureId,
+                                 String studentId,
+                                 String moderatorId,
+                                 String message) {
+        this.success = success;
+        this.lectureId = lecturerId;
 
-  public Integer getLectureId() {
-    return lectureId;
-  }
+        this.lecturerId = lectureId;
+        this.studentId = studentId;
+        this.moderatorId = moderatorId;
 
-  public void setLectureId(Integer lectureId) {
-    this.lectureId = lectureId;
-  }
+        this.message = message;
+    }
 
-  public String getStudentId() {
-    return studentId;
-  }
+    /**
+     * Gets success.
+     *
+     * @return the success
+     */
+    public Boolean getSuccess() {
+        if (this.success == null) {
+            return false;
+        }
+        return success;
+    }
 
-  public void setStudentId(String studentId) {
-    this.studentId = studentId;
-  }
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }
 
-  public String getModeratorId() {
-    return moderatorId;
-  }
+    public Integer getLectureId() {
+        return lectureId;
+    }
 
-  public void setModeratorId(String moderatorId) {
-    this.moderatorId = moderatorId;
-  }
+    public void setLectureId(Integer lectureId) {
+        this.lectureId = lectureId;
+    }
 
-  public String getMessage() {
-    return message;
-  }
+    public String getStudentId() {
+        return studentId;
+    }
 
-  public void setMessage(String message) {
-    this.message = message;
-  }
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
 
-  public String getLecturerId() {
-    return lecturerId;
-  }
+    public String getModeratorId() {
+        return moderatorId;
+    }
 
-  public void setLecturerId(String lecturerId) {
-    this.lecturerId = lecturerId;
-  }
+    public void setModeratorId(String moderatorId) {
+        this.moderatorId = moderatorId;
+    }
 
-  @Override
-  public String toString() {
-    return "CreateLectureResponse{" +
-            "success=" + success +
-            ", lectureId=" + lectureId +
-            ", lecturerId=" + lecturerId +
-            ", studentId=" + studentId +
-            ", moderatorId=" + moderatorId +
-            ", message='" + message + '\'' +
-            '}';
-  }
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getLecturerId() {
+        return lecturerId;
+    }
+
+    public void setLecturerId(String lecturerId) {
+        this.lecturerId = lecturerId;
+    }
+
+    @Override
+    public String toString() {
+        return "CreateLectureResponse{"
+                + "success=" + success
+                + ", lectureId=" + lectureId
+                + ", lecturerId=" + lecturerId
+                + ", studentId=" + studentId
+                + ", moderatorId=" + moderatorId
+                + ", message='" + message + '\''
+                + '}';
+    }
 }

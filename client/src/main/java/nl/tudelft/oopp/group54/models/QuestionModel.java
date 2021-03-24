@@ -3,84 +3,84 @@ package nl.tudelft.oopp.group54.models;
 import java.io.Serializable;
 import java.util.Date;
 
-public class QuestionModel implements Serializable{
-	private String userId;
-	private String questionId;
-	private String userName;
-	private String questionText;
-	private int score;
-	private boolean answered;
-	private String answerText;
-	private Date createdAt;
+public class QuestionModel implements Serializable {
+    private String userId;
+    private String questionId;
+    private String userName;
+    private String questionText;
+    private int score;
+    private boolean answered;
+    private String answerText;
+    private Date createdAt;
 
-	private QuestionModel() {
-		
-	}
-	
+    private QuestionModel() {
 
-	public String getQuestionId() {
-		return questionId;
-	}
-
-	public void setQuestionId(String questionId) {
-		this.questionId = questionId;
-	}
+    }
 
 
-	public String getUserId() {
-		return userId;
-	}
+    public String getQuestionId() {
+        return questionId;
+    }
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public String getUserId() {
+        return userId;
+    }
 
-	public String getQuestionText() {
-		return questionText;
-	}
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-	public void setQuestionText(String questionText) {
-		this.questionText = questionText;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public int getScore() {
-		return score;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public void setScore(int score) {
-		this.score = score;
-	}
+    public String getQuestionText() {
+        return questionText;
+    }
 
-	public boolean isAnswered() {
-		return answered;
-	}
+    public void setQuestionText(String questionText) {
+        this.questionText = questionText;
+    }
 
-	public void setAnswered(boolean answered) {
-		this.answered = answered;
-	}
+    public int getScore() {
+        return score;
+    }
 
-	public String getAnswerText() {
-		return answerText;
-	}
+    public void setScore(int score) {
+        this.score = score;
+    }
 
-	public void setAnswerText(String answerText) {
-		this.answerText = answerText;
-	}
+    public boolean isAnswered() {
+        return answered;
+    }
 
-	public Date getCreatedAt() {
-		return createdAt;
-	}
+    public void setAnswered(boolean answered) {
+        this.answered = answered;
+    }
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
+    public String getAnswerText() {
+        return answerText;
+    }
+
+    public void setAnswerText(String answerText) {
+        this.answerText = answerText;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
 
 }
