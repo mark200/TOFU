@@ -1,12 +1,12 @@
 package nl.tudelft.oopp.demo.entities;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import nl.tudelft.oopp.group54.entities.Ban;
 import nl.tudelft.oopp.group54.entities.BanKey;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 public class BanTest {
@@ -16,8 +16,11 @@ public class BanTest {
     static BanKey key;
     static BanKey keyDuplicate;
 
+    /**
+     * Init.
+     */
     @BeforeAll
-    public static void init(){
+    public static void init() {
         key = new BanKey("192.158.1.38", 321);
         keyDuplicate = new BanKey("192.158.1.38", 321);
         ban = new Ban(key);
@@ -26,7 +29,7 @@ public class BanTest {
     }
 
     @Test
-    public void equalsPrimaryKeys(){
+    public void equalsPrimaryKeys() {
         assertEquals(ban, banDuplicate);
     }
 
