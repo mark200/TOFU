@@ -1,20 +1,16 @@
 package nl.tudelft.oopp.group54.controllers.votes;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-
-import nl.tudelft.oopp.group54.entities.Question;
-import nl.tudelft.oopp.group54.entities.QuestionKey;
-import nl.tudelft.oopp.group54.entities.User;
-import nl.tudelft.oopp.group54.entities.UserKey;
-import nl.tudelft.oopp.group54.entities.Vote;
-import nl.tudelft.oopp.group54.entities.VoteKey;
+import nl.tudelft.oopp.group54.entities.*;
+import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.QuestionRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
 import nl.tudelft.oopp.group54.repositories.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 
 @Service
 public class VoteServiceImpl implements VoteService {
@@ -27,6 +23,9 @@ public class VoteServiceImpl implements VoteService {
 
     @Autowired
     VoteRepository voteRepository;
+
+    @Autowired
+    LectureRepository lectureRepository;
 
     @Override
     public Map<String, Object> voteOnQuestion(Integer lectureId, String userId, Integer questionId, boolean isUpvote) {
@@ -50,6 +49,7 @@ public class VoteServiceImpl implements VoteService {
             return toBeReturned;
         }
 
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
         Optional<User> foundUser = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
         Optional<Question> foundQuestion = questionRepository.findById(new QuestionKey(questionId, lectureId));
         Optional<Vote> foundVote = voteRepository.findById(new VoteKey(Integer.parseInt(userId), lectureId, questionId));
@@ -66,11 +66,25 @@ public class VoteServiceImpl implements VoteService {
             return toBeReturned;
         }
 
+        if (foundLecture.isEmpty()) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "There does not exist a lecture with this id.");
+            return toBeReturned;
+        }
+
+        // if the lecture has ended don't let users vote
+        if (!foundLecture.get().isLectureOngoing()) {
+            toBeReturned.put("success", false);
+            toBeReturned.put("message", "The lecture has ended.");
+            return toBeReturned;
+        }
+
+
         Vote newVote = null;
 
         if (foundVote.isEmpty()) {
             // This handles the case where users vote on their own question.
-            if (userId.equals(foundQuestion.get().getStudentId().toString())) {
+            if (userId.equals(foundQuestion.get().getStudent_id().toString())) {
                 toBeReturned.put("success", false);
                 toBeReturned.put("message", "Users cannot vote on their own question");
                 return toBeReturned;
@@ -84,7 +98,7 @@ public class VoteServiceImpl implements VoteService {
 
         voteRepository.flush();
         questionRepository.flush();
-        foundQuestion.get().setVoteCounter(foundQuestion.get().getVoteCounter() + 1);
+        foundQuestion.get().setVote_counter(foundQuestion.get().getVote_counter() + 1);
 
         try {
             voteRepository.save(newVote);

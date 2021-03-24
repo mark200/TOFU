@@ -76,7 +76,7 @@ public class Lecture {
 
     public Boolean isLectureStarted() {
         Date current = new Date();
-        return startTime.before(current);
+        return !(getStartTime().compareTo(current) > 0);
     }
 
     public Boolean isJoinable() {

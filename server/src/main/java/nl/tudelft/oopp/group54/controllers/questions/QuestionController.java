@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+        import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping(value = "/lectures")
 public class QuestionController {
@@ -36,11 +38,12 @@ public class QuestionController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> postQuestion(@PathVariable(value = "lectureID") Integer lectureId,
-                                            @RequestBody Map<String, Object> requestPayload) {
+                                            @RequestBody Map<String, Object> requestPayload,
+                                            HttpServletRequest request) {
 
         boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
                 requestPayload,
-                Arrays.asList("userId", "questionText", "UserIp")
+                Arrays.asList("userId", "questionText")
         );
 
         if (!containsNecessaryData) {
@@ -55,12 +58,11 @@ public class QuestionController {
 
         String userId;
         String questionText;
-        String userIp;
+        String userIp = request.getRemoteAddr();
 
         try {
             userId = (String) requestPayload.get("userId");
             questionText = (String) requestPayload.get("questionText");
-            userIp = (String) requestPayload.get("userIp");
         } catch (Exception e) {
             Map<String, Object> toBeReturned = new TreeMap<>();
             toBeReturned.put("success", "false");
@@ -69,7 +71,7 @@ public class QuestionController {
             return toBeReturned;
         }
 
-        return questionService.postQuestion(lectureId, userId, questionText, userIp);
+        return questionService.postQuestion(lectureId, userId, userIp, questionText);
     }
 
 

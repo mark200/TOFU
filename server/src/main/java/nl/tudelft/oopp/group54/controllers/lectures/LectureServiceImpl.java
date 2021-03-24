@@ -1,13 +1,5 @@
 package nl.tudelft.oopp.group54.controllers.lectures;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import nl.tudelft.oopp.group54.entities.Lecture;
 import nl.tudelft.oopp.group54.entities.User;
 import nl.tudelft.oopp.group54.entities.UserKey;
@@ -15,6 +7,9 @@ import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class LectureServiceImpl implements LectureService {
@@ -31,13 +26,13 @@ public class LectureServiceImpl implements LectureService {
     }
 
     /**
-     * Create a new lecture by adding it to the database.
+     * create a new lecture by adding it to the database
      *
      * @param startTime   - Date of the planned start time of the lecture
      * @param lectureName - lecture name given as string
      * @return - Map, which returns the status of the request to create
-     *           a new lecture, the message of the execution result and if it was successful
-     *           the UUIDs of the join ids for student, lecturer and moderator.
+     * a new lecture, the message of the execution result and if it was successful
+     * the UUIDs of the join ids for student, lecturer and moderator.
      */
     @Override
     public Map<String, Object> createNewLecture(Date startTime, String lectureName) {
@@ -87,11 +82,11 @@ public class LectureServiceImpl implements LectureService {
         }
 
 
-        String studentJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "s").getBytes())
+        String lecturerJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "s").getBytes())
                 .toString().replaceAll("-", "");
-        String moderatorJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "m").getBytes())
+        String studentJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "m").getBytes())
                 .toString().replaceAll("-", "");
-        String lecturerJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "l").getBytes())
+        String moderatorJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "l").getBytes())
                 .toString().replaceAll("-", "");
         Lecture newLecture = new
                 Lecture(null, lectureName, startTime, studentJoinId, moderatorJoinId, lecturerJoinId, true);
@@ -100,23 +95,22 @@ public class LectureServiceImpl implements LectureService {
         repository.flush();
         repository.save(newLecture);
 
-        // FIXME the order of those IDs should be fixed
         toBeReturned.put("success", true);
         toBeReturned.put("lectureId", newLecture.getId());
-        toBeReturned.put("lecturerId", studentJoinId);
-        toBeReturned.put("studentId", moderatorJoinId);
-        toBeReturned.put("moderatorId", lecturerJoinId);
+        toBeReturned.put("lecturerId", lecturerJoinId);
+        toBeReturned.put("studentId", studentJoinId);
+        toBeReturned.put("moderatorId", moderatorJoinId);
 
         return toBeReturned;
     }
 
     /**
-     * Creates a new User when joining the specified lecture.
+     * Creates a new User when joining the specified lecture
      * and assigns them a role
      *
-     * @param lectureId ID of lecture
-     * @param roleCode shows the role of user
-     * @param userName name of the user
+     * @param lectureId
+     * @param roleCode
+     * @param userName
      * @return
      */
     @Override
@@ -165,22 +159,34 @@ public class LectureServiceImpl implements LectureService {
         }
 
         int usersWatchingLecture = userRepository.findAll().stream()
-                .filter(x -> x.getKey().getLectureID() == lectureId.intValue())
+                .filter(x -> x.getKey().getLecture_id() == lectureId.intValue())
                 .collect(Collectors.toList()).size();
 
         User newUser = new User(new UserKey(usersWatchingLecture, lectureId), userName, "127.0.0.1", null, 0);
 
         // Determine role of student
+        // 1 - lecturer
+        // 2 - moderator
+        // 3 - student
         if (foundLecture.get().getStudentJoinId().equals(roleCode)) {
-            newUser.setRoleID(1);
-        } else if (foundLecture.get().getLecturerJoinId().equals(roleCode)) {
-            newUser.setRoleID(2);
-        } else if (foundLecture.get().getModeratorJoinId().equals(roleCode)) {
             newUser.setRoleID(3);
+        } else if (foundLecture.get().getLecturerJoinId().equals(roleCode)) {
+            newUser.setRoleID(1);
+        } else if (foundLecture.get().getModeratorJoinId().equals(roleCode)) {
+            newUser.setRoleID(2);
         } else {
             toBeReturned.put("success", false);
             toBeReturned.put("message", "Unrecognized roleCode/user ID.");
             return toBeReturned;
+        }
+
+        // if the lecture has ended don't let students join it.
+        if(newUser.getRoleID().equals(3)){
+            if(!foundLecture.get().isLectureOngoing()){
+                toBeReturned.put("success", false);
+                toBeReturned.put("message", "The lecture has ended.");
+                return toBeReturned;
+            }
         }
 
         userRepository.flush();
@@ -190,8 +196,8 @@ public class LectureServiceImpl implements LectureService {
             toBeReturned.put("success", true);
             toBeReturned.put("userID", newUser.getKey().getId());
             toBeReturned.put("userName", newUser.getName());
-            toBeReturned.put("role", (newUser.getRoleID() == 1)
-                    ? "Student" : ((newUser.getRoleID() == 2) ? "Lecturer" : "Moderator"));
+            toBeReturned.put("role", (newUser.getRoleID() == 1) ? "Student" : ((newUser.getRoleID() == 2) ? "Lecturer" : "Moderator"));
+            toBeReturned.put("privilegeId", newUser.getRoleID());
         } catch (Exception e) {
             toBeReturned.put("success", false);
             toBeReturned.put("message", e.toString());
@@ -201,10 +207,10 @@ public class LectureServiceImpl implements LectureService {
     }
 
     /**
-     * For now this method only returns the number of people watching the lecture.
+     * For now this method only returns the number of people watching the lecture
      * (meaning only this new functionality is implemented)
      *
-     * @param lectureId ID of lecture
+     * @param lectureId
      * @return
      */
     @Override
@@ -226,15 +232,16 @@ public class LectureServiceImpl implements LectureService {
         }
 
         int usersWatchingLecture = userRepository.findAll().stream()
-                .filter(x -> x.getKey().getLectureID() == lectureId.intValue())
+                .filter(x -> x.getKey().getLecture_id() == lectureId.intValue())
                 .collect(Collectors.toList()).size();
 
         toBeReturned.put("success", true);
         toBeReturned.put("lectureID", lectureId);
-        toBeReturned.put("People", usersWatchingLecture);
+        toBeReturned.put("people", usersWatchingLecture);
         toBeReturned.put("studentJoinID", foundLecture.get().getStudentJoinId());
         toBeReturned.put("moderatorJoinID", foundLecture.get().getModeratorJoinId());
         toBeReturned.put("lecturerJoinID", foundLecture.get().getLecturerJoinId());
+        toBeReturned.put("lectureOngoing", foundLecture.get().isLectureOngoing());
 
         return toBeReturned;
     }
@@ -281,7 +288,7 @@ public class LectureServiceImpl implements LectureService {
             return status;
         }
 
-        if (!lectureToBeEnded.get().isLectureOngoing()) {
+        if(!lectureToBeEnded.get().isLectureOngoing()){
             status.put("success", false);
             status.put("message", "The lecture has already been ended.");
             return status;

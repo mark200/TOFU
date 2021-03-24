@@ -1,6 +1,9 @@
 package nl.tudelft.oopp.group54.communication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nl.tudelft.oopp.group54.Datastore;
+import nl.tudelft.oopp.group54.models.requestentities.*;
+import nl.tudelft.oopp.group54.models.responseentities.*;
 
 import java.io.IOException;
 import java.net.URI;
@@ -8,42 +11,14 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import nl.tudelft.oopp.group54.Datastore;
-
-import nl.tudelft.oopp.group54.models.requestentities.BanIpRequest;
-import nl.tudelft.oopp.group54.models.requestentities.CreateLectureRequest;
-import nl.tudelft.oopp.group54.models.requestentities.DeleteQuestionRequest;
-import nl.tudelft.oopp.group54.models.requestentities.JoinLectureRequest;
-import nl.tudelft.oopp.group54.models.requestentities.PostAnswerRequest;
-import nl.tudelft.oopp.group54.models.requestentities.PostQuestionRequest;
-import nl.tudelft.oopp.group54.models.requestentities.VoteRequest;
-
-import nl.tudelft.oopp.group54.models.responseentities.BanIpResponse;
-import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
-import nl.tudelft.oopp.group54.models.responseentities.DeleteQuestionResponse;
-import nl.tudelft.oopp.group54.models.responseentities.EndLectureResponse;
-import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
-import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
-import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
-import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
-import nl.tudelft.oopp.group54.models.responseentities.VoteResponse;
-
 public class ServerCommunication {
 
     private static HttpClient client = HttpClient.newBuilder().build();
     private static Datastore ds = Datastore.getInstance();
-    // private static RequestBuilder requestBuilder = new RequestBuilder();
+    //    private static RequestBuilder requestBuilder = new RequestBuilder();
     private static ObjectMapper objectMapper = new ObjectMapper();
 
 
-    /**
-     * Posts a new lecture.
-     * @param startTimestamp time of new lecture
-     * @param lectureName name of new lecture
-     * @return a response
-     * @throws IOException something happened with input/output
-     * @throws InterruptedException something interrupted the method
-     */
     public static CreateLectureResponse postLecture(Long startTimestamp, String lectureName)
             throws IOException, InterruptedException {
 
@@ -67,17 +42,7 @@ public class ServerCommunication {
         return objectMapper.readValue(response.body(), CreateLectureResponse.class);
     }
 
-    /**
-     * Joins a new lecture.
-     * @param userName name of User who is joining
-     * @param lectureId ID of lecture
-     * @param joinId link that also describes the User's role
-     * @return a response
-     * @throws IOException something happened with input/output
-     * @throws InterruptedException something interrupted the method
-     */
-    public static JoinLectureResponse joinLecture(String userName, Integer lectureId, String joinId)
-            throws IOException, InterruptedException {
+    public static JoinLectureResponse joinLecture(String userName, Integer lectureId, String joinId) throws IOException, InterruptedException {
 
         JoinLectureRequest jlr = new JoinLectureRequest(userName, lectureId, joinId);
         String jlrJson = objectMapper.writeValueAsString(jlr);
@@ -97,16 +62,9 @@ public class ServerCommunication {
         return objectMapper.readValue(response.body(), JoinLectureResponse.class);
     }
 
-    /**
-     * Posts a question in a lecture.
-     * @param questionText content
-     * @return a response
-     * @throws IOException something happened with input/output
-     * @throws InterruptedException something interrupted the method
-     */
     public static PostQuestionResponse postQuestion(String questionText) throws IOException, InterruptedException {
 
-        PostQuestionRequest pqr = new PostQuestionRequest(questionText, ds.getUserId().toString(), ds.getUserIp().toString());
+        PostQuestionRequest pqr = new PostQuestionRequest(questionText, ds.getUserId().toString());
         String pqrJson = objectMapper.writeValueAsString(pqr);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -124,20 +82,11 @@ public class ServerCommunication {
         return objectMapper.readValue(response.body(), PostQuestionResponse.class);
     }
 
-    /**
-     * Returns all questions from server.
-     * @return a response
-     * @throws IOException something happened with input/output
-     * @throws InterruptedException something interrupted the method
-     */
     public static GetAllQuestionsResponse getAllQuestions() throws IOException, InterruptedException {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/"
-                        + ds.getLectureId()
-                        + "/questions?userId="
-                        + ds.getUserId()))
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId() + "/questions?userId=" + ds.getUserId()))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -150,14 +99,6 @@ public class ServerCommunication {
         return objectMapper.readValue(response.body(), GetAllQuestionsResponse.class);
     }
 
-    /**
-     * Lecturer/Moderator posts an answer.
-     * @param questionId used to identify the question
-     * @param answerText content of answer text
-     * @return a response
-     * @throws IOException something happened with input/output
-     * @throws InterruptedException something interrupted the method
-     */
     public static PostAnswerResponse postAnswer(String questionId, String answerText) throws IOException, InterruptedException {
 
         PostAnswerRequest par = new PostAnswerRequest(ds.getUserId().toString(), answerText);
@@ -167,11 +108,7 @@ public class ServerCommunication {
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(parJson))
                 .header("content-type", "application/json")
-                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/"
-                        + ds.getLectureId()
-                        + "/questions/"
-                        + questionId
-                        + "/answer"))
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId() + "/questions/" + questionId + "/answer"))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -183,13 +120,6 @@ public class ServerCommunication {
         return objectMapper.readValue(response.body(), PostAnswerResponse.class);
     }
 
-    /**
-     * Deletes a question.
-     * @param questionId used to identify a question
-     * @return a response
-     * @throws IOException something happened with input/output
-     * @throws InterruptedException something interrupted the method
-     */
     public static DeleteQuestionResponse deleteQuestion(String questionId) throws IOException, InterruptedException {
         DeleteQuestionRequest requestBody = new DeleteQuestionRequest(String.valueOf(ds.getUserId()));
 
@@ -198,8 +128,8 @@ public class ServerCommunication {
         HttpRequest request = HttpRequest.newBuilder()
                 .DELETE()
                 .header("content-type", "application/json")
-                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/"
-                        + ds.getLectureId() + "/questions/" + questionId + "?userId=" + ds.getUserId()))
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" +
+                        ds.getLectureId() + "/questions/" + questionId + "?userId=" + ds.getUserId()))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -211,22 +141,13 @@ public class ServerCommunication {
         return objectMapper.readValue(response.body(), DeleteQuestionResponse.class);
     }
 
-    /**
-     * Ends a lecture.
-     * @return a response
-     * @throws IOException something happened with input/output
-     * @throws InterruptedException something interrupted the method
-     */
     public static EndLectureResponse endLecture() throws IOException, InterruptedException {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .PUT(HttpRequest.BodyPublishers.ofString(""))
                 .header("content-type", "application/json")
-                .uri(URI.create(ds.getServiceEndpoint()
-                        + "/lectures/e/"
-                        + ds.getLectureId()
-                        + "?userId="
-                        + ds.getUserId()))
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/e/" +
+                        ds.getLectureId() + "?userId=" + ds.getUserId()))
                 .build();
 
 
@@ -236,13 +157,6 @@ public class ServerCommunication {
     }
 
 
-    /**
-     * Vote on question.
-     * @param questionId ID of question
-     * @return a response
-     * @throws IOException something happened with input/output
-     * @throws InterruptedException something interrupted the method
-     */
     public static VoteResponse voteOnQuestion(Integer questionId) throws IOException, InterruptedException {
         VoteRequest vreq = new VoteRequest(ds.getUserId().toString(), questionId);
         String vreqJson = objectMapper.writeValueAsString(vreq);
@@ -250,11 +164,7 @@ public class ServerCommunication {
         HttpRequest request = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(vreqJson))
                 .header("content-type", "application/json")
-                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/"
-                        + ds.getLectureId()
-                        + "/questions/"
-                        + questionId
-                        + "/votes"))
+                .uri(URI.create(ds.getServiceEndpoint()+"/lectures/" + ds.getLectureId() + "/questions/" + questionId + "/votes"))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -266,23 +176,26 @@ public class ServerCommunication {
         return objectMapper.readValue(response.body(), VoteResponse.class);
     }
 
-    /**
-     * Bans a User by question.
-     * @param questionId ID of the question
-     * @return a response
-     * @throws IOException something happened with input/output
-     * @throws InterruptedException something interrupted the method
-     */
-    public static BanIpResponse banIp(String questionId) throws IOException, InterruptedException {
-        BanIpRequest bir = new BanIpRequest(ds.getUserIp().toString());
+    public static BanIpResponse banIp(String questionId, String userIp) throws IOException, InterruptedException {
+
+
+
+        BanIpRequest bir = new BanIpRequest(userIp);
 
         String birJson = objectMapper.writeValueAsString(bir);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .GET()
+                .POST(HttpRequest.BodyPublishers.ofString(birJson))
                 .header("content-type", "application/json")
-                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/"
-                        + ds.getLectureId() + "/questions/" + questionId))
+                .uri(URI.create(
+                        ds.getServiceEndpoint() +
+                                "/lectures/" +
+                                ds.getLectureId() +
+                                "/questions/" +
+                                questionId +
+                                "/ban"
+                        )
+                )
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -292,5 +205,25 @@ public class ServerCommunication {
         }
 
         return objectMapper.readValue(response.body(), BanIpResponse.class);
+    }
+
+
+    /**
+     * Get metadata about the lecture.
+     * @return - GetLectureMetadataResponse
+     * @throws IOException -
+     * @throws InterruptedException -
+     */
+    public static GetLectureMetadataResponse getLectureMetadata() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/"
+                        + ds.getLectureId()))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return objectMapper.readValue(response.body(), GetLectureMetadataResponse.class);
     }
 }
