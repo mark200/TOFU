@@ -66,7 +66,7 @@ public class BanServiceImpl implements BanService {
         try {
             banRepository.save(newBan);
             status.put("success", true);
-            status.put("banIP", newBan.getPrimaryKey().getBanned_ip());
+            status.put("banIP", newBan.getPrimaryKey().getBannedIP());
         } catch (Exception e) {
             status.put("success", false);
             status.put("message", e.toString());

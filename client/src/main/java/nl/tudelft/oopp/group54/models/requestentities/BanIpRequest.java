@@ -19,8 +19,8 @@ public class BanIpRequest implements Serializable {
 
     @Override
     public String toString() {
-        return "BanIpRequest{" +
-                "userIp='" + userIp + '\'' +
-                '}';
+        return "BanIpRequest{"
+                + "userIp='" + userIp + '\''
+                + '}';
     }
 }

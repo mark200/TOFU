@@ -34,9 +34,9 @@ public class BanIpResponse implements Serializable {
 
     @Override
     public String toString() {
-        return "BanIpResponse{" +
-                "success=" + success +
-                ", message='" + message + '\'' +
-                '}';
+        return "BanIpResponse{"
+                + "success=" + success
+                + ", message='" + message + '\''
+                + '}';
     }
 }

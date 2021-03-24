@@ -1,13 +1,14 @@
 package nl.tudelft.oopp.group54.entities;
 
-import javax.persistence.Entity;
+import java.util.Date;
+
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.Objects;
 
 @Entity
 @Table(name = "Bans")
@@ -15,7 +16,9 @@ public class Ban {
     @EmbeddedId
     private BanKey primaryKey;
 
-    public Ban() {}
+    public Ban() {
+
+    }
 
     /**
      * Instantiates a new Ban.
@@ -36,8 +39,12 @@ public class Ban {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Ban ban = (Ban) o;
         return getPrimaryKey().equals(ban.getPrimaryKey());
     }
@@ -49,8 +56,8 @@ public class Ban {
 
     @Override
     public String toString() {
-        return "Ban{" +
-                "primaryKey=" + primaryKey +
-                '}';
+        return "Ban{"
+                + "primaryKey=" + primaryKey
+                + '}';
     }
 }
