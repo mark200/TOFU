@@ -1,6 +1,9 @@
 package nl.tudelft.oopp.group54.entities;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -14,16 +17,17 @@ public class Vote {
     private Integer voteValue = 0;
 
     /**
-     * Empty constructor
+     * Empty constructor.
      */
     public Vote() {
 
     }
 
     /**
-     * Constructor
-     * @param primaryKey
-     * @param voteValue
+     * Constructor.
+     * @param primaryKey complex primary key of the Vote
+     * @param voteValue the value of the vote that a question
+     *                  receives
      */
     public Vote(VoteKey primaryKey, @NotNull int voteValue) {
         this.primaryKey = primaryKey;
@@ -31,7 +35,7 @@ public class Vote {
     }
 
     /**
-     * Returns the primary key
+     * Returns the primary key.
      * @return
      */
     public VoteKey getPrimaryKey() {
@@ -39,15 +43,15 @@ public class Vote {
     }
 
     /**
-     * Updates the primary key
-     * @param primaryKey
+     * Updates the primary key.
+     * @param primaryKey complex primary key of the Vote
      */
     public void setPrimaryKey(VoteKey primaryKey) {
         this.primaryKey = primaryKey;
     }
 
     /**
-     * Returns the type of Vote
+     * Returns the type of Vote.
      * @return
      */
     public int getVoteValue() {
@@ -55,29 +59,34 @@ public class Vote {
     }
 
     /**
-     * Updates the type of Vote
-     * @param voteValue
+     * Updates the type of Vote.
+     * @param voteValue the value of the vote
+     *                  that a question receives
      */
     public void setVoteValue(int voteValue) {
         this.voteValue = voteValue;
     }
 
     /**
-     * Checks if the o is a Vote and has the same primary key
-     * @param o
+     * Checks if the o is a Vote and has the same primary key.
+     * @param o Another object that is going to be compared
      * @return
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Vote)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Vote)) {
+            return false;
+        }
 
         Vote vote = (Vote) o;
         return getPrimaryKey().equals(vote.getPrimaryKey());
     }
 
     /**
-     * Computes the hashcode
+     * Computes the hashcode.
      * @return
      */
     @Override
@@ -88,14 +97,14 @@ public class Vote {
     }
 
     /**
-     * Returns a String-based representation of the vote
+     * Returns a String-based representation of the vote.
      * @return
      */
     @Override
     public String toString() {
-        return "Vote{" +
-                "primaryKey = " + primaryKey.toString() +
-                ", voteValue = " + voteValue +
-                '}';
+        return "Vote{"
+                + "primaryKey = " + primaryKey.toString()
+                + ", voteValue = " + voteValue
+                + '}';
     }
 }
