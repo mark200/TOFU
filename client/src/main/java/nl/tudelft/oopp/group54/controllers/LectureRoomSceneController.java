@@ -1,5 +1,11 @@
 package nl.tudelft.oopp.group54.controllers;
 
+import static java.lang.Long.parseLong;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
@@ -16,16 +22,10 @@ import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import static java.lang.Long.parseLong;
-
 public class LectureRoomSceneController extends AbstractApplicationController {
 
-//  @FXML
-//  ScrollPane questionScroll;
+    //  @FXML
+    //  ScrollPane questionScroll;
 
 
     @FXML
@@ -59,22 +59,22 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     public void performControllerSpecificSetup() {
         answeredQuestionView.setItems(ds.getCurrentAnsweredQuestionViews());
         unansweredQuestionView.setItems(ds.getCurrentUnansweredQuestionViews());
-//    ds.addUnansweredQuestion("Lorem Ipsum is simply dummy text of the printing and " +
-//            "typesetting industry. Lorem Ipsum has been the industry's standard " +
-//            "dummy text ever since the 1500s, when an unknown printer took a " +
-//            "galley of type and scrambled it to make a type specimen book. " +
-//            "It has survived not only five centuries, but also the leap into " +
-//            "electronic typesetting, remaining essentially unchanged. It was " +
-//            "popularised in the 1960s with the release of Letraset sheets " +
-//            "containing Lorem Ipsum passages, and more recently with desktop " +
-//            "publishing software like Aldus PageMaker including versions of " +
-//            "Lorem Ipsum.");
-//
-//    for(int i  = 0; i < 20; i++) {
-//      ds.addUnansweredQuestion("hello world " + i);
-//      ds.addAnsweredQuestion("hello world " + i);
-//    }
-//
+        //    ds.addUnansweredQuestion("Lorem Ipsum is simply dummy text of the printing and " +
+        //            "typesetting industry. Lorem Ipsum has been the industry's standard " +
+        //            "dummy text ever since the 1500s, when an unknown printer took a " +
+        //            "galley of type and scrambled it to make a type specimen book. " +
+        //            "It has survived not only five centuries, but also the leap into " +
+        //            "electronic typesetting, remaining essentially unchanged. It was " +
+        //            "popularised in the 1960s with the release of Letraset sheets " +
+        //            "containing Lorem Ipsum passages, and more recently with desktop " +
+        //            "publishing software like Aldus PageMaker including versions of " +
+        //            "Lorem Ipsum.");
+        //
+        //    for(int i  = 0; i < 20; i++) {
+        //      ds.addUnansweredQuestion("hello world " + i);
+        //      ds.addAnsweredQuestion("hello world " + i);
+        //    }
+        //
         questionField.setOnKeyPressed(event -> {
             keyPressed(event);
         });
@@ -89,6 +89,11 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         endLecture();
     }
 
+    /**
+     * Key pressed.
+     *
+     * @param event the event
+     */
     public void keyPressed(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
             postQuestion();
@@ -124,6 +129,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     }
 
 
+    /**
+     * Refresh button clicked.
+     */
     public void refreshButtonClicked() {
         GetAllQuestionsResponse response = null;
 
@@ -148,6 +156,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         }
     }
 
+    /**
+     * End lecture.
+     */
     public void endLecture() {
         EndLectureResponse response = null;
 
@@ -174,6 +185,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         }
     }
 
+    /**
+     * Refresh button clicked after.
+     */
     public void refreshButtonClickedAfter() {
         GetAllQuestionsResponse response = null;
 
@@ -197,6 +211,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         }
     }
 
+    /**
+     * Toggle feedback panel visibility.
+     */
     public void toggleFeedbackPanelVisibility() {
         boolean vis = !this.feedbackMenu.isVisible();
         this.feedbackMenu.setVisible(vis);

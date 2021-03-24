@@ -19,6 +19,7 @@ public class TextFormatterFactory {
                 //  50 character, then use a nickname or something.
                 //return Pattern.compile("^[a-zA-Z\\s]*");
                 return Pattern.compile(".{0,50}");
+            default:
         }
         throw new IllegalArgumentException("Unrecognized pattern given");
     }

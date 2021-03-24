@@ -37,9 +37,9 @@ public class EndLectureResponse implements Serializable {
 
     @Override
     public String toString() {
-        return "EndLectureResponse{" +
-                "message='" + message + '\'' +
-                ", success=" + success +
-                '}';
+        return "EndLectureResponse{"
+                + "message='" + message + '\''
+                + ", success=" + success
+                + '}';
     }
 }

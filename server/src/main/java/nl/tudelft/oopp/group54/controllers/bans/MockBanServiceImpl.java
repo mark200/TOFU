@@ -1,10 +1,11 @@
 package nl.tudelft.oopp.group54.controllers.bans;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import nl.tudelft.oopp.group54.entities.Ban;
 import nl.tudelft.oopp.group54.entities.BanKey;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 @Service
 public class MockBanServiceImpl implements BanService {
@@ -12,11 +13,11 @@ public class MockBanServiceImpl implements BanService {
 
 
     /**
-     * ban an IP
+     * ban an IP.
      *
-     * @param lectureId
-     * @param questionId
-     * @param userIp
+     * @param lectureId lecture ID
+     * @param questionId question ID
+     * @param userIp user IP
      * @return status of the request
      */
     @Override

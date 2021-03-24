@@ -1,15 +1,20 @@
 package nl.tudelft.oopp.group54.controllers.votes;
 
-import nl.tudelft.oopp.group54.entities.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+
+import nl.tudelft.oopp.group54.entities.Question;
+import nl.tudelft.oopp.group54.entities.QuestionKey;
+import nl.tudelft.oopp.group54.entities.User;
+import nl.tudelft.oopp.group54.entities.UserKey;
+import nl.tudelft.oopp.group54.entities.Vote;
+import nl.tudelft.oopp.group54.entities.VoteKey;
 import nl.tudelft.oopp.group54.repositories.QuestionRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
 import nl.tudelft.oopp.group54.repositories.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
 
 @Service
 public class VoteServiceImpl implements VoteService {

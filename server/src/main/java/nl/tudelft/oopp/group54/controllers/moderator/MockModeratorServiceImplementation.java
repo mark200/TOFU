@@ -1,9 +1,9 @@
 package nl.tudelft.oopp.group54.controllers.moderator;
 
-import org.springframework.stereotype.Service;
-
 import java.util.Map;
 import java.util.TreeMap;
+
+import org.springframework.stereotype.Service;
 
 @Service
 public class MockModeratorServiceImplementation implements ModeratorService {
