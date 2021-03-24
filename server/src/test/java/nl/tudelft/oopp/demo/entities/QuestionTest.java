@@ -22,8 +22,11 @@ public class QuestionTest {
     static QuestionKey key;
     static QuestionKey keyDuplicate;
 
+    /**
+     * Executes before all tests.
+     */
     @BeforeAll
-    public static void init(){
+    public static void init() {
         key = new QuestionKey(123, 321);
         keyDuplicate = new QuestionKey(123, 321);
         Date date = new Date();
@@ -33,7 +36,7 @@ public class QuestionTest {
     }
 
     @Test
-    public void equalsPrimaryKeys(){
+    public void equalsPrimaryKeys() {
         assertEquals(question, questionDuplicate);
     }
 
