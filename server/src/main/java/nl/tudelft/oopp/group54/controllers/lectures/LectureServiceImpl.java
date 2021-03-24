@@ -82,11 +82,11 @@ public class LectureServiceImpl implements LectureService {
         }
 
 
-        String studentJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "s").getBytes())
+        String lecturerJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "s").getBytes())
                 .toString().replaceAll("-", "");
-        String moderatorJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "m").getBytes())
+        String studentJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "m").getBytes())
                 .toString().replaceAll("-", "");
-        String lecturerJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "l").getBytes())
+        String moderatorJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "l").getBytes())
                 .toString().replaceAll("-", "");
         Lecture newLecture = new
                 Lecture(null, lectureName, startTime, studentJoinId, moderatorJoinId, lecturerJoinId, true);
@@ -97,9 +97,9 @@ public class LectureServiceImpl implements LectureService {
 
         toBeReturned.put("success", true);
         toBeReturned.put("lectureId", newLecture.getId());
-        toBeReturned.put("lecturerId", studentJoinId);
-        toBeReturned.put("studentId", moderatorJoinId);
-        toBeReturned.put("moderatorId", lecturerJoinId);
+        toBeReturned.put("lecturerId", lecturerJoinId);
+        toBeReturned.put("studentId", studentJoinId);
+        toBeReturned.put("moderatorId", moderatorJoinId);
 
         return toBeReturned;
     }
@@ -169,11 +169,11 @@ public class LectureServiceImpl implements LectureService {
         // 2 - moderator
         // 3 - student
         if (foundLecture.get().getStudentJoinId().equals(roleCode)) {
-            newUser.setRoleID(1);
-        } else if (foundLecture.get().getLecturerJoinId().equals(roleCode)) {
-            newUser.setRoleID(2);
-        } else if (foundLecture.get().getModeratorJoinId().equals(roleCode)) {
             newUser.setRoleID(3);
+        } else if (foundLecture.get().getLecturerJoinId().equals(roleCode)) {
+            newUser.setRoleID(1);
+        } else if (foundLecture.get().getModeratorJoinId().equals(roleCode)) {
+            newUser.setRoleID(2);
         } else {
             toBeReturned.put("success", false);
             toBeReturned.put("message", "Unrecognized roleCode/user ID.");
