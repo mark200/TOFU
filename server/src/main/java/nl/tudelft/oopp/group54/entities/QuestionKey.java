@@ -39,7 +39,7 @@ public class QuestionKey implements Serializable, Comparable {
     }
 
     public void setLectureId(int lectureId) {
-        this.lectureId = lecture_id;
+        this.lectureId = lectureId;
     }
 
     //TODO: implement this compare correctly.
