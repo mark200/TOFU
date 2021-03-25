@@ -8,6 +8,9 @@ public class PostQuestionResponse implements Serializable {
     private Integer questionID;
     private String code;
 
+    /**
+     * Instantiates a new Post question response.
+     */
     public PostQuestionResponse() {
         this.success = false;
         this.message = "";
@@ -15,6 +18,14 @@ public class PostQuestionResponse implements Serializable {
         this.code = "";
     }
 
+    /**
+     * Instantiates a new Post question response.
+     *
+     * @param success    the success
+     * @param message    the message
+     * @param questionID the question id
+     * @param code       the code
+     */
     public PostQuestionResponse(boolean success, String message, Integer questionID, String code) {
         this.success = success;
         this.message = message;

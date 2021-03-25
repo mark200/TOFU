@@ -1,14 +1,23 @@
 package nl.tudelft.oopp.group54.controllers.questions;
 
-import nl.tudelft.oopp.group54.entities.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+import nl.tudelft.oopp.group54.entities.Lecture;
+import nl.tudelft.oopp.group54.entities.Question;
+import nl.tudelft.oopp.group54.entities.QuestionKey;
+import nl.tudelft.oopp.group54.entities.User;
+import nl.tudelft.oopp.group54.entities.UserKey;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.QuestionRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class QuestionServiceImplementation implements QuestionService {
@@ -22,11 +31,11 @@ public class QuestionServiceImplementation implements QuestionService {
     private LectureRepository lectureRepository;
 
     /**
-     * post a question
+     * post a question.
      *
-     * @param lectureId
-     * @param userId
-     * @param questionText
+     * @param lectureId    desc
+     * @param userId       desc
+     * @param questionText desc
      * @return status of the request
      */
     @Override
@@ -87,9 +96,9 @@ public class QuestionServiceImplementation implements QuestionService {
 
         Question newQuestion = new Question();
         newQuestion.setPrimaryKey(newQuestionKey);
-        newQuestion.setStudent_id(findUserRow.get().getKey().getId());
+        newQuestion.setStudentId(findUserRow.get().getKey().getId());
         newQuestion.setContent(questionText);
-        newQuestion.setCreated_at(new Date());
+        newQuestion.setCreatedAt(new Date());
         newQuestion.setStudentIp(userIp);
 
         questionRepository.flush();
@@ -107,11 +116,11 @@ public class QuestionServiceImplementation implements QuestionService {
     }
 
     /**
-     * Returns all question asked by the User with userID in JSON format
+     * Returns all question asked by the User with userID in JSON format.
      *
      * @param lectureId the lecture where the questions have been asked
      * @param userId    the user that has asked the questions we return
-     * @return
+     * @return Map
      */
     @Override
     public Map<String, Object> getAllQuestions(Integer lectureId, String userId) {
@@ -185,14 +194,19 @@ public class QuestionServiceImplementation implements QuestionService {
         Optional<User> authorOfTheDeletionRequest = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
         Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
 
-        Integer requestAuthorLectureId = authorOfTheDeletionRequest.get().getKey().getLecture_id();
-        Integer questionAuthorLectureId = questionToBeDeleted.get().getPrimaryKey().getLecture_id();
+        Integer requestAuthorLectureId = authorOfTheDeletionRequest.get().getKey().getLectureID();
+        Integer questionAuthorLectureId = questionToBeDeleted.get().getPrimaryKey().getLectureId();
 
         // If the lectures of user and question do not match.
         if (!requestAuthorLectureId.equals(questionAuthorLectureId)) {
             status.put("success", false);
             status.put("message", "The question in different lecture can't be deleted!");
             return status;
+        }
+
+        if (foundLecture.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized lecture.");
         }
 
         if (questionToBeDeleted.isEmpty()) {
@@ -207,13 +221,8 @@ public class QuestionServiceImplementation implements QuestionService {
             return status;
         }
 
-        if (foundLecture.isEmpty()) {
-            status.put("success", false);
-            status.put("message", "Unrecognized lecture.");
-        }
-
         Integer requestAuthorId = authorOfTheDeletionRequest.get().getKey().getId();
-        Integer questionAuthorId = questionToBeDeleted.get().getStudent_id();
+        Integer questionAuthorId = questionToBeDeleted.get().getStudentId();
         Integer requestAuthorRole = authorOfTheDeletionRequest.get().getRoleID();
 
         // 1 - lecturer
@@ -221,8 +230,8 @@ public class QuestionServiceImplementation implements QuestionService {
         // 3 - student
 
         // don't let students post questions once the lecture has ended
-        if(authorOfTheDeletionRequest.get().getRoleID().equals(3)){
-            if(!foundLecture.get().isLectureOngoing()){
+        if (authorOfTheDeletionRequest.get().getRoleID().equals(3)) {
+            if (!foundLecture.get().isLectureOngoing()) {
                 status.put("success", false);
                 status.put("message", "The lecture has ended.");
                 return status;
@@ -274,29 +283,30 @@ public class QuestionServiceImplementation implements QuestionService {
     }
 
     /**
-     * Transform a question into JSON format
+     * Transform a question into JSON format.
      *
      * @param q an object of type Question
      * @return A JSON representation of the object
      */
-    public Map<String, Object> transformQuestion(Question q, int lecture_id) {
+    public Map<String, Object> transformQuestion(Question q, int lectureId) {
         if (q == null) {
             return null;
         }
 
-        Optional<User> author = userRepository.findById(new UserKey(q.getStudent_id(), lecture_id));
+        Optional<User> author = userRepository.findById(new UserKey(q.getStudentId(), lectureId));
 
         Map<String, Object> toBeReturned = new TreeMap<>();
         toBeReturned.put("questionId", q.getPrimaryKey().getId());
-        toBeReturned.put("userId", q.getStudent_id());
+        toBeReturned.put("userId", q.getStudentId());
         toBeReturned.put("userIp", q.getStudentIp());
         toBeReturned.put("userName", author.get().getName());
         toBeReturned.put("questionText", q.getContent());
-        toBeReturned.put("score", q.getVote_counter());
+        toBeReturned.put("score", q.getVoteCounter());
         toBeReturned.put("answered", q.getAnswered());
 
-        if (q.getAnswered())
+        if (q.getAnswered()) {
             toBeReturned.put("answerText", q.getAnswerText());
+        }
 
         return toBeReturned;
     }

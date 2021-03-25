@@ -1,17 +1,22 @@
 package nl.tudelft.oopp.group54.controllers.answers;
 
-import nl.tudelft.oopp.group54.entities.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+import java.util.TreeMap;
+
+import nl.tudelft.oopp.group54.entities.Answer;
+import nl.tudelft.oopp.group54.entities.AnswerKey;
+import nl.tudelft.oopp.group54.entities.Question;
+import nl.tudelft.oopp.group54.entities.QuestionKey;
+import nl.tudelft.oopp.group54.entities.User;
+import nl.tudelft.oopp.group54.entities.UserKey;
 import nl.tudelft.oopp.group54.repositories.AnswerRepository;
 import nl.tudelft.oopp.group54.repositories.QuestionRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
 import nl.tudelft.oopp.group54.repositories.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.TreeMap;
 
 @Service
 public class AnswerServiceImpl implements AnswerService {

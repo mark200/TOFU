@@ -1,8 +1,7 @@
 package nl.tudelft.oopp.group54.controllers.answers;
 
-import org.springframework.lang.Nullable;
-
 import java.util.Map;
+import org.springframework.lang.Nullable;
 
 public interface AnswerService {
 

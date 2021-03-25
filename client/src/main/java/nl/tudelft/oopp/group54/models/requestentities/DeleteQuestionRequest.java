@@ -19,8 +19,8 @@ public class DeleteQuestionRequest implements Serializable {
 
     @Override
     public String toString() {
-        return "DeleteQuestionRequest{" +
-                "userId='" + userId + '\'' +
-                '}';
+        return "DeleteQuestionRequest{"
+                + "userId='" + userId + '\''
+                + '}';
     }
 }

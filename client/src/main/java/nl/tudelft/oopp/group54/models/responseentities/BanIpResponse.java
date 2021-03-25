@@ -5,8 +5,6 @@ import java.io.Serializable;
 public class BanIpResponse implements Serializable {
     private boolean success;
     private String message;
-    private String banIP;
-
 
     public BanIpResponse() {
         this.success = false;
@@ -16,18 +14,6 @@ public class BanIpResponse implements Serializable {
     public BanIpResponse(boolean success, String message) {
         this.success = success;
         this.message = message;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public String getBanIP() {
-        return banIP;
-    }
-
-    public void setBanIP(String banIP) {
-        this.banIP = banIP;
     }
 
     public boolean getSuccess() {
@@ -48,10 +34,9 @@ public class BanIpResponse implements Serializable {
 
     @Override
     public String toString() {
-        return "BanIpResponse{" +
-                "success=" + success +
-                ", message='" + message + '\'' +
-                ", banIP='" + banIP + '\'' +
-                '}';
+        return "BanIpResponse{"
+                + "success=" + success
+                + ", message='" + message + '\''
+                + '}';
     }
 }

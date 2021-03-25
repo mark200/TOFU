@@ -12,6 +12,14 @@ public class DeleteQuestionResponse implements Serializable {
     private Integer questionId;
     private String code;
 
+    /**
+     * Instantiates a new Delete question response.
+     *
+     * @param success    the success
+     * @param message    the message
+     * @param questionId the question id
+     * @param code       the code
+     */
     public DeleteQuestionResponse(Boolean success, String message, Integer questionId, String code) {
         this.success = success;
         this.message = message;
@@ -19,6 +27,9 @@ public class DeleteQuestionResponse implements Serializable {
         this.code = code;
     }
 
+    /**
+     * Instantiates a new Delete question response.
+     */
     public DeleteQuestionResponse() {
         this.success = false;
         this.message = "";
@@ -60,13 +71,17 @@ public class DeleteQuestionResponse implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         DeleteQuestionResponse that = (DeleteQuestionResponse) o;
-        return getSuccess().equals(that.getSuccess()) &&
-                getMessage().equals(that.getMessage()) &&
-                Objects.equals(getQuestionId(), that.getQuestionId()) &&
-                Objects.equals(getCode(), that.getCode());
+        return getSuccess().equals(that.getSuccess())
+                && getMessage().equals(that.getMessage())
+                && Objects.equals(getQuestionId(), that.getQuestionId())
+                && Objects.equals(getCode(), that.getCode());
     }
 
     @Override

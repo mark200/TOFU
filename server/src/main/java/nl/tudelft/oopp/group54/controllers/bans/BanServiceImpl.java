@@ -1,12 +1,20 @@
 package nl.tudelft.oopp.group54.controllers.bans;
 
-import nl.tudelft.oopp.group54.entities.*;
-import nl.tudelft.oopp.group54.repositories.QuestionRepository;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+
+import nl.tudelft.oopp.group54.entities.Ban;
+import nl.tudelft.oopp.group54.entities.BanKey;
+import nl.tudelft.oopp.group54.entities.Question;
+import nl.tudelft.oopp.group54.entities.QuestionKey;
+
 import nl.tudelft.oopp.group54.repositories.BanRepository;
+import nl.tudelft.oopp.group54.repositories.QuestionRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
 
 @Service
 public class BanServiceImpl implements BanService {
@@ -17,11 +25,11 @@ public class BanServiceImpl implements BanService {
     private QuestionRepository questionRepository;
 
     /**
-     * ban an IP
+     * ban an IP.
      *
-     * @param lectureId
-     * @param questionId
-     * @param userIp
+     * @param lectureId lecture ID
+     * @param questionId question ID
+     * @param userIp user IP
      * @return status of the request
      */
     @Override
@@ -66,7 +74,7 @@ public class BanServiceImpl implements BanService {
         try {
             banRepository.save(newBan);
             status.put("success", true);
-            status.put("banIP", newBan.getPrimaryKey().getBanned_ip());
+            status.put("banIP", newBan.getPrimaryKey().getBannedIP());
         } catch (Exception e) {
             status.put("success", false);
             status.put("message", e.toString());

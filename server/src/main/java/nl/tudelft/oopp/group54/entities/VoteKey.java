@@ -1,9 +1,9 @@
 package nl.tudelft.oopp.group54.entities;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 @Embeddable
 public class VoteKey implements Serializable {
@@ -20,17 +20,17 @@ public class VoteKey implements Serializable {
     private Integer questionID;
 
     /**
-     * Empty Constructor
+     * Empty Constructor.
      */
     public VoteKey() {
 
     }
 
     /**
-     * Constructor
-     * @param studentID
-     * @param lectureID
-     * @param questionID
+     * Constructor.
+     * @param studentID ID of student
+     * @param lectureID ID of lecture
+     * @param questionID IF of question
      */
     public VoteKey(@NotNull int studentID, @NotNull int lectureID, @NotNull int questionID) {
         this.studentID = studentID;
@@ -39,7 +39,7 @@ public class VoteKey implements Serializable {
     }
 
     /**
-     * Returns the Identification Number of the Student who made that Vote
+     * Returns the Identification Number of the Student who made that Vote.
      * @return
      */
     public int getStudentID() {
@@ -47,15 +47,15 @@ public class VoteKey implements Serializable {
     }
 
     /**
-     * Updates the Identification Number of the Student who made that Vote
-     * @param studentID
+     * Updates the Identification Number of the Student who made that Vote.
+     * @param studentID ID of new student
      */
     public void setStudentID(int studentID) {
         this.studentID = studentID;
     }
 
     /**
-     * Returns the Identification Number of the Lecture where the Question
+     * Returns the Identification Number of the Lecture where the Question.
      * was asked on which the Vote was made
      * @return
      */
@@ -64,16 +64,16 @@ public class VoteKey implements Serializable {
     }
 
     /**
-     * Updates the Identification Number of the Lecture where the Question
+     * Updates the Identification Number of the Lecture where the Question.
      * was asked on which the Vote was made
-     * @param lectureID
+     * @param lectureID ID of new lecture
      */
     public void setLectureID(int lectureID) {
         this.lectureID = lectureID;
     }
 
     /**
-     * Returns the Identification Number of the Question
+     * Returns the Identification Number of the Question.
      * for which the Vote was made
      * @return
      */
@@ -82,33 +82,43 @@ public class VoteKey implements Serializable {
     }
 
     /**
-     * Updates the Identification Number of the Question
+     * Updates the Identification Number of the Question.
      * for which the Vote was made
-     * @param questionID
+     * @param questionID ID of new question
      */
     public void setQuestionID(int questionID) {
         this.questionID = questionID;
     }
 
     /**
-     * Checks if o is the same key
-     * @param o
+     * Checks if o is the same key.
+     * @param o object that is compared to this
      * @return
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof VoteKey)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof VoteKey)) {
+            return false;
+        }
 
         VoteKey voteKey = (VoteKey) o;
 
-        if (getStudentID() != voteKey.getStudentID()) return false;
-        if (getLectureID() != voteKey.getLectureID()) return false;
+        if (getStudentID() != voteKey.getStudentID()) {
+            return false;
+        }
+
+        if (getLectureID() != voteKey.getLectureID()) {
+            return false;
+        }
+
         return getQuestionID() == voteKey.getQuestionID();
     }
 
     /**
-     * Computes the hashcode of the Vote
+     * Computes the hashcode of the Vote.
      * @return
      */
     @Override
@@ -120,15 +130,15 @@ public class VoteKey implements Serializable {
     }
 
     /**
-     * Returns a String-based representation of the Vote
+     * Returns a String-based representation of the Vote.
      * @return
      */
     @Override
     public String toString() {
-        return "VoteKey{" +
-                "studentID = " + studentID +
-                ", lectureID = " + lectureID +
-                ", roleID = " + questionID +
-                '}';
+        return "VoteKey{"
+                + "studentID = " + studentID
+                + ", lectureID = " + lectureID
+                + ", roleID = " + questionID
+                + '}';
     }
 }

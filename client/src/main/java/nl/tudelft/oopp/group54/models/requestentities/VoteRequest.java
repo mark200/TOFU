@@ -19,6 +19,12 @@ public class VoteRequest implements Serializable {
         this.upvote = upvote;
     }
 
+    /**
+     * Instantiates a new Vote request.
+     *
+     * @param userId     the user id
+     * @param questionId the question id
+     */
     public VoteRequest(String userId, Integer questionId) {
         this.userId = userId;
         this.questionId = questionId;

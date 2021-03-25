@@ -1,25 +1,25 @@
 package nl.tudelft.oopp.group54.entities;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import java.io.Serializable;
-import java.util.Objects;
 
 @Embeddable
 public class QuestionKey implements Serializable, Comparable {
-	
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", columnDefinition = "INT AUTO_INCREMENT")
-	private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", columnDefinition = "INT AUTO_INCREMENT")
+    private Integer id;
 
     @Column(name = "lecture_id", nullable = false)
-    private Integer lecture_id;
+    private Integer lectureId;
 
-    public QuestionKey(Integer id, Integer lecture_id) {
-    	this.id = id;
-        this.lecture_id = lecture_id;
+    public QuestionKey(Integer id, Integer lectureId) {
+        this.id = id;
+        this.lectureId = lectureId;
     }
 
     public QuestionKey() {
@@ -30,16 +30,16 @@ public class QuestionKey implements Serializable, Comparable {
         return id;
     }
 
-    public int getLecture_id() {
-        return lecture_id;
+    public int getLectureId() {
+        return lectureId;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setLecture_id(int lecture_id) {
-        this.lecture_id = lecture_id;
+    public void setLectureId(int lectureId) {
+        this.lectureId = lectureId;
     }
 
     //TODO: implement this compare correctly.
@@ -52,15 +52,19 @@ public class QuestionKey implements Serializable, Comparable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         QuestionKey that = (QuestionKey) o;
-        return getId() == that.getId() &&
-                getLecture_id() == that.getLecture_id();
+        return getId() == that.getId()
+                && getLectureId() == that.getLectureId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getLecture_id());
+        return Objects.hash(getId(), getLectureId());
     }
 }
