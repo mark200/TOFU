@@ -1,16 +1,21 @@
 package nl.tudelft.oopp.group54.controllers.votes;
 
-import nl.tudelft.oopp.group54.entities.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+import nl.tudelft.oopp.group54.entities.Lecture;
+import nl.tudelft.oopp.group54.entities.Question;
+import nl.tudelft.oopp.group54.entities.QuestionKey;
+import nl.tudelft.oopp.group54.entities.User;
+import nl.tudelft.oopp.group54.entities.UserKey;
+import nl.tudelft.oopp.group54.entities.Vote;
+import nl.tudelft.oopp.group54.entities.VoteKey;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.QuestionRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
 import nl.tudelft.oopp.group54.repositories.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
 
 @Service
 public class VoteServiceImpl implements VoteService {
@@ -52,7 +57,6 @@ public class VoteServiceImpl implements VoteService {
         Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
         Optional<User> foundUser = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
         Optional<Question> foundQuestion = questionRepository.findById(new QuestionKey(questionId, lectureId));
-        Optional<Vote> foundVote = voteRepository.findById(new VoteKey(Integer.parseInt(userId), lectureId, questionId));
 
         if (foundUser.isEmpty()) {
             toBeReturned.put("success", false);
@@ -79,6 +83,7 @@ public class VoteServiceImpl implements VoteService {
             return toBeReturned;
         }
 
+        Optional<Vote> foundVote = voteRepository.findById(new VoteKey(Integer.parseInt(userId), lectureId, questionId));
 
         Vote newVote = null;
 

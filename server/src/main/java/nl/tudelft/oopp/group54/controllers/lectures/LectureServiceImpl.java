@@ -1,5 +1,13 @@
 package nl.tudelft.oopp.group54.controllers.lectures;
 
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import nl.tudelft.oopp.group54.entities.Lecture;
 import nl.tudelft.oopp.group54.entities.User;
 import nl.tudelft.oopp.group54.entities.UserKey;
@@ -7,9 +15,6 @@ import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class LectureServiceImpl implements LectureService {
@@ -26,13 +31,11 @@ public class LectureServiceImpl implements LectureService {
     }
 
     /**
-     * create a new lecture by adding it to the database
+     * create a new lecture by adding it to the database.
      *
-     * @param startTime   - Date of the planned start time of the lecture
-     * @param lectureName - lecture name given as string
+     * @param startTime   - Date of the planned start time of the lecture.
+     * @param lectureName - lecture name given as string.
      * @return - Map, which returns the status of the request to create
-     * a new lecture, the message of the execution result and if it was successful
-     * the UUIDs of the join ids for student, lecturer and moderator.
      */
     @Override
     public Map<String, Object> createNewLecture(Date startTime, String lectureName) {
@@ -106,12 +109,12 @@ public class LectureServiceImpl implements LectureService {
 
     /**
      * Creates a new User when joining the specified lecture
-     * and assigns them a role
+     * and assigns them a role.
      *
-     * @param lectureId
-     * @param roleCode
-     * @param userName
-     * @return
+     * @param lectureId id
+     * @param roleCode code
+     * @param userName userName
+     * @return Map
      */
     @Override
     public Map<String, Object> joinOngoingLecture(Integer lectureId, String roleCode, String userName) {
@@ -181,8 +184,8 @@ public class LectureServiceImpl implements LectureService {
         }
 
         // if the lecture has ended don't let students join it.
-        if(newUser.getRoleID().equals(3)){
-            if(!foundLecture.get().isLectureOngoing()){
+        if (newUser.getRoleID().equals(3)) {
+            if (!foundLecture.get().isLectureOngoing()) {
                 toBeReturned.put("success", false);
                 toBeReturned.put("message", "The lecture has ended.");
                 return toBeReturned;
@@ -196,7 +199,8 @@ public class LectureServiceImpl implements LectureService {
             toBeReturned.put("success", true);
             toBeReturned.put("userID", newUser.getKey().getId());
             toBeReturned.put("userName", newUser.getName());
-            toBeReturned.put("role", (newUser.getRoleID() == 1) ? "Student" : ((newUser.getRoleID() == 2) ? "Lecturer" : "Moderator"));
+            toBeReturned.put("role",
+                    (newUser.getRoleID() == 1) ? "Student" : ((newUser.getRoleID() == 2) ? "Lecturer" : "Moderator"));
             toBeReturned.put("privilegeId", newUser.getRoleID());
         } catch (Exception e) {
             toBeReturned.put("success", false);
@@ -207,10 +211,10 @@ public class LectureServiceImpl implements LectureService {
     }
 
     /**
-     * For now this method only returns the number of people watching the lecture
+     * For now this method only returns the number of people watching the lecture.
      * (meaning only this new functionality is implemented)
      *
-     * @param lectureId
+     * @param lectureId description
      * @return
      */
     @Override
@@ -248,7 +252,8 @@ public class LectureServiceImpl implements LectureService {
 
     /**
      * Changes lecture's lectureOngoing value to false.
-     * @param userId - Id of the user
+     *
+     * @param userId    - Id of the user
      * @param lectureId - Id of the lecture
      * @return status of the request
      */
@@ -288,7 +293,7 @@ public class LectureServiceImpl implements LectureService {
             return status;
         }
 
-        if(!lectureToBeEnded.get().isLectureOngoing()){
+        if (!lectureToBeEnded.get().isLectureOngoing()) {
             status.put("success", false);
             status.put("message", "The lecture has already been ended.");
             return status;

@@ -34,7 +34,7 @@ public class MainSceneController extends AbstractApplicationController {
     }
 
     /**
-     * display the message that lecture has been ended when students gets kicked out of the room
+     * display the message that lecture has been ended when students gets kicked out of the room.
      */
     @Override
     public void switchToMainFromLecture() {

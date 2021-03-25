@@ -1,22 +1,18 @@
 package nl.tudelft.oopp.group54.widgets;
 
+import java.io.IOException;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.control.*;
-import nl.tudelft.oopp.group54.communication.ServerCommunication;
-import nl.tudelft.oopp.group54.controllers.LectureRoomSceneController;
-import nl.tudelft.oopp.group54.models.QuestionModel;
-import nl.tudelft.oopp.group54.models.responseentities.BanIpResponse;
-import nl.tudelft.oopp.group54.models.responseentities.DeleteQuestionResponse;
-import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
-import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
-
-import java.io.IOException;
-
-import javafx.beans.property.DoubleProperty;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -27,9 +23,16 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import nl.tudelft.oopp.group54.models.responseentities.VoteResponse;
 
-import java.io.IOException;
+import nl.tudelft.oopp.group54.communication.ServerCommunication;
+import nl.tudelft.oopp.group54.controllers.LectureRoomSceneController;
+import nl.tudelft.oopp.group54.models.QuestionModel;
+import nl.tudelft.oopp.group54.models.responseentities.BanIpResponse;
+import nl.tudelft.oopp.group54.models.responseentities.DeleteQuestionResponse;
+import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
+
+import nl.tudelft.oopp.group54.models.responseentities.VoteResponse;
 
 public abstract class QuestionView extends AnchorPane {
 
@@ -62,6 +65,15 @@ public abstract class QuestionView extends AnchorPane {
 
     private LectureRoomSceneController owner;
 
+    /**
+     * Instantiates a new Question view.
+     *
+     * @param text       the text
+     * @param questionId the question id
+     * @param userName   the user name
+     * @param userIp     the user ip
+     * @param voteCount  the vote count
+     */
     public QuestionView(String text, String questionId, String userName, String userIp, Integer voteCount) {
         this.innerVBox = new VBox();
 
@@ -226,10 +238,11 @@ public abstract class QuestionView extends AnchorPane {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (!response.isSuccess())
+        if (!response.isSuccess()) {
             System.out.println(response.getMessage());
+        }
 
-        if(response != null){
+        if (response != null) {
             owner.displayStatusMessage(response.getMessage());
         }
 
@@ -247,10 +260,10 @@ public abstract class QuestionView extends AnchorPane {
             e.printStackTrace();
         }
 
-        if (!response.getSuccess())
+        if (!response.getSuccess()) {
             System.out.println(response.getMessage());
-
-        if(response != null){
+        }
+        if (response != null) {
             owner.displayStatusMessage(response.getMessage());
         }
 
@@ -277,10 +290,11 @@ public abstract class QuestionView extends AnchorPane {
             e.printStackTrace();
         }
 
-        if (!response.getSuccess())
+        if (!response.getSuccess()) {
             System.out.println(response.getMessage());
+        }
 
-        if(response != null){
+        if (response != null) {
             owner.displayStatusMessage(response.getMessage());
         }
 
@@ -293,14 +307,14 @@ public abstract class QuestionView extends AnchorPane {
 
 
     /**
-     * Update the Options dropdown for Lecturer
+     * Update the Options dropdown for Lecturer.
      */
     private void updateLecturer() {
 
     }
 
     /**
-     * Update the Options dropdown for student
+     * Update the Options dropdown for student.
      */
     private void updateStudent() {
         markAnswer.setVisible(false);
@@ -309,13 +323,16 @@ public abstract class QuestionView extends AnchorPane {
     }
 
     /**
-     * Update the Options dropdown for Moderator
+     * Update the Options dropdown for Moderator.
      */
     private void updateModerator() {
 
     }
 
-    public void updateQuestionView(){
+    /**
+     * Update question view.
+     */
+    public void updateQuestionView() {
         if (this.owner.getDs().getPrivilegeId().equals(1)) {
             updateLecturer();
         }
@@ -329,33 +346,29 @@ public abstract class QuestionView extends AnchorPane {
         }
     }
 
+    private void banAuthor() {
+        BanIpResponse response = null;
 
-//	public void setQuestionModel() {
-//		this.questionModel = questionModel;
-//	}
-        private void banAuthor() {
-            BanIpResponse response = null;
-
-            try {
-                response = ServerCommunication.banIp(this.questionId, this.userIp);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            if (response.getSuccess()) {
-                owner.displayStatusMessage("Users with this question's author's IP " +
-                        "have been banned from posting anymore questions.");
-            }
-
-            owner.refreshButtonClickedAfter();
-
+        try {
+            response = ServerCommunication.banIp(this.questionId, this.userIp);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        
-        public void toggleLecturerMode(boolean b) {
-            //implemented in child class
+
+        if (response.getSuccess()) {
+            owner.displayStatusMessage("Users with this question's author's IP "
+                    + "have been banned from posting anymore questions.");
         }
+
+        owner.refreshButtonClickedAfter();
+
+    }
+
+    public void toggleLecturerMode(boolean b) {
+        //implemented in child class
+    }
 
 }
 
