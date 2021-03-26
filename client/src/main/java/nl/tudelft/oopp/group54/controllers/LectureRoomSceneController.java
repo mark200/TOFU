@@ -215,6 +215,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             for (QuestionModel question : sorted) {
                 if (!this.ds.containsUnansweredQuestion(question.getQuestionId())) {
                     this.ds.addUnansweredQuestion(question, this);
+                } else if (question.getScore() != this.ds.getVoteOnQuestion(question.getQuestionId())) {
+                    this.ds.deleteQuestion(question);
+                    this.ds.addUnansweredQuestion(question, this);
                 }
             }
         }

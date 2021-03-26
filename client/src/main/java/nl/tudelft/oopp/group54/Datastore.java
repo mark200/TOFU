@@ -101,7 +101,7 @@ public class Datastore {
                 question.getUserName(), question.getUserIp(), question.getScore());
         q.setOwner(sceneController);
         q.updateQuestionView();
-        this.questions.addUnansweredQuestion(question.getQuestionId());
+        this.questions.addUnansweredQuestion(question.getQuestionId(), question.getScore());
         this.currentUnansweredQuestionViews.add(q);
     }
 
@@ -116,12 +116,13 @@ public class Datastore {
                 question.getUserName(), question.getUserIp(), question.getScore());
         q.setOwner(sceneController);
         q.updateQuestionView();
-        this.questions.addAnsweredQuestion(question.getQuestionId());
+        this.questions.addAnsweredQuestion(question.getQuestionId(), question.getScore());
         this.currentAnsweredQuestionViews.add(q);
     }
 
     /**
      * Checks if datastore contains the ID of an unanswered question.
+     *
      * @param id String representation of an ID of a question
      * @return True/False
      */
@@ -135,6 +136,7 @@ public class Datastore {
 
     /**
      * Checks if datastore contains the ID of an answered question.
+     *
      * @param id String representation of an ID of a question
      * @return True/False
      */
@@ -144,6 +146,13 @@ public class Datastore {
         }
 
         return this.questions.containsAnsweredQuestion(id);
+    }
+
+    public void deleteQuestion(QuestionModel question) {
+        if (question == null) {
+            return;
+        }
+        this.currentUnansweredQuestionViews.remove(question);
     }
 
     public CreateLectureResponse getCreateLectureResponse() {
@@ -184,5 +193,9 @@ public class Datastore {
 
     public void setPrivilegeId(Integer privilegeId) {
         this.privilegeId = privilegeId;
+    }
+
+    public Integer getVoteOnQuestion(String questionId) {
+        return this.questions.getVoteCount(questionId);
     }
 }

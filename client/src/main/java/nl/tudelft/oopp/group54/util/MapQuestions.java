@@ -1,18 +1,20 @@
 package nl.tudelft.oopp.group54.util;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class MapQuestions {
-    private Set<String> innerUnansweredQuestionsIDs;
-    private Set<String> innerAnsweredQuestionsIDs;
+    private Map<String, Integer> innerUnansweredQuestionsIDs;
+    private Map<String, Integer> innerAnsweredQuestionsIDs;
 
     /**
      * Empty Constructor.
      */
     public MapQuestions() {
-        this.innerAnsweredQuestionsIDs = new HashSet<>();
-        this.innerUnansweredQuestionsIDs = new HashSet<>();
+        this.innerAnsweredQuestionsIDs = new HashMap<>();
+        this.innerUnansweredQuestionsIDs = new HashMap<>();
     }
 
     /**
@@ -20,24 +22,24 @@ public class MapQuestions {
      * @param innerUnansweredQuestionsIDs IDs of all unanswered questions
      * @param innerAnsweredQuestionsIDs IDs of all answered questions
      */
-    public MapQuestions(Set<String> innerUnansweredQuestionsIDs, Set<String> innerAnsweredQuestionsIDs) {
+    public MapQuestions(Map<String,Integer> innerUnansweredQuestionsIDs, Map<String, Integer> innerAnsweredQuestionsIDs) {
         this.innerUnansweredQuestionsIDs = innerUnansweredQuestionsIDs;
         this.innerAnsweredQuestionsIDs = innerAnsweredQuestionsIDs;
     }
 
-    public Set<String> getInnerUnansweredQuestionsIDs() {
+    public Map<String,Integer> getInnerUnansweredQuestionsIDs() {
         return innerUnansweredQuestionsIDs;
     }
 
-    public void setInnerUnansweredQuestionsIDs(Set<String> innerUnansweredQuestionsIDs) {
+    public void setInnerUnansweredQuestionsIDs(HashMap<String, Integer> innerUnansweredQuestionsIDs) {
         this.innerUnansweredQuestionsIDs = innerUnansweredQuestionsIDs;
     }
 
-    public Set<String> getInnerAnsweredQuestionsIDs() {
+    public Map<String, Integer> getInnerAnsweredQuestionsIDs() {
         return innerAnsweredQuestionsIDs;
     }
 
-    public void setInnerAnsweredQuestionsIDs(Set<String> innerAnsweredQuestionsIDs) {
+    public void setInnerAnsweredQuestionsIDs(Map<String,Integer> innerAnsweredQuestionsIDs) {
         this.innerAnsweredQuestionsIDs = innerAnsweredQuestionsIDs;
     }
 
@@ -45,24 +47,24 @@ public class MapQuestions {
      * Adds ID of an unanswered question to the set.
      * @param id textual representation of an identification number
      */
-    public void addUnansweredQuestion(String id) {
+    public void addUnansweredQuestion(String id, Integer voteCount) {
         if (id == null) {
             return;
         }
 
-        this.innerUnansweredQuestionsIDs.add(id);
+        this.innerUnansweredQuestionsIDs.put(id, voteCount);
     }
 
     /**
      * Adds ID of an answered question to the set.
      * @param id textual representation of an identification number
      */
-    public void addAnsweredQuestion(String id) {
+    public void addAnsweredQuestion(String id, Integer voteCount) {
         if (id == null) {
             return;
         }
 
-        this.innerAnsweredQuestionsIDs.add(id);
+        this.innerAnsweredQuestionsIDs.put(id, voteCount);
     }
 
     /**
@@ -75,7 +77,7 @@ public class MapQuestions {
             return false;
         }
 
-        return this.innerUnansweredQuestionsIDs.contains(id);
+        return this.innerUnansweredQuestionsIDs.containsKey(id);
     }
 
     /**
@@ -88,6 +90,14 @@ public class MapQuestions {
             return false;
         }
 
-        return this.innerAnsweredQuestionsIDs.contains(id);
+        return this.innerAnsweredQuestionsIDs.containsKey(id);
+    }
+
+    public Integer getVoteCount(String id) {
+        return this.innerUnansweredQuestionsIDs.get(id);
+    }
+
+    public void updateValue(String id, Integer voteCount) {
+        this.innerUnansweredQuestionsIDs.put(id, voteCount);
     }
 }
