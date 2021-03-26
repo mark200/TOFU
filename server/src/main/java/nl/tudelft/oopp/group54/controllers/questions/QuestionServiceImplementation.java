@@ -92,6 +92,17 @@ public class QuestionServiceImplementation implements QuestionService {
             }
         }
 
+        // don't let students post questions more than once in a minute.
+        Date timeLimit = new Date(System.currentTimeMillis() - 60000);
+        Date lastQuestion = findUserRow.get().getlastQuestion();
+        if (findUserRow.get().getRoleID().equals(3) && lastQuestion != null) {
+            if (lastQuestion.after(timeLimit)) {
+                status.put("success", false);
+                status.put("message", "Cannot post more than 1 question in 1 minute.");
+                return status;
+            }
+        }
+
         QuestionKey newQuestionKey = new QuestionKey(null, lectureId);
 
         Question newQuestion = new Question();
@@ -100,6 +111,7 @@ public class QuestionServiceImplementation implements QuestionService {
         newQuestion.setContent(questionText);
         newQuestion.setCreatedAt(new Date());
         newQuestion.setStudentIp(userIp);
+        findUserRow.get().setLastQuestion(new Date(System.currentTimeMillis()));
 
         questionRepository.flush();
 
