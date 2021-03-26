@@ -161,6 +161,8 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         if (response.getSuccess()) {
             questionField.clear();
             this.refreshButtonClicked();
+        } else {
+            this.displayStatusMessage(response.getMessage());
         }
     }
 
