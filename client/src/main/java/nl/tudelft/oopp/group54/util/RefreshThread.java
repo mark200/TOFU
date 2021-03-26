@@ -19,8 +19,6 @@ public class RefreshThread implements Runnable {
                 this.lecture.refreshButtonClickedAfter();
             }
 
-        } while (this.lecture.isLectureEnded() == false);
-
-        System.out.println("Goodbye!");
+        } while (!this.lecture.isLectureEnded());
     }
 }
