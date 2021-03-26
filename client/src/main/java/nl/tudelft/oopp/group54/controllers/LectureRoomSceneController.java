@@ -20,6 +20,7 @@ import nl.tudelft.oopp.group54.models.responseentities.EndLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureMetadataResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
+import nl.tudelft.oopp.group54.util.RefreshThread;
 import nl.tudelft.oopp.group54.views.ApplicationScene;
 import nl.tudelft.oopp.group54.views.MainView;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
@@ -93,23 +94,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             keyPressed(event);
         });
 
-
-        Thread one = new Thread(() -> {
-            //While
-            do {
-                long var = System.currentTimeMillis() / 1000;
-                double var2 = var % 10;
-
-                if (var2 == 1.0) {
-
-                    refreshButtonClicked();
-
-                }
-
-            } while (true);
-        });
-
-        one.start();
+        new Thread(new RefreshThread(this)).start();
     }
 
     public void askButtonClicked() {
@@ -211,7 +196,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
         if (response.getSuccess()) {
             if (statusDisplay) {
-                this.displayStatusMessage("Refreshed succesfully.");
+                this.displayStatusMessage("Refreshed successfully.");
             }
             // The questions are already sorted by time so only sorting by score is required.
             List<QuestionModel> sorted = response.getUnanswered();
@@ -221,13 +206,19 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                     return Integer.compare(o2.getScore(), o1.getScore());
                 }
             });
-            this.ds.setCurrentUnansweredQuestionViews(null);
-            this.ds.setCurrentAnsweredQuestionViews(null);
+
+            // this.ds.setCurrentUnansweredQuestionViews(null);
+            // this.ds.setCurrentAnsweredQuestionViews(null);
+
             for (QuestionModel question : response.getAnswered()) {
-                this.ds.addAnsweredQuestion(question, this);
+                if (!this.ds.containsAnsweredQuestion(question.getQuestionId())) {
+                    this.ds.addAnsweredQuestion(question, this);
+                }
             }
             for (QuestionModel question : sorted) {
-                this.ds.addUnansweredQuestion(question, this);
+                if (!this.ds.containsUnansweredQuestion(question.getQuestionId())) {
+                    this.ds.addUnansweredQuestion(question, this);
+                }
             }
         }
     }
@@ -314,5 +305,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
     public Datastore getDs() {
         return ds;
+    }
+
+    public Boolean isLectureEnded() {
+        return this.ended;
     }
 }

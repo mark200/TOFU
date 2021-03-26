@@ -8,6 +8,7 @@ import nl.tudelft.oopp.group54.controllers.LectureRoomSceneController;
 import nl.tudelft.oopp.group54.models.QuestionModel;
 import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
+import nl.tudelft.oopp.group54.util.MapQuestions;
 import nl.tudelft.oopp.group54.widgets.AnsweredQuestionView;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
 import nl.tudelft.oopp.group54.widgets.UnansweredQuestionView;
@@ -18,6 +19,8 @@ public class Datastore {
 
     ObservableList<QuestionView> currentUnansweredQuestionViews;
     ObservableList<QuestionView> currentAnsweredQuestionViews;
+
+    private MapQuestions questions;
 
     CreateLectureResponse createLectureResponse;
     JoinLectureResponse joinLectureResponse;
@@ -31,6 +34,7 @@ public class Datastore {
     private Datastore() {
         this.currentUnansweredQuestionViews = FXCollections.observableArrayList();
         this.currentAnsweredQuestionViews = FXCollections.observableArrayList();
+        this.questions = new MapQuestions();
         createLectureResponse = null;
         joinLectureResponse = null;
     }
@@ -97,6 +101,7 @@ public class Datastore {
                 question.getUserName(), question.getUserIp(), question.getScore());
         q.setOwner(sceneController);
         q.updateQuestionView();
+        this.questions.addUnansweredQuestion(question.getQuestionId());
         this.currentUnansweredQuestionViews.add(q);
     }
 
@@ -111,9 +116,35 @@ public class Datastore {
                 question.getUserName(), question.getUserIp(), question.getScore());
         q.setOwner(sceneController);
         q.updateQuestionView();
+        this.questions.addAnsweredQuestion(question.getQuestionId());
         this.currentAnsweredQuestionViews.add(q);
     }
 
+    /**
+     * Checks if datastore contains the ID of an unanswered question.
+     * @param id String representation of an ID of a question
+     * @return True/False
+     */
+    public boolean containsUnansweredQuestion(String id) {
+        if (id == null) {
+            return false;
+        }
+
+        return this.questions.containsUnansweredQuestion(id);
+    }
+
+    /**
+     * Checks if datastore contains the ID of an answered question.
+     * @param id String representation of an ID of a question
+     * @return True/False
+     */
+    public boolean containsAnsweredQuestion(String id) {
+        if (id == null) {
+            return false;
+        }
+
+        return this.questions.containsAnsweredQuestion(id);
+    }
 
     public CreateLectureResponse getCreateLectureResponse() {
         return createLectureResponse;
