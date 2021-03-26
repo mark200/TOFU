@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -138,5 +139,56 @@ public class LectureController {
         return lectureService.getLectureMetadata(lectureID);
     }
 
+    /**
+     * Post lecture feedback. If the poster is a student, it will add to the amount of people
+     * who have the same feedback regarding a lecture. If the poster is a lecturer or moderator,
+     * it will clear (remove) all feedback given on the specific matter.
+     * @param lectureID The lecture for which this feedback is being given.
+     * @param requestPayload The specifics of the actual feedback.
+     *                       Check the LectureFeedbackCode enum for specifics.
+     * @return Whether the operation was successful.
+     */
+    @PostMapping(
+            value = "/{lectureID}/feedback",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> postLectureFeedback(@PathVariable("lectureID") Integer lectureID,
+                                                   @RequestBody Map<String, Object> requestPayload) {
+
+        boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
+                requestPayload,
+                Arrays.asList("userId", "lectureFeedbackCode")
+        );
+
+        if (!containsNecessaryData) {
+            Map<String, Object> toBeReturned = new TreeMap<>();
+            toBeReturned.put("success", "false");
+            toBeReturned.put("message", "Expected userId and lectureFeedbackId to be provided.");
+            return toBeReturned;
+        }
+
+        String userId;
+        Integer lectureFeedbackCode;
+
+        try {
+            userId = requestPayload.get("userId").toString();
+            lectureFeedbackCode = (Integer) requestPayload.get("lectureFeedbackCode");
+        } catch (Exception e) {
+            Map<String, Object> toBeReturned = new TreeMap<>();
+            toBeReturned.put("success", "false");
+            toBeReturned.put("message", e.getMessage());
+            return toBeReturned;
+        }
+
+        return lectureService.postLectureFeedback(lectureID, userId, lectureFeedbackCode);
+    }
+
+    @GetMapping(
+            value = "/{lectureID}/feedback",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> getLectureFeedback(@PathVariable("lectureID") Integer lectureID,
+                                                  @RequestParam String userId) {
+
+        return lectureService.getLectureFeedback(lectureID, userId);
+    }
 
 }
