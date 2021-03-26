@@ -92,6 +92,24 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         questionField.setOnKeyPressed(event -> {
             keyPressed(event);
         });
+
+
+        Thread one = new Thread(() -> {
+            //While
+            do {
+                long var = System.currentTimeMillis() / 1000;
+                double var2 = var % 10;
+
+                if (var2 == 1.0) {
+
+                    refreshButtonClicked();
+
+                }
+
+            } while (true);
+        });
+
+        one.start();
     }
 
     public void askButtonClicked() {
