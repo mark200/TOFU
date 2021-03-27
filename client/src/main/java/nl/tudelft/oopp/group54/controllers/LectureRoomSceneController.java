@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
+import javax.swing.JOptionPane;
 import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.models.QuestionModel;
@@ -27,6 +28,8 @@ import nl.tudelft.oopp.group54.views.MainView;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
 
 
+
+
 public class LectureRoomSceneController extends AbstractApplicationController {
 
     //  @FXML
@@ -34,7 +37,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
     @FXML
     ListView<QuestionView> answeredQuestionView;
-    
+
     @FXML
     ListView<QuestionView> unansweredQuestionView;
 
@@ -52,6 +55,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
     @FXML
     Button feedbackPanelButton;
+
+    @FXML
+    Button exportQuestionsbutton;
 
     @FXML
     Accordion feedbackMenu;
@@ -100,6 +106,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             //TODO: GUI elements for the student
             this.endLectureButton.setVisible(false);
             this.lecturerModeButton.setVisible(false);
+            this.exportQuestionsbutton.setVisible(false);
         }
 
         updateOnQuestions(false);
@@ -113,6 +120,15 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     public void askButtonClicked() {
         postQuestion();
         this.refreshButtonClickedAfter();
+    }
+
+    /**
+     * Opens the popup to enter a file name.
+     */
+    public void exportQuestionsButtonClicked() {
+        System.out.println("haha");
+        String name = JOptionPane.showInputDialog(null, "input the title of the text file");
+        System.out.println(name);
     }
 
     public void lectureTooFastButtonClicked() {
@@ -352,6 +368,22 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     }
 
     /**
+     * Get all questions response.
+     * @return the response of the GET questions request.
+     */
+    private GetAllQuestionsResponse getQuestions() {
+        GetAllQuestionsResponse response = null;
+
+        try {
+            response = ServerCommunication.getAllQuestions();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    /**
      * sets GUI element to the state of lecture has finished.
      */
     public void endLectureGui() {
@@ -365,9 +397,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     public Datastore getDs() {
         return ds;
     }
-    
+
     public Boolean isInLecturerMode() {
         return inLecturerMode;
     }
-    
+
 }
