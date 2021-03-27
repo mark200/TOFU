@@ -156,7 +156,7 @@
                            <content>
                               <VBox prefHeight="200.0" prefWidth="100.0">
                                  <children>
-                                    <MenuButton id="sortDrop" mnemonicParsing="false" text="sort by:">
+                                    <MenuButton id="sortDrop" fx:id="sortDrop" mnemonicParsing="false" text="sort by:">
                                       <items>
                                         <MenuItem mnemonicParsing="false" text="Action 1" />
                                         <MenuItem mnemonicParsing="false" text="Action 2" />

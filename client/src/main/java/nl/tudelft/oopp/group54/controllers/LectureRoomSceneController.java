@@ -6,7 +6,13 @@ import java.util.Comparator;
 import java.util.List;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
@@ -74,6 +80,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
     private Boolean ended = false;
     private Boolean inLecturerMode = false;
+    private boolean voteSort = false;
 
 
     @Override
@@ -237,12 +244,8 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             }
             // The questions are already sorted by time so only sorting by score is required.
             List<QuestionModel> sorted = response.getUnanswered();
-            Collections.sort(sorted, new Comparator<QuestionModel>() {
-                @Override
-                public int compare(QuestionModel o1, QuestionModel o2) {
-                    return Integer.compare(o2.getScore(), o1.getScore());
-                }
-            });
+            sortQuestions(sorted);
+
             this.ds.setCurrentUnansweredQuestionViews(null);
             this.ds.setCurrentAnsweredQuestionViews(null);
             for (QuestionModel question : response.getAnswered()) {
@@ -251,6 +254,22 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             for (QuestionModel question : sorted) {
                 this.ds.addUnansweredQuestion(question, this);
             }
+        }
+    }
+
+    /**
+     * Sort questions.
+     *
+     * @param list the list
+     */
+    public void sortQuestions(List<QuestionModel> list) {
+        if (voteSort) {
+            list.sort(new Comparator<QuestionModel>() {
+                @Override
+                public int compare(QuestionModel o1, QuestionModel o2) {
+                    return Integer.compare(o2.getScore(), o1.getScore());
+                }
+            });
         }
     }
 
@@ -300,8 +319,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
         if (lectureFeedbackResponse.getSuccess()) {
             this.lectureTooFastLabel.setText(
-                    lectureFeedbackResponse.getLectureFeedbackMap().get("1").toString()
-            );
+                    lectureFeedbackResponse.getLectureFeedbackMap().get("1").toString());
             this.lectureTooSlowLabel.setText(
                     lectureFeedbackResponse.getLectureFeedbackMap().get("2").toString()
             );
@@ -313,11 +331,21 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     }
 
     @FXML
-    public void initialize() {
+    protected void initialize() {
         MenuItem item1 = new MenuItem("sort by votes");
         MenuItem item2 = new MenuItem("sort by recency");
 
-        sortDrop.getItems().addAll(item1, item2);
+        sortDrop.getItems().setAll(item1, item2);
+
+        item1.setOnAction(event -> {
+            voteSort = true;
+            refreshButtonClickedAfter();
+        });
+
+        item2.setOnAction(event -> {
+            voteSort = false;
+            refreshButtonClickedAfter();
+        });
     }
 
     /**
