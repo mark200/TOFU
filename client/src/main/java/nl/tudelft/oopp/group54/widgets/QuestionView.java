@@ -99,6 +99,9 @@ public abstract class QuestionView extends AnchorPane {
 
     }
 
+    public String getQuestionId() {
+        return questionId;
+    }
 
     private void addOuterGridPane() {
         this.outerGridPane = new GridPane();

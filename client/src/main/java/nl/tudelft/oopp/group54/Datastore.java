@@ -148,11 +148,21 @@ public class Datastore {
         return this.questions.containsAnsweredQuestion(id);
     }
 
-    public void deleteQuestion(QuestionModel question) {
+    public void updateQuestion(QuestionModel question) {
         if (question == null) {
             return;
         }
-        this.currentUnansweredQuestionViews.remove(question);
+        this.questions.updateValue(question.getQuestionId(), question.getScore());
+        QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(),
+                question.getUserName(), question.getUserIp(), question.getScore());
+        int index = 0;
+        for(int i = 0; i < this.currentUnansweredQuestionViews.size(); i++) {
+            if(this.currentUnansweredQuestionViews.get(i).getQuestionId().equals(question.getQuestionId())) {
+                index = i;
+            }
+        }
+        this.currentUnansweredQuestionViews.remove(index);
+        this.currentUnansweredQuestionViews.add(q);
     }
 
     public CreateLectureResponse getCreateLectureResponse() {

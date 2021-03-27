@@ -200,12 +200,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             }
             // The questions are already sorted by time so only sorting by score is required.
             List<QuestionModel> sorted = response.getUnanswered();
-            Collections.sort(sorted, new Comparator<QuestionModel>() {
-                @Override
-                public int compare(QuestionModel o1, QuestionModel o2) {
-                    return Integer.compare(o2.getScore(), o1.getScore());
-                }
-            });
+            sortQuestions(sorted);
 
             for (QuestionModel question : response.getAnswered()) {
                 if (!this.ds.containsAnsweredQuestion(question.getQuestionId())) {
@@ -216,11 +211,19 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                 if (!this.ds.containsUnansweredQuestion(question.getQuestionId())) {
                     this.ds.addUnansweredQuestion(question, this);
                 } else if (question.getScore() != this.ds.getVoteOnQuestion(question.getQuestionId())) {
-                    this.ds.deleteQuestion(question);
-                    this.ds.addUnansweredQuestion(question, this);
+                    this.ds.updateQuestion(question);
                 }
             }
         }
+    }
+
+    public void sortQuestions(List<QuestionModel> list) {
+        list.sort(new Comparator<QuestionModel>() {
+            @Override
+            public int compare(QuestionModel o1, QuestionModel o2) {
+                return Integer.compare(o2.getScore(), o1.getScore());
+            }
+        });
     }
 
     /**
