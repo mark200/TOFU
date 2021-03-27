@@ -65,8 +65,9 @@ public abstract class QuestionView extends AnchorPane {
     private String userNameString;
     private Integer voteCount;
     private String userIp;
+    private String userId;
 
-    private LectureRoomSceneController owner;
+    protected LectureRoomSceneController owner;
 
     /**
      * Instantiates a new Question view.
@@ -257,7 +258,7 @@ public abstract class QuestionView extends AnchorPane {
         owner.refreshButtonClickedAfter();
     }
 
-    private void delete() {
+    protected void delete() {
         DeleteQuestionResponse response = null;
         System.out.println("requesting");
         try {
@@ -349,13 +350,9 @@ public abstract class QuestionView extends AnchorPane {
     }
 
     /**
-     * Update the Options dropdown for student.
+     * Update the Options for student.
      */
     private void updateStudent() {
-        markAnswer.setVisible(false);
-        answerText.setVisible(false);
-        ban.setVisible(false);
-        edit.setVisible(false);
     }
 
     /**

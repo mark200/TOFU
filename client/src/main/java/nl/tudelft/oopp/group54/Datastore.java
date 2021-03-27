@@ -94,10 +94,12 @@ public class Datastore {
      */
     public void addUnansweredQuestion(QuestionModel question, LectureRoomSceneController sceneController) {
         QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(),
-                question.getUserName(), question.getUserIp(), question.getScore());
+                question.getUserName(), question.getUserIp(), question.getScore(), question.getUserId());
         q.setOwner(sceneController);
         q.updateQuestionView();
-        q.toggleLecturerMode(sceneController.isInLecturerMode());
+        if (this.getPrivilegeId().equals(1)) {
+            q.toggleLecturerMode(sceneController.isInLecturerMode());
+        } 
         this.currentUnansweredQuestionViews.add(q);
     }
 
