@@ -293,6 +293,89 @@ public class QuestionServiceImplementation implements QuestionService {
 
         return status;
     }
+    
+    
+    @Override
+    public Map<String, Object> editQuestion(Integer lectureId, Integer questionId, String userId, String newContent) {
+        Map<String, Object> status = new LinkedHashMap<>();
+
+        if (questionId == null) {
+            status.put("success", false);
+            status.put("message", "Question id can't be null");
+            return status;
+        }
+
+        if (lectureId == null) {
+            status.put("success", false);
+            status.put("message", "Lecture id can't be null");
+            return status;
+        }
+        
+        // get question and author of request from database.
+        Optional<Question> questionToBeEdited = questionRepository.findById(new QuestionKey(questionId, lectureId));
+        Optional<User> authorOfTheEditRequest = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
+        
+        Integer requestAuthorLectureId = authorOfTheEditRequest.get().getKey().getLectureID();
+        Integer questionAuthorLectureId = questionToBeEdited.get().getPrimaryKey().getLectureId();
+        
+        // If the lectures of user and question do not match.
+        if (!requestAuthorLectureId.equals(questionAuthorLectureId)) {
+            status.put("success", false);
+            status.put("message", "The question in different lecture can't be edited!");
+            return status;
+        }
+
+        if (foundLecture.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized lecture.");
+        }
+
+        if (questionToBeEdited.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized question. Incorrect combination of lecture and question ids");
+            return status;
+        }
+
+        if (authorOfTheEditRequest.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized user id or specified lecture does not exist!");
+            return status;
+        }
+        
+        Integer requestAuthorId = authorOfTheEditRequest.get().getKey().getId();
+        Integer questionAuthorId = questionToBeEdited.get().getStudentId();
+        Integer requestAuthorRole = authorOfTheEditRequest.get().getRoleID();
+
+        // 1 - lecturer
+        // 2 - moderator
+        // 3 - student
+
+        //students cant edit questions
+        if (requestAuthorRole.equals(3)) {
+            status.put("code", "401 UNAUTHORIZED");
+            status.put("success", false);
+            status.put("message", "You are not authorized to edit this question!");
+            return status;
+        }
+        
+        questionRepository.flush();
+        
+        try {
+            questionToBeEdited.get().setContent(newContent);
+            questionRepository.save(questionToBeEdited.get());
+            status.put("success", true);
+            status.put("questionId", questionToBeEdited.get().getPrimaryKey().getId());
+            status.put("message", "message was edited successfully!");
+            
+            questionRepository.flush();
+        } catch (Exception e) {
+            status.put("success", false);
+            status.put("message", e.toString());
+        }
+         
+        return status;
+    }
 
     /**
      * Transform a question into JSON format.
