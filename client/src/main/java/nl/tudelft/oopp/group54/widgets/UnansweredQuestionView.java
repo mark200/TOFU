@@ -24,8 +24,8 @@ public class UnansweredQuestionView extends QuestionView {
     }
 
     @Override
-    public void toggleLecturerMode(boolean b) {
-        if (b) {
+    public void toggleLecturerMode(boolean inLecturerMode) {
+        if (inLecturerMode) {
             this.dropDown.setVisible(false);
             this.markAnsweredButton.setVisible(true);
         } else {

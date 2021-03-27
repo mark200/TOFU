@@ -97,6 +97,7 @@ public class Datastore {
                 question.getUserName(), question.getUserIp(), question.getScore());
         q.setOwner(sceneController);
         q.updateQuestionView();
+        q.toggleLecturerMode(sceneController.isInLecturerMode());
         this.currentUnansweredQuestionViews.add(q);
     }
 

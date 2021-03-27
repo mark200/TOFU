@@ -30,10 +30,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     //  @FXML
     //  ScrollPane questionScroll
 
-
     @FXML
     ListView<QuestionView> answeredQuestionView;
-
+    
     @FXML
     ListView<QuestionView> unansweredQuestionView;
 
@@ -78,12 +77,14 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         if (this.ds.getPrivilegeId().equals(2)) {
             //TODO: GUI elements for the moderator
             this.endLectureButton.setVisible(false);
+            this.lecturerModeButton.setVisible(false);
         }
 
         // student
         if (this.ds.getPrivilegeId().equals(3)) {
             //TODO: GUI elements for the student
             this.endLectureButton.setVisible(false);
+            this.lecturerModeButton.setVisible(false);
         }
 
         updateOnQuestions(false);
@@ -113,9 +114,6 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     private void enterLecturerMode() {
         inLecturerMode = true;
         this.lecturerModeButton.setStyle("-fx-background-color: linear-gradient(#cccccc, #aaaaaa);");
-        this.feedbackMenu.setVisible(false);
-        this.feedbackMenuContainer.setPrefWidth(0);
-        this.feedbackPanelButton.setDisable(true);
         for (QuestionView q : unansweredQuestionView.getItems()) {
             q.toggleLecturerMode(true);
         }
@@ -124,9 +122,6 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     private void exitLecturerMode() {
         inLecturerMode = false;
         this.lecturerModeButton.setStyle("");
-        this.feedbackMenu.setVisible(true);
-        this.feedbackMenuContainer.setPrefWidth(feedbackMenuContainerUnfoldedWidth);
-        this.feedbackPanelButton.setDisable(false);
         for (QuestionView q : unansweredQuestionView.getItems()) {
             q.toggleLecturerMode(false);
         }
@@ -299,4 +294,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     public Datastore getDs() {
         return ds;
     }
+    
+    public Boolean isInLecturerMode() {
+        return inLecturerMode;
+    }
+    
 }
