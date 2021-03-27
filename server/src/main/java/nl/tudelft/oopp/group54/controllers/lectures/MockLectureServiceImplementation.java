@@ -45,4 +45,14 @@ public class MockLectureServiceImplementation implements LectureService {
 
         return toBeReturned;
     }
+
+    @Override
+    public Map<String, Object> postLectureFeedback(Integer lectureID, String userId, Integer lectureFeedbackId) {
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> getLectureFeedback(Integer lectureID, String userId) {
+        return null;
+    }
 }

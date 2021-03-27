@@ -121,8 +121,8 @@
                                           <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                                        </rowConstraints>
                                        <children>
-                                          <Button mnemonicParsing="false" text="Too fast" />
-                                          <Label alignment="CENTER" contentDisplay="CENTER" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                          <Button fx:id="lectureTooFastButton" mnemonicParsing="false" onAction="#lectureTooFastButtonClicked" text="Too fast" />
+                                          <Label fx:id="lectureTooFastLabel" alignment="CENTER" contentDisplay="CENTER" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                              <padding>
                                                 <Insets right="2.0" />
                                              </padding>
@@ -138,8 +138,8 @@
                                           <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                                        </rowConstraints>
                                        <children>
-                                          <Button mnemonicParsing="false" text="Too slow" />
-                                          <Label alignment="CENTER" contentDisplay="CENTER" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                          <Button fx:id="lectureTooSlowButton" mnemonicParsing="false" onAction="#lectureTooSlowButtonClicked" text="Too slow" />
+                                          <Label fx:id="lectureTooSlowLabel" alignment="CENTER" contentDisplay="CENTER" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                              <padding>
                                                 <Insets right="2.0" />
                                              </padding>

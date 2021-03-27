@@ -8,6 +8,7 @@ import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -18,6 +19,7 @@ import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.models.QuestionModel;
 import nl.tudelft.oopp.group54.models.responseentities.EndLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
+import nl.tudelft.oopp.group54.models.responseentities.GetLectureFeedbackResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureMetadataResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
 import nl.tudelft.oopp.group54.views.ApplicationScene;
@@ -57,6 +59,18 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     ColumnConstraints feedbackMenuContainer;
     Integer feedbackMenuContainerUnfoldedWidth = 140;
 
+    @FXML
+    Button lectureTooFastButton;
+
+    @FXML
+    Label lectureTooFastLabel;
+
+    @FXML
+    Button lectureTooSlowButton;
+
+    @FXML
+    Label lectureTooSlowLabel;
+
     Datastore ds = Datastore.getInstance();
 
     private Boolean ended = false;
@@ -71,6 +85,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         // lecturer
         if (this.ds.getPrivilegeId().equals(1)) {
             //TODO: GUI elements for the lecturer
+            System.out.println("Lecturer-specific setup happens here.");
         }
 
         // moderator
@@ -98,6 +113,26 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     public void askButtonClicked() {
         postQuestion();
         this.refreshButtonClickedAfter();
+    }
+
+    public void lectureTooFastButtonClicked() {
+        lectureFeedbackButtonClicked(1);
+        refreshButtonClickedAfter();
+    }
+
+    public void lectureTooSlowButtonClicked() {
+        lectureFeedbackButtonClicked(2);
+        refreshButtonClickedAfter();
+    }
+
+    private void lectureFeedbackButtonClicked(Integer lectureFeedbackCode) {
+        try {
+            ServerCommunication.sendLectureFeedback(ds.getUserId(), lectureFeedbackCode);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            this.displayStatusMessage(e.getMessage());
+        }
     }
 
     /**
@@ -147,10 +182,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         PostQuestionResponse response = null;
         try {
             response = ServerCommunication.postQuestion(questionText);
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            this.displayStatusMessage(e.getMessage());
         }
 
         if (response.getSuccess()) {
@@ -162,14 +196,26 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     }
 
 
+    /**
+     * The actions that occur when the refresh button is clicked.
+     * All existing questions will be updated.
+     * New questions will be added.
+     * Lecture metadata(whether it is ended) will be reflected.
+     * Lecture feedback will be updated
+     */
     public void refreshButtonClicked() {
         updateOnQuestions(true);
         updateOnMetadata();
+        updateLectureFeedback();
     }
 
+    /**
+     * Same as refreshButtonClicked, but the refresh status message is suppressed.
+     */
     public void refreshButtonClickedAfter() {
         updateOnQuestions(false);
         updateOnMetadata();
+        updateLectureFeedback();
     }
 
     /**
@@ -182,9 +228,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
         try {
             response = ServerCommunication.getAllQuestions();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -238,6 +282,33 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                     }
                 }
             }
+        }
+
+    }
+
+    /**
+     * Get the new state of the total lecture feedback.
+     */
+    public void updateLectureFeedback() {
+        GetLectureFeedbackResponse lectureFeedbackResponse = null;
+
+        try {
+            lectureFeedbackResponse = ServerCommunication.getLectureFeedback();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            this.displayStatusMessage(e.getMessage());
+        }
+
+        if (lectureFeedbackResponse.getSuccess()) {
+            this.lectureTooFastLabel.setText(
+                    lectureFeedbackResponse.getLectureFeedbackMap().get("1").toString()
+            );
+            this.lectureTooSlowLabel.setText(
+                    lectureFeedbackResponse.getLectureFeedbackMap().get("2").toString()
+            );
+
+        } else {
+            this.displayStatusMessage(lectureFeedbackResponse.getMessage());
         }
 
     }

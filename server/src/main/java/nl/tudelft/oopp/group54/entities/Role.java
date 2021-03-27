@@ -8,6 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+// Determine role of student
+// 1 - lecturer
+// 2 - moderator
+// 3 - student
+
 @Entity
 @Table(name = "Role")
 public class Role {
