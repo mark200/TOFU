@@ -6,11 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
@@ -70,6 +66,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
     @FXML
     Label lectureTooSlowLabel;
+
+    @FXML
+    MenuButton sortDrop;
 
     Datastore ds = Datastore.getInstance();
 
@@ -311,6 +310,14 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             this.displayStatusMessage(lectureFeedbackResponse.getMessage());
         }
 
+    }
+
+    @FXML
+    public void initialize() {
+        MenuItem item1 = new MenuItem("sort by votes");
+        MenuItem item2 = new MenuItem("sort by recency");
+
+        sortDrop.getItems().addAll(item1, item2);
     }
 
     /**
