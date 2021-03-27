@@ -398,6 +398,7 @@ public class QuestionServiceImplementation implements QuestionService {
         toBeReturned.put("questionText", q.getContent());
         toBeReturned.put("score", q.getVoteCounter());
         toBeReturned.put("answered", q.getAnswered());
+        toBeReturned.put("createdAt", q.getCreatedAt());
 
         if (q.getAnswered()) {
             toBeReturned.put("answerText", q.getAnswerText());

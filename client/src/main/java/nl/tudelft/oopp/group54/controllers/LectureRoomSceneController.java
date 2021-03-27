@@ -1,9 +1,17 @@
 package nl.tudelft.oopp.group54.controllers;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
@@ -11,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
@@ -126,9 +135,156 @@ public class LectureRoomSceneController extends AbstractApplicationController {
      * Opens the popup to enter a file name.
      */
     public void exportQuestionsButtonClicked() {
-        System.out.println("haha");
-        String name = JOptionPane.showInputDialog(null, "input the title of the text file");
-        System.out.println(name);
+        Optional<String> result = openDialog();
+
+        if (!result.isPresent()) {
+            displayStatusMessage("The input is empty");
+        }
+
+        String textFile = result.get();
+
+        // contains illegal characters
+        if (containsIllegals(textFile) || textFile.contains("/") || textFile.contains(".") || textFile.length() < 1) {
+            displayStatusMessage("Your input contains illegal characters. Please use alphanumerics only.");
+            return;
+        }
+
+        export(textFile);
+    }
+
+    /**
+     * Opens TextInputDialog for a filename.
+     * @return - Optional String with the filename.
+     */
+    public Optional<String> openDialog() {
+        TextInputDialog dialog = new TextInputDialog("questions");
+        dialog.setTitle("text file name");
+        dialog.setHeaderText("");
+        dialog.setContentText("Please enter the name of the file to export to:");
+        Optional<String> result = dialog.showAndWait();
+        return result;
+    }
+
+    /**
+     * Populates the text file with the questions.
+     * @param textFile - name of the to be created text file.
+     */
+    private void export(String textFile) {
+        if (textFile == null) {
+            displayStatusMessage("There was an error writing to file. Please try again");
+            return;
+        }
+
+        GetAllQuestionsResponse response = getQuestions();
+        List<QuestionModel> questions = sortQuestions(response);
+        FileWriter exports = createFile(textFile);
+        writeToFile(questions, exports);
+    }
+
+    /**
+     * Writes a list of questions to a file.
+     * @param questions - List of questions.
+     * @param exports - file to write to
+     */
+    private void writeToFile(List<QuestionModel> questions, FileWriter exports) {
+        if (exports == null) {
+            displayStatusMessage("There was an error writing to file. Please try again");
+            return;
+        }
+        if (questions == null) {
+            displayStatusMessage("There was an error writing to file. Please try again");
+            return;
+        }
+
+        // if there are no questions
+        if (questions.size() == 0) {
+            try {
+                exports.write("There are no questions");
+            } catch (IOException e) {
+                e.printStackTrace();
+                displayStatusMessage("There was an error writing to file. Please try again");
+            }
+        }
+
+        int counter = 1;
+        for (QuestionModel q: questions) {
+            try {
+                String writeContent = "Question " + counter + ":\n" + q.toString()
+                        +  "\n";
+                exports.write(writeContent);
+            } catch (Exception e) {
+                e.printStackTrace();
+                e.getCause();
+                displayStatusMessage("There was an error writing to file. Please try again");
+            }
+            counter++;
+        }
+
+        try {
+            exports.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println(e.getCause().toString());
+        }
+    }
+
+    /**
+     * Sorts the questions in the response.
+     * @param response - The response of the request.
+     * @return - sorted list of questions.
+     */
+    private List<QuestionModel> sortQuestions(GetAllQuestionsResponse response) {
+        if (response == null) {
+            return null;
+        }
+
+        // Concatenate answered and unanswered questions
+        List<QuestionModel> newList = Stream.concat(response.getAnswered().stream(), response.getUnanswered().stream())
+                .collect(Collectors.toList());
+
+        // sort the list of questions
+        // this way we can have the most important questions at the top.
+        Collections.sort(newList, new Comparator<QuestionModel>() {
+            @Override
+            public int compare(QuestionModel o1, QuestionModel o2) {
+                return Integer.compare(o2.getScore(), o1.getScore());
+            }
+        });
+
+        return newList;
+    }
+
+    /**
+     * Creates a file.
+     * @param textFile - String of the filename
+     * @return - File
+     */
+    private FileWriter createFile(String textFile) {
+        if (textFile == null) {
+            return null;
+        }
+
+        try {
+            FileWriter exports = new FileWriter(textFile + ".txt");
+            return exports;
+        } catch (Exception e) {
+            e.printStackTrace();
+            displayStatusMessage("There was an error writing to file. Please try again");
+            return null;
+        }
+    }
+
+
+    /**
+     * Returns true if input contains illegal characters
+     * Source: https://stackoverflow.com/questions/14635391/java-function-to-return-if-string-contains-illegal-characters
+     * @param toExamine - the input string
+     * @return true if does not contain.
+     */
+    public boolean containsIllegals(String toExamine) {
+        Pattern pattern = Pattern.compile("[~#@*+%{}<>\\[\\]|\"\\_^]");
+        Matcher matcher = pattern.matcher(toExamine);
+        return matcher.find();
     }
 
     public void lectureTooFastButtonClicked() {
@@ -205,7 +361,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
         if (response.getSuccess()) {
             questionField.clear();
-            this.refreshButtonClicked();
+            this.refreshButtonClickedAfter();
         } else {
             this.displayStatusMessage(response.getMessage());
         }
