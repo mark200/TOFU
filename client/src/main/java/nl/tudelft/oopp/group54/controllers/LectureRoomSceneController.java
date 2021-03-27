@@ -66,7 +66,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     Button feedbackPanelButton;
 
     @FXML
-    Button exportQuestionsbutton;
+    Button exportQuestionsButton;
 
     @FXML
     Accordion feedbackMenu;
@@ -115,8 +115,10 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             //TODO: GUI elements for the student
             this.endLectureButton.setVisible(false);
             this.lecturerModeButton.setVisible(false);
-            this.exportQuestionsbutton.setVisible(false);
+            this.exportQuestionsButton.setVisible(false);
         }
+
+        System.out.println(this.ds.getPrivilegeId());
 
         updateOnQuestions(false);
         updateOnMetadata();
