@@ -4,7 +4,9 @@ import javafx.scene.control.Button;
 
 public class UnansweredQuestionView extends QuestionView {
     private Button markAnsweredButton;
+    private Button deleteButton;
 
+    private String userId;
 
     /**
      * Instantiates a new Unanswered question view.
@@ -15,12 +17,13 @@ public class UnansweredQuestionView extends QuestionView {
      * @param userIp     the user ip
      * @param voteCount  the vote count
      */
-    public UnansweredQuestionView(String s, String questionId, String userName, String userIp, Integer voteCount) {
+    public UnansweredQuestionView(String s, String questionId, String userName, String userIp, Integer voteCount, String userId) {
         super(s, questionId, userName, userIp, voteCount);
         super.addDropDown();
         this.addMarkAnsweredButton();
         super.horizontalGridPane.add(markAnsweredButton, 1, 0);
         this.markAnsweredButton.setVisible(false);
+        this.userId = userId;
     }
 
     @Override
@@ -39,5 +42,23 @@ public class UnansweredQuestionView extends QuestionView {
         markAnsweredButton.setOnAction(event -> {
             super.markAnswered();
         });
+    }
+    
+    private void addDeleteButton() {
+        this.deleteButton = new Button("Delete");
+        super.horizontalGridPane.add(deleteButton, 1, 0);
+        deleteButton.setOnAction(event -> {
+            super.delete();
+        });
+    }
+    
+    @Override
+    public void updateQuestionView() {
+        if (this.owner.getDs().getPrivilegeId().equals(3)) {
+            this.dropDown.setVisible(false);
+            if (Long.parseLong(userId) == super.owner.getDs().getUserId()) {
+                this.addDeleteButton();
+            }
+        }
     }
 }
