@@ -13,6 +13,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -29,6 +30,7 @@ import nl.tudelft.oopp.group54.controllers.LectureRoomSceneController;
 import nl.tudelft.oopp.group54.models.QuestionModel;
 import nl.tudelft.oopp.group54.models.responseentities.BanIpResponse;
 import nl.tudelft.oopp.group54.models.responseentities.DeleteQuestionResponse;
+import nl.tudelft.oopp.group54.models.responseentities.EditQuestionResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
 
@@ -52,6 +54,7 @@ public abstract class QuestionView extends AnchorPane {
     private MenuItem markAnswer;
     private MenuItem answerText;
     private MenuItem ban;
+    private MenuItem edit;
 
     private Button upvoteButton;
 
@@ -181,8 +184,9 @@ public abstract class QuestionView extends AnchorPane {
         this.markAnswer = new MenuItem("Mark answered");
         this.answerText = new MenuItem("Answer with text");
         this.ban = new MenuItem("Ban author");
+        this.edit = new MenuItem("Edit");
 
-        dropDown.getItems().addAll(delete, markAnswer, answerText, ban);
+        dropDown.getItems().addAll(delete, edit, markAnswer, answerText, ban);
 
         attachEventHandlers();
 
@@ -208,6 +212,10 @@ public abstract class QuestionView extends AnchorPane {
 
         ban.setOnAction(event -> {
             banAuthor();
+        });
+        
+        edit.setOnAction(event -> {
+            edit();
         });
     }
 
@@ -304,6 +312,33 @@ public abstract class QuestionView extends AnchorPane {
     private void answerWithText() {
         System.out.println("answer question " + questionId + " with text");
     }
+    
+    private void edit() {
+        this.questionTextArea.setEditable(true);
+        this.questionTextArea.requestFocus();
+        this.questionTextArea.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                this.questionTextArea.setEditable(false);
+                EditQuestionResponse response = null;
+                
+                try {
+                    response = ServerCommunication.editQuestion(this.questionId, this.questionTextArea.getText());
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+                
+                if (!response.getSuccess()) {
+                    System.out.println(response.getMessage());
+                }
+
+                if (response != null) {
+                    owner.displayStatusMessage(response.getMessage());
+                }
+                questionTextArea.setEditable(false);
+                owner.refreshButtonClickedAfter();
+            }
+        });
+    }
 
 
     /**
@@ -320,6 +355,7 @@ public abstract class QuestionView extends AnchorPane {
         markAnswer.setVisible(false);
         answerText.setVisible(false);
         ban.setVisible(false);
+        edit.setVisible(false);
     }
 
     /**

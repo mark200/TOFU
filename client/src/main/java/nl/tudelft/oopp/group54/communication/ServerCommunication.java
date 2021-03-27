@@ -10,6 +10,7 @@ import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.models.requestentities.BanIpRequest;
 import nl.tudelft.oopp.group54.models.requestentities.CreateLectureRequest;
 import nl.tudelft.oopp.group54.models.requestentities.DeleteQuestionRequest;
+import nl.tudelft.oopp.group54.models.requestentities.EditQuestionRequest;
 import nl.tudelft.oopp.group54.models.requestentities.JoinLectureRequest;
 import nl.tudelft.oopp.group54.models.requestentities.PostAnswerRequest;
 import nl.tudelft.oopp.group54.models.requestentities.PostQuestionRequest;
@@ -17,6 +18,7 @@ import nl.tudelft.oopp.group54.models.requestentities.VoteRequest;
 import nl.tudelft.oopp.group54.models.responseentities.BanIpResponse;
 import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.DeleteQuestionResponse;
+import nl.tudelft.oopp.group54.models.responseentities.EditQuestionResponse;
 import nl.tudelft.oopp.group54.models.responseentities.EndLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureMetadataResponse;
@@ -208,6 +210,37 @@ public class ServerCommunication {
         }
 
         return objectMapper.readValue(response.body(), DeleteQuestionResponse.class);
+    }
+    
+    /**
+     * Edit question edit question response.
+     * 
+     * @param questionId the question id
+     * @param newContent the new content
+     * @return the edit question response
+     * @throws IOException          the io exception
+     * @throws InterruptedException the interrupted exception
+     */
+    public static EditQuestionResponse editQuestion(String questionId,
+                                                    String newContent) throws IOException, InterruptedException {
+        EditQuestionRequest eqr = new EditQuestionRequest(questionId, newContent);
+        String eqrJson = objectMapper.writeValueAsString(eqr);
+        
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(eqrJson))
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId()
+                                + "/questions/edit?userId=" + ds.getUserId()))
+                .build();
+        
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status:" + response.statusCode());
+            System.out.println(response.body());
+        }
+
+        return objectMapper.readValue(response.body(), EditQuestionResponse.class);
     }
 
     /**

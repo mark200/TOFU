@@ -8,4 +8,6 @@ public interface QuestionService {
     Map<String, Object> getAllQuestions(Integer lectureId, String userId);
 
     Map<String, Object> deleteQuestion(Integer lectureId, Integer questionId, String userId);
+    
+    Map<String, Object> editQuestion(Integer lectureId, Integer questionId, String userId, String newContent);
 }
