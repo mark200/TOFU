@@ -349,9 +349,13 @@ public abstract class QuestionView extends AnchorPane {
         this.answerTextArea.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 PostAnswerResponse response = null;
+                
+                String text = answerTextArea.getText();
+                
+                text = text.trim();
 
                 try {
-                    response = ServerCommunication.postAnswer(this.questionId, answerTextArea.getText());
+                    response = ServerCommunication.postAnswer(this.questionId, text);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
@@ -379,8 +383,12 @@ public abstract class QuestionView extends AnchorPane {
                 this.questionTextArea.setEditable(false);
                 EditQuestionResponse response = null;
                 
+                String text = this.questionTextArea.getText();
+                
+                text = text.trim();
+                
                 try {
-                    response = ServerCommunication.editQuestion(this.questionId, this.questionTextArea.getText());
+                    response = ServerCommunication.editQuestion(this.questionId, text);
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -397,6 +405,7 @@ public abstract class QuestionView extends AnchorPane {
             }
         });
     }
+
 
 
     /**
