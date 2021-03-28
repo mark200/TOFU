@@ -8,7 +8,13 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import nl.tudelft.oopp.group54.entities.*;
+import nl.tudelft.oopp.group54.entities.Ban;
+import nl.tudelft.oopp.group54.entities.BanKey;
+import nl.tudelft.oopp.group54.entities.Lecture;
+import nl.tudelft.oopp.group54.entities.Question;
+import nl.tudelft.oopp.group54.entities.QuestionKey;
+import nl.tudelft.oopp.group54.entities.User;
+import nl.tudelft.oopp.group54.entities.UserKey;
 import nl.tudelft.oopp.group54.repositories.BanRepository;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.QuestionRepository;
