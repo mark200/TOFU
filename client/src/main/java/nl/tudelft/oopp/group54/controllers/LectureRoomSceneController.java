@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
@@ -94,7 +98,17 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             keyPressed(event);
         });
 
-        new Thread(new RefreshThread(this)).start();
+        //new Thread(new RefreshThread(this)).start();
+
+        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(new Runnable() {
+            @Override
+            @FXML
+            public void run() {
+                // do stuff
+                refreshButtonClickedAfter();
+            }
+        }, 0, 5, TimeUnit.SECONDS);
     }
 
     public void askButtonClicked() {
@@ -201,18 +215,27 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             // The questions are already sorted by time so only sorting by score is required.
             List<QuestionModel> sorted = response.getUnanswered();
             sortQuestions(sorted);
+            GetAllQuestionsResponse finalResponse = response;
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    displayQuestions(sorted, finalResponse.getAnswered());
+                }
+            });
+        }
+    }
 
-            for (QuestionModel question : response.getAnswered()) {
-                if (!this.ds.containsAnsweredQuestion(question.getQuestionId())) {
-                    this.ds.addAnsweredQuestion(question, this);
-                }
+    public void displayQuestions(List<QuestionModel> unanswered, List<QuestionModel> answered) {
+        for (QuestionModel question : answered) {
+            if (!this.ds.containsAnsweredQuestion(question.getQuestionId())) {
+                this.ds.addAnsweredQuestion(question, this);
             }
-            for (QuestionModel question : sorted) {
-                if (!this.ds.containsUnansweredQuestion(question.getQuestionId())) {
-                    this.ds.addUnansweredQuestion(question, this);
-                } else if (question.getScore() != this.ds.getVoteOnQuestion(question.getQuestionId())) {
-                    this.ds.updateQuestion(question);
-                }
+        }
+        for (QuestionModel question : unanswered) {
+            if (!this.ds.containsUnansweredQuestion(question.getQuestionId())) {
+                this.ds.addUnansweredQuestion(question, this);
+            } else if (question.getScore() != this.ds.getVoteOnQuestion(question.getQuestionId())) {
+                this.ds.updateQuestion(question);
             }
         }
     }
