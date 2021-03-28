@@ -17,7 +17,7 @@ public class LectureTest {
     static Lecture lecture1;
 
     @BeforeAll
-    public static void init(){
+    public static void init() {
         Date date = new Date();
     }
 }

@@ -243,15 +243,18 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                 this.displayStatusMessage("Refreshed succesfully.");
             }
             // The questions are already sorted by time so only sorting by score is required.
-            List<QuestionModel> sorted = response.getUnanswered();
-            sortQuestions(sorted);
+            List<QuestionModel> sortedUnanswered = response.getUnanswered();
+            List<QuestionModel> sortedAnswered = response.getAnswered();
+
+            sortQuestions(sortedUnanswered);
+            sortQuestions(sortedAnswered);
 
             this.ds.setCurrentUnansweredQuestionViews(null);
             this.ds.setCurrentAnsweredQuestionViews(null);
-            for (QuestionModel question : response.getAnswered()) {
+            for (QuestionModel question : sortedAnswered) {
                 this.ds.addAnsweredQuestion(question, this);
             }
-            for (QuestionModel question : sorted) {
+            for (QuestionModel question : sortedUnanswered) {
                 this.ds.addUnansweredQuestion(question, this);
             }
         }
