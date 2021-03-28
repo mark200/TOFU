@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
@@ -88,6 +89,18 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     @FXML
     MenuButton sortDrop;
 
+    @FXML
+    TextField titleTextField;
+
+    @FXML
+    ChoiceBox<String> optionCountChoiceBox;
+
+    @FXML
+    ChoiceBox<String> correctAnswerChoiceBox;
+
+    @FXML
+    Button submitPoll;
+
     Datastore ds = Datastore.getInstance();
 
     private Boolean ended = false;
@@ -121,14 +134,84 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             this.exportQuestionsButton.setVisible(false);
         }
 
-        System.out.println(this.ds.getPrivilegeId());
 
+        updatePollingGridPane();
         updateOnQuestions(false);
         updateOnMetadata();
 
         questionField.setOnKeyPressed(event -> {
             keyPressed(event);
         });
+
+        optionCountChoiceBox.setOnAction(event -> {
+            updateCorrectChoiceBox();
+        });
+    }
+
+    /**
+     * Dynamically update the choices.
+     */
+    private void updateCorrectChoiceBox() {
+        if (optionCountChoiceBox.getValue().equals("Option Count")) {
+            return;
+        }
+
+        return;
+
+        //Integer numberOfChoices = Integer.parseInt(optionCountChoiceBox.getValue());
+    }
+
+
+    /**
+     * Button Clicked.
+     */
+    public void submitPollButtonClicked() {
+        if (missingPollInfo()) {
+            return;
+        }
+
+
+    }
+
+    /**
+     * Checks whether information of poll is missing
+     */
+    public Boolean missingPollInfo() {
+        CharSequence pollingTitle = titleTextField.getCharacters();
+        Boolean titleTextFieldMissing = pollingTitle.length() == 0;
+
+        if (titleTextFieldMissing) {
+            this.shakeWidget(this.titleTextField);
+            this.displayStatusMessage("Please enter the title of the poll");
+            return true;
+        }
+
+        if (optionCountChoiceBox.getValue().equals("Option Count")) {
+            this.shakeWidget(optionCountChoiceBox);
+            this.displayStatusMessage("Please enter option count");
+            return true;
+        }
+
+        if (correctAnswerChoiceBox.getValue().equals("Correct Answer")) {
+            this.shakeWidget(correctAnswerChoiceBox);
+            this.displayStatusMessage("Please choose the correct answer or No Answer");
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Setup the Choice Boxes of the polling.
+     */
+    private void updatePollingGridPane() {
+        optionCountChoiceBox.getItems().addAll("2", "3", "4", "5", "6", "7", "8", "9", "10");
+        correctAnswerChoiceBox.getItems().addAll("No Answer","A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+        optionCountChoiceBox.setValue("Option Count");
+        correctAnswerChoiceBox.setValue("Correct Answer");
+        optionCountChoiceBox.getItems().add(0, "Option Count");
+        correctAnswerChoiceBox.getItems().add(0, "Correct Answer");
     }
 
     public void askButtonClicked() {
