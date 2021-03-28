@@ -2,11 +2,7 @@ package nl.tudelft.oopp.group54.widgets;
 
 import java.io.IOException;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
@@ -17,28 +13,23 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
 import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.controllers.LectureRoomSceneController;
-import nl.tudelft.oopp.group54.models.QuestionModel;
 import nl.tudelft.oopp.group54.models.responseentities.BanIpResponse;
 import nl.tudelft.oopp.group54.models.responseentities.DeleteQuestionResponse;
 import nl.tudelft.oopp.group54.models.responseentities.EditQuestionResponse;
-import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
 
 import nl.tudelft.oopp.group54.models.responseentities.VoteResponse;
 
 public abstract class QuestionView extends AnchorPane {
 
-    private VBox innerVBox;
     private GridPane outerGridPane;
     private GridPane voteGridPane;
     private GridPane verticalGridPane;
@@ -47,7 +38,7 @@ public abstract class QuestionView extends AnchorPane {
 
     private TextArea questionTextArea;
     protected TextArea answerTextArea;
-    private Text userName;
+    private Label userName;
 
     protected MenuButton dropDown;
 
@@ -80,8 +71,6 @@ public abstract class QuestionView extends AnchorPane {
      * @param voteCount  the vote count
      */
     public QuestionView(String text, String questionId, String userName, String userIp, Integer voteCount) {
-        this.innerVBox = new VBox();
-
         this.text = text;
         this.userNameString = userName;
         this.questionId = questionId;
@@ -104,11 +93,18 @@ public abstract class QuestionView extends AnchorPane {
 
         this.owner = null;
 
+        // this.getStylesheets().add("stylesheets/defaultTheme.css");
+
     }
 
 
     private void addOuterGridPane() {
         this.outerGridPane = new GridPane();
+
+        setTopAnchor(this.outerGridPane, 0.0);
+        setRightAnchor(this.outerGridPane, 0.0);
+        setLeftAnchor(this.outerGridPane, 0.0);
+        setBottomAnchor(this.outerGridPane, 0.0);
 
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setMinWidth(30);
@@ -165,14 +161,10 @@ public abstract class QuestionView extends AnchorPane {
     private void addHorizontalGridPane() {
         this.horizontalGridPane = new GridPane();
 
-        this.userName = new Text(userNameString);
+        this.userName = new Label(userNameString);
 
 
         this.horizontalGridPane.add(this.userName, 0, 0);
-
-        this.horizontalGridPane.setStyle(
-                "-fx-border-color: aqua;" + "-fx-border-radius: 3px"
-        );
 
         ColumnConstraints column1 = new ColumnConstraints();
         column1.setPercentWidth(50);
@@ -274,9 +266,7 @@ public abstract class QuestionView extends AnchorPane {
         VoteResponse response = null;
         try {
             response = ServerCommunication.voteOnQuestion(Integer.valueOf(questionId));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         if (!response.isSuccess()) {
@@ -295,9 +285,7 @@ public abstract class QuestionView extends AnchorPane {
         System.out.println("requesting");
         try {
             response = ServerCommunication.deleteQuestion(this.questionId);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -325,9 +313,7 @@ public abstract class QuestionView extends AnchorPane {
 
         try {
             response = ServerCommunication.postAnswer(this.questionId, "");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -356,9 +342,7 @@ public abstract class QuestionView extends AnchorPane {
 
                 try {
                     response = ServerCommunication.postAnswer(this.questionId, text);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
+                } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
 
@@ -450,9 +434,7 @@ public abstract class QuestionView extends AnchorPane {
 
         try {
             response = ServerCommunication.banIp(this.questionId, this.userIp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 

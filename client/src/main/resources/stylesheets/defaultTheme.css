@@ -1,0 +1,415 @@
+
+* {
+    /* Color scheme */
+   -fx-54-background: #2c2c2c;
+   -fx-54-primary: #7c6e04;
+   -fx-54-secondary: #5c5c5c;
+   -fx-54-foreground: #ffffff;
+   -fx-54-warning: #ff0000;
+
+}
+
+
+/* =================================================== */
+/* ===================== GENERAL ===================== */
+/* =================================================== */
+
+.root {
+    -fx-base: -fx-54-background;
+    -fx-background-color: -fx-54-background;
+}
+
+
+.label{
+    -fx-text-fill: -fx-54-foreground;
+}
+
+/* =================================================== */
+/* ================== POPUP WINDOWS ================== */
+/* =================================================== */
+
+.context-menu {
+    /*-fx-background-color: derive(-fx-54-background, 20%);*/
+    -fx-background-color: derive(-fx-54-background, 20%);
+}
+
+.context-menu .scroll-arrow {
+    -fx-background-color: transparent;
+}
+
+.context-menu .scroll-arrow:hover {
+    -fx-background: -fx-54-secondary;
+    -fx-background-color: -fx-54-primary;
+    -fx-text-fill: -fx-54-foreground;
+}
+
+.menu-item:hover {
+    -fx-background-color: -fx-54-primary;
+    -fx-text-fill: -fx-54-foreground;
+}
+
+.menu-item:focused {
+    -fx-background-color: -fx-54-primary;
+    -fx-text-fill: -fx-54-foreground;
+}
+
+/*
+.context-menu:show-mnemonics .mnemonic-underline {
+    -fx-stroke: -fx-text-fill;
+}*/
+
+/* =================================================== */
+/* ===================== BUTTONS ===================== */
+/* =================================================== */
+
+.button {
+    -fx-background-radius: 10;
+    -fx-background-color: derive(-fx-54-background, 10%);
+    -fx-text-fill: -fx-54-foreground;
+}
+
+.button:hover {
+    -fx-background-color: derive(-fx-54-background, 20%);
+}
+
+.button:focused {
+    -fx-background-color: derive(-fx-54-background, 20%);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-border-color: -fx-54-primary;
+
+}
+
+.button:pressed {
+    -fx-background-color: derive(-fx-54-background, 30%);
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-border-color: -fx-54-primary;
+}
+
+.imageButton {
+    -fx-background-size: 16px;
+    -fx-background-color: transparent;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center, center;
+    -fx-background-radius: 5;
+    -fx-padding: 4 12;
+    -fx-opacity: 0.7;
+
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+}
+
+.imageButton:hover {
+    -fx-opacity: 0.9;
+    -fx-background-color: derive(-fx-54-background, 30%);
+    -fx-background-radius: 5;
+
+
+}
+
+.imageButton:focused {
+    -fx-opacity: 1;
+    -fx-background-color: derive(-fx-54-background, 30%);
+    -fx-background-opacity: derive(-fx-54-background, 30%);
+    -fx-background-radius: 5;
+
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-border-color: -fx-54-primary;
+
+}
+
+
+.imageButton:pressed {
+    -fx-opacity: 1;
+    -fx-background-color: derive(-fx-54-background, 30%);
+    -fx-background-radius: 5;
+
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-border-color: -fx-54-primary;
+
+}
+
+#backButton {
+    -fx-background-image: url('../images/backButton.png');
+
+}
+
+#refreshButton {
+    -fx-background-image: url('../images/refreshButton.png');
+
+}
+
+#askButton {
+    -fx-background-size: 20px;
+    -fx-background-image: url('../images/askButton.png');
+}
+
+#exportButton {
+    -fx-background-image: url('../images/exportButton.png');
+}
+
+#lectureModeButton {
+    -fx-background-image: url('../images/lecturerModeButton.png');
+}
+
+#feedbackPanelButton {
+    -fx-background-image: url('../images/feedbackPanelButton.png');
+    -fx-background-color: derive(-fx-54-background, 30%);
+
+}
+
+.date-picker:editable > .arrow-button > * {
+    -fx-opacity: 0;
+}
+
+.date-picker > .arrow-button {
+    -fx-background-image: url("../images/datePickerIcon.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+    -fx-background-size: 24px;
+    -fx-background-color: transparent;
+    -fx-background-radius: 5;
+    -fx-padding: 4 12;
+    -fx-opacity: 0.7;
+}
+
+.date-picker > .arrow-button:focused {
+    -fx-opacity: 1;
+    -fx-background-color: derive(-fx-54-background, 30%);
+    -fx-background-opacity: derive(-fx-54-background, 30%);
+    -fx-background-radius: 5;
+}
+
+.date-picker > .arrow-button:hover {
+    -fx-opacity: 0.9;
+    -fx-background-color: derive(-fx-54-background, 30%);
+    -fx-background-radius: 5;
+
+}
+
+.date-picker > .arrow-button:pressed {
+    -fx-opacity: 1;
+    -fx-background-color: derive(-fx-54-background, 30%);
+    -fx-background-radius: 5;
+}
+
+
+
+/* =================================================== */
+/* ====================== BARS ======================= */
+/* =================================================== */
+
+
+.statusBar {
+    -fx-background-color: derive(-fx-54-background, -20%);
+
+}
+
+.tool-bar {
+    -fx-background-color: derive(-fx-54-background, -20%);
+
+}
+
+
+/* =================================================== */
+/* =================== DATEPICKER ==================== */
+/* =================================================== */
+
+
+.date-picker {
+    -fx-background-color: -fx-54-background;
+}
+
+.date-cell {
+    -fx-background-color: -fx-54-background;
+    -fx-text-fill: -fx-54-foreground;
+}
+
+.date-cell:hover {
+    -fx-background-color: derive(-fx-54-background, 10%);
+    -fx-text-fill: -fx-54-foreground;
+}
+
+.date-cell:selected {
+    -fx-background-color: derive(-fx-54-background, 20%);
+    -fx-text-fill: -fx-54-foreground;
+}
+
+.date-cell:focused {
+    -fx-background-color: derive(-fx-54-background, 30%);
+    -fx-text-fill: -fx-54-foreground;
+}
+
+
+.date-picker-popup > .month-year-pane {
+    -fx-background-color: -fx-54-background;
+    -fx-text-fill: -fx-54-foreground;
+}
+
+/* =================================================== */
+/* ==================== LIST VIEW ==================== */
+/* =================================================== */
+
+.list-view {
+    -fx-background-color: derive(-fx-54-background, 10%);
+}
+.list-cell {
+    -fx-background-color: derive(-fx-54-background, 10%);
+    -fx-text-fill: -fx-54-foreground;
+    -fx-opacity: 1;
+}
+.list-cell:odd {
+    -fx-background-color: derive(-fx-54-background, 5%);
+    -fx-text-fill: -fx-54-foreground;
+    -fx-opacity: 1;
+}
+
+
+
+
+.text-field{
+    -fx-background-radius: 5;
+
+    -fx-background-color: derive(-fx-54-background, 10%);
+    -fx-text-fill: -fx-54-foreground;
+    -fx-highlight-fill: -fx-54-foreground;
+
+}
+.text-field:hover{
+    -fx-background-color: derive(-fx-54-background, 20%);
+}
+.text-field:focused{
+    -fx-background-color: derive(-fx-54-background, 30%);
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-border-color: -fx-54-primary;
+}
+
+.text-area{
+    -fx-background-radius: 5;
+
+    -fx-background-color: derive(-fx-54-background, 10%);
+    -fx-text-fill: -fx-54-foreground;
+    -fx-highlight-fill: -fx-54-foreground;
+
+}
+
+.text-area .scroll-pane {
+    -fx-background-radius: 5;
+    -fx-background-color: derive(-fx-54-background, 10%);
+}
+
+.text-area:hover{
+    -fx-background-color: derive(-fx-54-background, 10%);
+}
+.text-area:focused{
+    -fx-background-color: derive(-fx-54-background, 20%);
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-border-color: -fx-54-primary;
+}
+
+.text-area .content {
+    -fx-cursor: text;
+    -fx-background-radius: 5;
+    -fx-background-color: derive(-fx-54-background, 10%);
+}
+
+.text-area .content:hover{
+    -fx-background-color: derive(-fx-54-background, 20%);
+}
+
+.text-area .content:focused{
+    -fx-background-color: derive(-fx-54-background, 30%);
+}
+
+
+.tab-pane {
+    -fx-background-color: -fx-54-background;
+}
+
+.tab {
+    -fx-background-color: derive(-fx-54-background, 10%);
+    -fx-background-radius: 0;
+    -fx-text-fill: -fx-54-foreground;
+}
+
+.tab:hover {
+    /*-fx-color: -fx-hover-base;*/
+    -fx-background-color: derive(-fx-54-background, 20%);
+}
+
+.tab:selected {
+    -fx-background-color: -fx-54-primary;
+}
+
+.tab:disabled {
+    -fx-opacity: -fx-disabled-opacity;
+}
+
+.tab-pane *.tab-header-background {
+    -fx-background-color: -fx-54-background;
+    /*-fx-effect: innershadow(two-pass-box , rgba(0,0,0,0.6) , 4, 0.0 , 0 , 0); */
+}
+
+
+.tab .tab-label {
+    -fx-background-color: transparent;
+    -fx-alignment: CENTER;
+    -fx-text-fill: -fx-54-foreground;
+}
+
+.criticalSection {
+    -fx-background-color: -fx-54-primary;
+}
+
+/* =================================================== */
+/* =================== DATEPICKER ==================== */
+/* =================================================== */
+
+.titled-pane {
+    -fx-text-fill: -fx-54-foreground;
+    -fx-background-color: derive(-fx-54-background, 20%);
+}
+
+.titled-pane:focused {
+    -fx-text-fill: -fx-54-foreground;
+    -fx-background-color: derive(-fx-54-background, 10%);
+}
+
+.titled-pane > .title {
+    -fx-background-color: derive(-fx-54-background, 10%);
+    -fx-background-radius: 0;
+    -fx-padding: 0.166667em 0.833333em 0.25em 0.833333em; /* 2 10 3 10 */
+}
+
+.titled-pane > .title > .arrow-button {
+    -fx-background-color: null;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0.0em 0.25em 0.0em 0.0em; /* 0 3 0 0 */
+}
+
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-background-color: -fx-mark-highlight-color, -fx-mark-color;
+    -fx-background-insets: 1 0 -1 0, 0;
+    -fx-padding: 0.25em 0.3125em 0.25em 0.3125em; /* 3 3.75 3 3.75 */
+    -fx-shape: "M 0 0 h 7 l -3.5 4 z";
+}
+
+.titled-pane:collapsed > .title > .arrow-button .arrow {
+    -fx-rotate: -90;
+}
+
+.titled-pane > *.content {
+    -fx-background-color: -fx-54-background;
+    -fx-background-insets: 0, 0 1 1 1;
+    -fx-padding: 0.167em;
+}
+
+.titled-pane:focused > .title > .arrow-button .arrow {
+    -fx-background-color: white;
+}
