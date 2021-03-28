@@ -76,5 +76,20 @@ public class UserTest {
         User u1 = new User(new UserKey(3, 3), "Ivan Ivanov", "127.0.0.1", date, 1);
         assertNotEquals(u1, user);
     }
+
+    @Test
+    public void equalsSameObject() {
+        assertEquals(user, user);
+    }
+
+    @Test
+    public void equalsNull() {
+        assertNotEquals(user, null);
+    }
+
+    @Test
+    public void equalsDifferentObject() {
+        assertNotEquals(user, "123");
+    }
 }
 
