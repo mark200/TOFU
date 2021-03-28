@@ -34,6 +34,7 @@
                <items>
                   <Button fx:id="utilityToolbarBackButton" mnemonicParsing="false" onAction="#utilityToolbarBackButtonPressed" text="Back" />
                   <Button mnemonicParsing="false" onAction="#refreshButtonClicked" text="Refresh" />
+                  <Button fx:id="exportQuestionsButton" mnemonicParsing="false" onAction="#exportQuestionsButtonClicked" text="Export questions" />
                   <Button fx:id="lecturerModeButton" mnemonicParsing="false" onAction="#lecturerModeButtonClicked" text="Lecturer mode" />
                </items>
             </ToolBar>

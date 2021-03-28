@@ -91,4 +91,9 @@ public class QuestionModel implements Serializable {
         this.createdAt = createdAt;
     }
 
+    @Override
+    public String toString() {
+        return  questionText + ", created at " + createdAt.toString();
+
+    }
 }

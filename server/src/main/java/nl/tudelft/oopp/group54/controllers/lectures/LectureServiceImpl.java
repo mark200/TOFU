@@ -207,7 +207,7 @@ public class LectureServiceImpl implements LectureService {
             toBeReturned.put("userID", newUser.getKey().getId());
             toBeReturned.put("userName", newUser.getName());
             toBeReturned.put("role",
-                    (newUser.getRoleID() == 1) ? "Student" : ((newUser.getRoleID() == 2) ? "Lecturer" : "Moderator"));
+                    (newUser.getRoleID() == 1) ? "Lecturer" : ((newUser.getRoleID() == 2) ? "Moderator" : "Student"));
             toBeReturned.put("privilegeId", newUser.getRoleID());
         } catch (Exception e) {
             toBeReturned.put("success", false);
