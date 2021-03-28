@@ -1,9 +1,7 @@
 package nl.tudelft.oopp.group54.controllers;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -25,7 +23,6 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
-import javax.swing.JOptionPane;
 import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.models.QuestionModel;
@@ -184,7 +181,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         }
 
         GetAllQuestionsResponse response = getQuestions();
-        List<QuestionModel> questions = sortQuestions(response);
+        List<QuestionModel> questions = sortQuestionList(response);
         FileWriter exports = createFile(textFile);
         writeToFile(questions, exports);
     }
@@ -241,7 +238,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
      * @param response - The response of the request.
      * @return - sorted list of questions.
      */
-    private List<QuestionModel> sortQuestions(GetAllQuestionsResponse response) {
+    private List<QuestionModel> sortQuestionList(GetAllQuestionsResponse response) {
         if (response == null) {
             return null;
         }
@@ -420,8 +417,8 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             List<QuestionModel> sortedUnanswered = response.getUnanswered();
             List<QuestionModel> sortedAnswered = response.getAnswered();
 
-            sortQuestions(sortedUnanswered);
-            sortQuestions(sortedAnswered);
+            sortQuestionList(sortedUnanswered);
+            sortQuestionList(sortedAnswered);
 
             this.ds.setCurrentUnansweredQuestionViews(null);
             this.ds.setCurrentAnsweredQuestionViews(null);
@@ -439,7 +436,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
      *
      * @param list the list
      */
-    public void sortQuestions(List<QuestionModel> list) {
+    public void sortQuestionList(List<QuestionModel> list) {
         if (voteSort) {
             list.sort(new Comparator<QuestionModel>() {
                 @Override
