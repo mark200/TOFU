@@ -1,11 +1,10 @@
 package nl.tudelft.oopp.group54.entities;
 
-import java.util.Date;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Date;
 import nl.tudelft.oopp.group54.entities.Lecture;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
