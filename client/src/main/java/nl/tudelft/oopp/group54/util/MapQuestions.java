@@ -93,11 +93,19 @@ public class MapQuestions {
         return this.innerAnsweredQuestionsIDs.containsKey(id);
     }
 
-    public Integer getVoteCount(String id) {
+    public Integer getVoteCountUnanswered(String id) {
         return this.innerUnansweredQuestionsIDs.get(id);
+    }
+
+    public Integer getVoteCountAnswered(String id) {
+        return  this.innerAnsweredQuestionsIDs.get(id);
     }
 
     public void updateValue(String id, Integer voteCount) {
         this.innerUnansweredQuestionsIDs.put(id, voteCount);
+    }
+
+    public void deleteQuestion(String id) {
+        this.innerUnansweredQuestionsIDs.remove(id);
     }
 }

@@ -1,7 +1,5 @@
 package nl.tudelft.oopp.group54;
 
-import com.sun.javafx.collections.ImmutableObservableList;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import nl.tudelft.oopp.group54.controllers.LectureRoomSceneController;
@@ -20,7 +18,8 @@ public class Datastore {
     ObservableList<QuestionView> currentUnansweredQuestionViews;
     ObservableList<QuestionView> currentAnsweredQuestionViews;
 
-    private MapQuestions questions;
+    private MapQuestions questionModels;
+    private MapQuestions questionViews;
 
     CreateLectureResponse createLectureResponse;
     JoinLectureResponse joinLectureResponse;
@@ -34,7 +33,8 @@ public class Datastore {
     private Datastore() {
         this.currentUnansweredQuestionViews = FXCollections.observableArrayList();
         this.currentAnsweredQuestionViews = FXCollections.observableArrayList();
-        this.questions = new MapQuestions();
+        this.questionModels = new MapQuestions();
+        this.questionViews = new MapQuestions();
         createLectureResponse = null;
         joinLectureResponse = null;
     }
@@ -101,7 +101,7 @@ public class Datastore {
                 question.getUserName(), question.getUserIp(), question.getScore(), question.getUserId());
         q.setOwner(sceneController);
         q.updateQuestionView();
-        this.questions.addUnansweredQuestion(question.getQuestionId(), question.getScore());
+        this.questionModels.addUnansweredQuestion(question.getQuestionId(), question.getScore());
         if (this.getPrivilegeId().equals(1)) {
             q.toggleLecturerMode(sceneController.isInLecturerMode());
         }
@@ -119,7 +119,7 @@ public class Datastore {
                 question.getUserName(), question.getUserIp(), question.getScore(), question.getAnswerText());
         q.setOwner(sceneController);
         q.updateQuestionView();
-        this.questions.addAnsweredQuestion(question.getQuestionId(), question.getScore());
+        this.questionModels.addAnsweredQuestion(question.getQuestionId(), question.getScore());
         this.currentAnsweredQuestionViews.add(q);
     }
 
@@ -134,7 +134,7 @@ public class Datastore {
             return false;
         }
 
-        return this.questions.containsUnansweredQuestion(id);
+        return this.questionModels.containsUnansweredQuestion(id);
     }
 
     /**
@@ -148,24 +148,24 @@ public class Datastore {
             return false;
         }
 
-        return this.questions.containsAnsweredQuestion(id);
+        return this.questionModels.containsAnsweredQuestion(id);
     }
 
     public void updateQuestion(QuestionModel question) {
         if (question == null) {
             return;
         }
-        this.questions.updateValue(question.getQuestionId(), question.getScore());
+        this.questionModels.updateValue(question.getQuestionId(), question.getScore());
         QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(),
-                question.getUserName(), question.getUserIp(), question.getScore());
+                question.getUserName(), question.getUserIp(), question.getScore(), question.getUserId());
         int index = 0;
         for(int i = 0; i < this.currentUnansweredQuestionViews.size(); i++) {
             if(this.currentUnansweredQuestionViews.get(i).getQuestionId().equals(question.getQuestionId())) {
                 index = i;
+                break;
             }
         }
-        this.currentUnansweredQuestionViews.remove(index);
-        this.currentUnansweredQuestionViews.add(q);
+        this.currentUnansweredQuestionViews.set(index, q);
     }
 
     public CreateLectureResponse getCreateLectureResponse() {
@@ -209,6 +209,6 @@ public class Datastore {
     }
 
     public Integer getVoteOnQuestion(String questionId) {
-        return this.questions.getVoteCount(questionId);
+        return this.questionModels.getVoteCountUnanswered(questionId);
     }
 }
