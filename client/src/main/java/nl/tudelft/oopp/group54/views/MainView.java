@@ -61,8 +61,14 @@ public class MainView extends Application {
             e.printStackTrace();
         }
 
+
         rootScene = new Scene(root);
         stage.setScene(rootScene);
+
+        if (newSceneName.getText().equals("lectureRoomScene")) {
+            stage.setHeight(650);
+            stage.setWidth(765);
+        }
 
         if (recordInHistory) {
             history.push(currentScene);

@@ -18,6 +18,8 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
@@ -86,10 +88,14 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     @FXML
     Label lectureTooSlowLabel;
 
+    @FXML
+    MenuButton sortDrop;
+
     Datastore ds = Datastore.getInstance();
 
     private Boolean ended = false;
     private Boolean inLecturerMode = false;
+    private boolean voteSort = false;
 
 
     @Override
@@ -411,21 +417,36 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                 this.displayStatusMessage("Refreshed succesfully.");
             }
             // The questions are already sorted by time so only sorting by score is required.
-            List<QuestionModel> sorted = response.getUnanswered();
-            Collections.sort(sorted, new Comparator<QuestionModel>() {
+            List<QuestionModel> sortedUnanswered = response.getUnanswered();
+            List<QuestionModel> sortedAnswered = response.getAnswered();
+
+            sortQuestions(sortedUnanswered);
+            sortQuestions(sortedAnswered);
+
+            this.ds.setCurrentUnansweredQuestionViews(null);
+            this.ds.setCurrentAnsweredQuestionViews(null);
+            for (QuestionModel question : sortedAnswered) {
+                this.ds.addAnsweredQuestion(question, this);
+            }
+            for (QuestionModel question : sortedUnanswered) {
+                this.ds.addUnansweredQuestion(question, this);
+            }
+        }
+    }
+
+    /**
+     * Sort questions.
+     *
+     * @param list the list
+     */
+    public void sortQuestions(List<QuestionModel> list) {
+        if (voteSort) {
+            list.sort(new Comparator<QuestionModel>() {
                 @Override
                 public int compare(QuestionModel o1, QuestionModel o2) {
                     return Integer.compare(o2.getScore(), o1.getScore());
                 }
             });
-            this.ds.setCurrentUnansweredQuestionViews(null);
-            this.ds.setCurrentAnsweredQuestionViews(null);
-            for (QuestionModel question : response.getAnswered()) {
-                this.ds.addAnsweredQuestion(question, this);
-            }
-            for (QuestionModel question : sorted) {
-                this.ds.addUnansweredQuestion(question, this);
-            }
         }
     }
 
@@ -475,8 +496,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
         if (lectureFeedbackResponse.getSuccess()) {
             this.lectureTooFastLabel.setText(
-                    lectureFeedbackResponse.getLectureFeedbackMap().get("1").toString()
-            );
+                    lectureFeedbackResponse.getLectureFeedbackMap().get("1").toString());
             this.lectureTooSlowLabel.setText(
                     lectureFeedbackResponse.getLectureFeedbackMap().get("2").toString()
             );
@@ -485,6 +505,24 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             this.displayStatusMessage(lectureFeedbackResponse.getMessage());
         }
 
+    }
+
+    @FXML
+    protected void initialize() {
+        MenuItem item1 = new MenuItem("sort by votes");
+        MenuItem item2 = new MenuItem("sort by recency");
+
+        sortDrop.getItems().setAll(item1, item2);
+
+        item1.setOnAction(event -> {
+            voteSort = true;
+            refreshButtonClickedAfter();
+        });
+
+        item2.setOnAction(event -> {
+            voteSort = false;
+            refreshButtonClickedAfter();
+        });
     }
 
     /**
