@@ -46,6 +46,7 @@ public abstract class QuestionView extends AnchorPane {
     private MenuBar menuBar;
 
     private TextArea questionTextArea;
+    protected TextArea answerTextArea;
     private Text userName;
 
     protected MenuButton dropDown;
@@ -96,6 +97,8 @@ public abstract class QuestionView extends AnchorPane {
         addVerticalGridPane();
 
         addHorizontalGridPane();
+        
+        createAnswerTextArea();
 
         this.getChildren().addAll(this.outerGridPane, this.menuBar);
 
@@ -115,6 +118,12 @@ public abstract class QuestionView extends AnchorPane {
         col2.setHgrow(Priority.ALWAYS);
 
         this.outerGridPane.getColumnConstraints().addAll(col1, col2);
+        
+        RowConstraints row1 = new RowConstraints();
+        RowConstraints row2 = new RowConstraints();
+        row2.setPrefHeight(0);
+        
+        this.outerGridPane.getRowConstraints().addAll(row1, row2);
 
     }
 
@@ -192,6 +201,29 @@ public abstract class QuestionView extends AnchorPane {
         attachEventHandlers();
 
         this.horizontalGridPane.add(dropDown, 1, 0);
+    }
+    
+    private void createAnswerTextArea() {
+        this.answerTextArea = new TextArea();
+
+        this.answerTextArea.setWrapText(true);
+        this.answerTextArea.setPrefRowCount(3);
+        this.answerTextArea.setVisible(false);
+        
+        this.outerGridPane.add(answerTextArea, 1, 1);
+    }
+    
+    protected void toggleAnswerTextArea(boolean visible) {
+        if (visible) {
+            outerGridPane.getRowConstraints().add(1, new RowConstraints());
+        } else {
+            RowConstraints row1 = new RowConstraints();
+            RowConstraints row2 = new RowConstraints();
+            row2.setPrefHeight(0);
+            
+            this.outerGridPane.getRowConstraints().addAll(row1, row2);
+        }
+        this.answerTextArea.setVisible(visible);
     }
 
     private void attachEventHandlers() {
@@ -311,7 +343,32 @@ public abstract class QuestionView extends AnchorPane {
     }
 
     private void answerWithText() {
-        System.out.println("answer question " + questionId + " with text");
+        toggleAnswerTextArea(true);
+        this.answerTextArea.requestFocus();
+        this.answerTextArea.setEditable(true);
+        this.answerTextArea.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                PostAnswerResponse response = null;
+
+                try {
+                    response = ServerCommunication.postAnswer(this.questionId, answerTextArea.getText());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (!response.getSuccess()) {
+                    System.out.println(response.getMessage());
+                }
+
+                if (response != null) {
+                    owner.displayStatusMessage(response.getMessage());
+                }
+
+                owner.refreshButtonClickedAfter();
+            }
+        });
     }
     
     private void edit() {
