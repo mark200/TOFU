@@ -1,4 +1,4 @@
-package nl.tudelft.oopp.demo.services;
+package nl.tudelft.oopp.group54.services;
 
 //import nl.tudelft.oopp.group54.entities.Lecture;
 //import nl.tudelft.oopp.group54.repositories.LectureRepository;
