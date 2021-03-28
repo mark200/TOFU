@@ -65,7 +65,7 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <TextField fx:id="questionField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Your question here..." GridPane.valignment="BOTTOM" />
+                                          <TextField fx:id="questionField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Your question here..." style="-fx-border-radius: red;" GridPane.valignment="BOTTOM" />
                                           <Button id="askButton" fx:id="askButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#askButtonClicked" styleClass="imageButton" GridPane.columnIndex="1" GridPane.valignment="BOTTOM" />
                                        </children>
                                     </GridPane>
@@ -182,7 +182,7 @@
             </GridPane>
             <AnchorPane styleClass="statusBar" GridPane.rowIndex="2">
                <children>
-                  <Text fx:id="systemStatus1" fill="RED" layoutX="0.041015625" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="This is the current system status" AnchorPane.bottomAnchor="0.0">
+                  <Text fx:id="systemStatus" fill="RED" layoutX="0.041015625" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="This is the current system status" AnchorPane.bottomAnchor="0.0">
                      <font>
                         <Font size="14.0" />
                      </font>
