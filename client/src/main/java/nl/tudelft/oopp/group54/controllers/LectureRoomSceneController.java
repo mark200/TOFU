@@ -181,7 +181,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         }
 
         GetAllQuestionsResponse response = getQuestions();
-        List<QuestionModel> questions = sortQuestionList(response);
+        List<QuestionModel> questions = sortQuestionResponse(response);
         FileWriter exports = createFile(textFile);
         writeToFile(questions, exports);
     }
@@ -238,7 +238,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
      * @param response - The response of the request.
      * @return - sorted list of questions.
      */
-    private List<QuestionModel> sortQuestionList(GetAllQuestionsResponse response) {
+    private List<QuestionModel> sortQuestionResponse(GetAllQuestionsResponse response) {
         if (response == null) {
             return null;
         }
@@ -417,8 +417,8 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             List<QuestionModel> sortedUnanswered = response.getUnanswered();
             List<QuestionModel> sortedAnswered = response.getAnswered();
 
-            sortQuestionList(sortedUnanswered);
-            sortQuestionList(sortedAnswered);
+            sortQuestions(sortedUnanswered);
+            sortQuestions(sortedAnswered);
 
             this.ds.setCurrentUnansweredQuestionViews(null);
             this.ds.setCurrentAnsweredQuestionViews(null);
@@ -436,7 +436,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
      *
      * @param list the list
      */
-    public void sortQuestionList(List<QuestionModel> list) {
+    public void sortQuestions(List<QuestionModel> list) {
         if (voteSort) {
             list.sort(new Comparator<QuestionModel>() {
                 @Override
