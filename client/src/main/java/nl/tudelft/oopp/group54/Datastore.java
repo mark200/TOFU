@@ -98,10 +98,13 @@ public class Datastore {
      */
     public void addUnansweredQuestion(QuestionModel question, LectureRoomSceneController sceneController) {
         QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(),
-                question.getUserName(), question.getUserIp(), question.getScore());
+                question.getUserName(), question.getUserIp(), question.getScore(), question.getUserId());
         q.setOwner(sceneController);
         q.updateQuestionView();
         this.questions.addUnansweredQuestion(question.getQuestionId(), question.getScore());
+        if (this.getPrivilegeId().equals(1)) {
+            q.toggleLecturerMode(sceneController.isInLecturerMode());
+        }
         this.currentUnansweredQuestionViews.add(q);
     }
 
@@ -113,7 +116,7 @@ public class Datastore {
      */
     public void addAnsweredQuestion(QuestionModel question, LectureRoomSceneController sceneController) {
         QuestionView q = new AnsweredQuestionView(question.getQuestionText(), question.getQuestionId(),
-                question.getUserName(), question.getUserIp(), question.getScore());
+                question.getUserName(), question.getUserIp(), question.getScore(), question.getAnswerText());
         q.setOwner(sceneController);
         q.updateQuestionView();
         this.questions.addAnsweredQuestion(question.getQuestionId(), question.getScore());

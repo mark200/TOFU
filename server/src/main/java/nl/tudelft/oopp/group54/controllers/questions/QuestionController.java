@@ -90,4 +90,47 @@ public class QuestionController {
         System.out.println("requested");
         return questionService.deleteQuestion(lectureId, questionId, userId);
     }
+    
+    /**
+     * Edits a question.
+     * 
+     * @param lectureId the lecture id
+     * @param requestPayload the request body
+     * @param userId the userId
+     * @return 
+     */
+    @PostMapping(value = "/{lectureId}/questions/edit",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> editQuestion(@PathVariable(value = "lectureId") Integer lectureId,
+                                            @RequestBody Map<String, Object> requestPayload,
+                                            @RequestParam String userId) {
+
+        boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
+                requestPayload,
+                Arrays.asList("questionId", "newContent")
+        );
+
+        if (!containsNecessaryData) {
+
+            Map<String, Object> toBeReturned = new TreeMap<>();
+            toBeReturned.put("success", "false");
+            toBeReturned.put("message", "Expected lectureId and new Content to be provided");
+
+            return toBeReturned;
+        }
+        
+        if (!(requestPayload.get("questionId") instanceof String && requestPayload.get("questionId") instanceof String)) {
+            Map<String, Object> toBeReturned = new TreeMap<>();
+            toBeReturned.put("success", "false");
+            toBeReturned.put("message", "Expected lectureId and new Content to be strings");
+
+            return toBeReturned;
+        }
+        
+        Integer questionId = Integer.parseInt((String)requestPayload.get("questionId"));
+        String newContent = (String)requestPayload.get("newContent");
+        
+        return questionService.editQuestion(lectureId, questionId, userId, newContent);
+    }
 }

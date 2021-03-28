@@ -13,6 +13,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -29,6 +30,7 @@ import nl.tudelft.oopp.group54.controllers.LectureRoomSceneController;
 import nl.tudelft.oopp.group54.models.QuestionModel;
 import nl.tudelft.oopp.group54.models.responseentities.BanIpResponse;
 import nl.tudelft.oopp.group54.models.responseentities.DeleteQuestionResponse;
+import nl.tudelft.oopp.group54.models.responseentities.EditQuestionResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
 
@@ -44,6 +46,7 @@ public abstract class QuestionView extends AnchorPane {
     private MenuBar menuBar;
 
     private TextArea questionTextArea;
+    protected TextArea answerTextArea;
     private Text userName;
 
     protected MenuButton dropDown;
@@ -52,6 +55,7 @@ public abstract class QuestionView extends AnchorPane {
     private MenuItem markAnswer;
     private MenuItem answerText;
     private MenuItem ban;
+    private MenuItem edit;
 
     private Button upvoteButton;
 
@@ -62,8 +66,9 @@ public abstract class QuestionView extends AnchorPane {
     private String userNameString;
     private Integer voteCount;
     private String userIp;
+    private String userId;
 
-    private LectureRoomSceneController owner;
+    protected LectureRoomSceneController owner;
 
     /**
      * Instantiates a new Question view.
@@ -92,6 +97,8 @@ public abstract class QuestionView extends AnchorPane {
         addVerticalGridPane();
 
         addHorizontalGridPane();
+        
+        createAnswerTextArea();
 
         this.getChildren().addAll(this.outerGridPane, this.menuBar);
 
@@ -114,6 +121,12 @@ public abstract class QuestionView extends AnchorPane {
         col2.setHgrow(Priority.ALWAYS);
 
         this.outerGridPane.getColumnConstraints().addAll(col1, col2);
+        
+        RowConstraints row1 = new RowConstraints();
+        RowConstraints row2 = new RowConstraints();
+        row2.setPrefHeight(0);
+        
+        this.outerGridPane.getRowConstraints().addAll(row1, row2);
 
     }
 
@@ -184,12 +197,36 @@ public abstract class QuestionView extends AnchorPane {
         this.markAnswer = new MenuItem("Mark answered");
         this.answerText = new MenuItem("Answer with text");
         this.ban = new MenuItem("Ban author");
+        this.edit = new MenuItem("Edit");
 
-        dropDown.getItems().addAll(delete, markAnswer, answerText, ban);
+        dropDown.getItems().addAll(delete, edit, markAnswer, answerText, ban);
 
         attachEventHandlers();
 
         this.horizontalGridPane.add(dropDown, 1, 0);
+    }
+    
+    private void createAnswerTextArea() {
+        this.answerTextArea = new TextArea();
+
+        this.answerTextArea.setWrapText(true);
+        this.answerTextArea.setPrefRowCount(3);
+        this.answerTextArea.setVisible(false);
+        
+        this.outerGridPane.add(answerTextArea, 1, 1);
+    }
+    
+    protected void toggleAnswerTextArea(boolean visible) {
+        if (visible) {
+            outerGridPane.getRowConstraints().add(1, new RowConstraints());
+        } else {
+            RowConstraints row1 = new RowConstraints();
+            RowConstraints row2 = new RowConstraints();
+            row2.setPrefHeight(0);
+            
+            this.outerGridPane.getRowConstraints().addAll(row1, row2);
+        }
+        this.answerTextArea.setVisible(visible);
     }
 
     private void attachEventHandlers() {
@@ -211,6 +248,10 @@ public abstract class QuestionView extends AnchorPane {
 
         ban.setOnAction(event -> {
             banAuthor();
+        });
+        
+        edit.setOnAction(event -> {
+            edit();
         });
     }
 
@@ -252,7 +293,7 @@ public abstract class QuestionView extends AnchorPane {
         owner.refreshButtonClickedAfter();
     }
 
-    private void delete() {
+    protected void delete() {
         DeleteQuestionResponse response = null;
         System.out.println("requesting");
         try {
@@ -305,8 +346,69 @@ public abstract class QuestionView extends AnchorPane {
     }
 
     private void answerWithText() {
-        System.out.println("answer question " + questionId + " with text");
+        toggleAnswerTextArea(true);
+        this.answerTextArea.requestFocus();
+        this.answerTextArea.setEditable(true);
+        this.answerTextArea.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                PostAnswerResponse response = null;
+                
+                String text = answerTextArea.getText();
+                
+                text = text.trim();
+
+                try {
+                    response = ServerCommunication.postAnswer(this.questionId, text);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (!response.getSuccess()) {
+                    System.out.println(response.getMessage());
+                }
+
+                if (response != null) {
+                    owner.displayStatusMessage(response.getMessage());
+                }
+
+                owner.refreshButtonClickedAfter();
+            }
+        });
     }
+    
+    private void edit() {
+        this.questionTextArea.setEditable(true);
+        this.questionTextArea.requestFocus();
+        this.questionTextArea.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                this.questionTextArea.setEditable(false);
+                EditQuestionResponse response = null;
+                
+                String text = this.questionTextArea.getText();
+                
+                text = text.trim();
+                
+                try {
+                    response = ServerCommunication.editQuestion(this.questionId, text);
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+                
+                if (!response.getSuccess()) {
+                    System.out.println(response.getMessage());
+                }
+
+                if (response != null) {
+                    owner.displayStatusMessage(response.getMessage());
+                }
+                questionTextArea.setEditable(false);
+                owner.refreshButtonClickedAfter();
+            }
+        });
+    }
+
 
 
     /**
@@ -317,12 +419,9 @@ public abstract class QuestionView extends AnchorPane {
     }
 
     /**
-     * Update the Options dropdown for student.
+     * Update the Options for student.
      */
     private void updateStudent() {
-        markAnswer.setVisible(false);
-        answerText.setVisible(false);
-        ban.setVisible(false);
     }
 
     /**

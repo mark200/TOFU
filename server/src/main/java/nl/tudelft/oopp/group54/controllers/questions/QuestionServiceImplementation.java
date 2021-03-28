@@ -8,11 +8,14 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import nl.tudelft.oopp.group54.entities.Ban;
+import nl.tudelft.oopp.group54.entities.BanKey;
 import nl.tudelft.oopp.group54.entities.Lecture;
 import nl.tudelft.oopp.group54.entities.Question;
 import nl.tudelft.oopp.group54.entities.QuestionKey;
 import nl.tudelft.oopp.group54.entities.User;
 import nl.tudelft.oopp.group54.entities.UserKey;
+import nl.tudelft.oopp.group54.repositories.BanRepository;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.QuestionRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
@@ -29,6 +32,9 @@ public class QuestionServiceImplementation implements QuestionService {
 
     @Autowired
     private LectureRepository lectureRepository;
+
+    @Autowired
+    private BanRepository banRepository;
 
     /**
      * post a question.
@@ -69,6 +75,14 @@ public class QuestionServiceImplementation implements QuestionService {
 
         Optional<User> findUserRow = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
         Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
+        Optional<Ban> findBanRow = banRepository.findById(new BanKey(userIp, lectureId));
+
+        if (findBanRow.isPresent()) {
+            status.put("code", "401 UNAUTHORIZED");
+            status.put("success", false);
+            status.put("message", "Ip address has been banned from posting questions");
+            return status;
+        }
 
         if (findUserRow.isEmpty()) {
             status.put("code", "401 UNAUTHORIZED");
@@ -92,6 +106,17 @@ public class QuestionServiceImplementation implements QuestionService {
             }
         }
 
+        // don't let students post questions more than once in a minute.
+        Date timeLimit = new Date(System.currentTimeMillis() - 60000);
+        Date lastQuestion = findUserRow.get().getlastQuestion();
+        if (findUserRow.get().getRoleID().equals(3) && lastQuestion != null) {
+            if (lastQuestion.after(timeLimit)) {
+                status.put("success", false);
+                status.put("message", "Cannot post more than 1 question in 1 minute.");
+                return status;
+            }
+        }
+
         QuestionKey newQuestionKey = new QuestionKey(null, lectureId);
 
         Question newQuestion = new Question();
@@ -100,6 +125,7 @@ public class QuestionServiceImplementation implements QuestionService {
         newQuestion.setContent(questionText);
         newQuestion.setCreatedAt(new Date());
         newQuestion.setStudentIp(userIp);
+        findUserRow.get().setLastQuestion(new Date(System.currentTimeMillis()));
 
         questionRepository.flush();
 
@@ -281,6 +307,89 @@ public class QuestionServiceImplementation implements QuestionService {
 
         return status;
     }
+    
+    
+    @Override
+    public Map<String, Object> editQuestion(Integer lectureId, Integer questionId, String userId, String newContent) {
+        Map<String, Object> status = new LinkedHashMap<>();
+
+        if (questionId == null) {
+            status.put("success", false);
+            status.put("message", "Question id can't be null");
+            return status;
+        }
+
+        if (lectureId == null) {
+            status.put("success", false);
+            status.put("message", "Lecture id can't be null");
+            return status;
+        }
+        
+        // get question and author of request from database.
+        Optional<Question> questionToBeEdited = questionRepository.findById(new QuestionKey(questionId, lectureId));
+        Optional<User> authorOfTheEditRequest = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
+        
+        Integer requestAuthorLectureId = authorOfTheEditRequest.get().getKey().getLectureID();
+        Integer questionAuthorLectureId = questionToBeEdited.get().getPrimaryKey().getLectureId();
+        
+        // If the lectures of user and question do not match.
+        if (!requestAuthorLectureId.equals(questionAuthorLectureId)) {
+            status.put("success", false);
+            status.put("message", "The question in different lecture can't be edited!");
+            return status;
+        }
+
+        if (foundLecture.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized lecture.");
+        }
+
+        if (questionToBeEdited.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized question. Incorrect combination of lecture and question ids");
+            return status;
+        }
+
+        if (authorOfTheEditRequest.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized user id or specified lecture does not exist!");
+            return status;
+        }
+        
+        Integer requestAuthorId = authorOfTheEditRequest.get().getKey().getId();
+        Integer questionAuthorId = questionToBeEdited.get().getStudentId();
+        Integer requestAuthorRole = authorOfTheEditRequest.get().getRoleID();
+
+        // 1 - lecturer
+        // 2 - moderator
+        // 3 - student
+
+        //students cant edit questions
+        if (requestAuthorRole.equals(3)) {
+            status.put("code", "401 UNAUTHORIZED");
+            status.put("success", false);
+            status.put("message", "You are not authorized to edit this question!");
+            return status;
+        }
+        
+        questionRepository.flush();
+        
+        try {
+            questionToBeEdited.get().setContent(newContent);
+            questionRepository.save(questionToBeEdited.get());
+            status.put("success", true);
+            status.put("questionId", questionToBeEdited.get().getPrimaryKey().getId());
+            status.put("message", "message was edited successfully!");
+            
+            questionRepository.flush();
+        } catch (Exception e) {
+            status.put("success", false);
+            status.put("message", e.toString());
+        }
+         
+        return status;
+    }
 
     /**
      * Transform a question into JSON format.
@@ -303,6 +412,7 @@ public class QuestionServiceImplementation implements QuestionService {
         toBeReturned.put("questionText", q.getContent());
         toBeReturned.put("score", q.getVoteCounter());
         toBeReturned.put("answered", q.getAnswered());
+        toBeReturned.put("createdAt", q.getCreatedAt());
 
         if (q.getAnswered()) {
             toBeReturned.put("answerText", q.getAnswerText());

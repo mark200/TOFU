@@ -51,4 +51,9 @@ public class MockQuestionServiceImplementation implements QuestionService {
     public Map<String, Object> deleteQuestion(Integer lectureId, Integer questionId, String userId) {
         return null;
     }
+    
+    @Override
+    public Map<String, Object> editQuestion(Integer lectureId, Integer questionId, String userId, String newContent) {
+        return null;
+    }
 }

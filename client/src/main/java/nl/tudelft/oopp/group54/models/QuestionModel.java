@@ -91,4 +91,22 @@ public class QuestionModel implements Serializable {
         this.createdAt = createdAt;
     }
 
+    @Override
+    public String toString() {
+        questionText = questionText.trim();
+        System.out.print(questionText + " a ");
+        System.out.println();
+        String s = "Q: " + questionText + "\n";
+        if (answerText != null && !answerText.equals("")) {
+            answerText.trim();
+            s += "A: " + answerText;
+        } else {
+            s += "A: No answer for this question\n";
+        }
+        
+        s += "created at " + createdAt.toString();
+
+        return s;
+
+    }
 }
