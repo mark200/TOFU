@@ -8,11 +8,8 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import nl.tudelft.oopp.group54.entities.Lecture;
-import nl.tudelft.oopp.group54.entities.Question;
-import nl.tudelft.oopp.group54.entities.QuestionKey;
-import nl.tudelft.oopp.group54.entities.User;
-import nl.tudelft.oopp.group54.entities.UserKey;
+import nl.tudelft.oopp.group54.entities.*;
+import nl.tudelft.oopp.group54.repositories.BanRepository;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.QuestionRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
@@ -29,6 +26,9 @@ public class QuestionServiceImplementation implements QuestionService {
 
     @Autowired
     private LectureRepository lectureRepository;
+
+    @Autowired
+    private BanRepository banRepository;
 
     /**
      * post a question.
@@ -69,6 +69,14 @@ public class QuestionServiceImplementation implements QuestionService {
 
         Optional<User> findUserRow = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
         Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
+        Optional<Ban> findBanRow = banRepository.findById(new BanKey(userIp, lectureId));
+
+        if (findBanRow.isPresent()) {
+            status.put("code", "401 UNAUTHORIZED");
+            status.put("success", false);
+            status.put("message", "Ip address has been banned from posting questions");
+            return status;
+        }
 
         if (findUserRow.isEmpty()) {
             status.put("code", "401 UNAUTHORIZED");
