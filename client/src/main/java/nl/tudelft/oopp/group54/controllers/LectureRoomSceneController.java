@@ -2,7 +2,12 @@ package nl.tudelft.oopp.group54.controllers;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -444,13 +449,28 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         }
     }
 
+    /**
+     * Updates the list of question that the User sees and all changes to them.
+     * @param unanswered list of new unanswered questions retrieved from the server
+     * @param answered list of new answered questions retrieved from the server
+     */
     public void displayQuestions(List<QuestionModel> unanswered, List<QuestionModel> answered) {
-        List<String> idUnanswered = unanswered.stream().map(x -> x.getQuestionId()).collect(Collectors.toList());
+        updateNewQuestions(unanswered, answered);
+        updateDeletedQuestions(unanswered);
+    }
 
-        for (QuestionView view : this.ds.getCurrentUnansweredQuestionViews()) {
-            if (!idUnanswered.contains(view.getQuestionId())) {
-                this.ds.deleteUnansweredQuestionView(view);
-            }
+    /**
+     * Updates the listview with new questions from the database.
+     * @param unanswered list of new unanswered questions
+     * @param answered list of new answered questions
+     */
+    public void updateNewQuestions(List<QuestionModel> unanswered, List<QuestionModel> answered) {
+        if (unanswered == null) {
+            return;
+        }
+
+        if (answered == null) {
+            return;
         }
 
         // Checks for new questions that do not exist in the old list
@@ -466,6 +486,29 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                 this.ds.addUnansweredQuestion(question, this);
             } else if (question.getScore() != this.ds.getVoteOnQuestion(question.getQuestionId())) {
                 this.ds.updateQuestion(question);
+            }
+        }
+    }
+
+    /**
+     * Removes all deleted questions from the current listview.
+     * Implemented in linear time.
+     * @param unanswered list of new unanswered questions
+     */
+    public void updateDeletedQuestions(List<QuestionModel> unanswered) {
+        if (unanswered == null) {
+            return;
+        }
+
+        Set<String> bufferedQuestionIDs = new HashSet<>();
+
+        for (QuestionModel question : unanswered) {
+            bufferedQuestionIDs.add(question.getQuestionId());
+        }
+
+        for (QuestionView questionView : this.ds.getCurrentUnansweredQuestionViews()) {
+            if (!bufferedQuestionIDs.contains(questionView.getQuestionId())) {
+                this.ds.deleteUnansweredQuestionView(questionView);
             }
         }
     }
