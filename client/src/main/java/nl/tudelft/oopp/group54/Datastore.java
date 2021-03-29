@@ -18,8 +18,7 @@ public class Datastore {
     ObservableList<QuestionView> currentUnansweredQuestionViews;
     ObservableList<QuestionView> currentAnsweredQuestionViews;
 
-    private MapQuestions questionModels;
-    private MapQuestions questionViews;
+    private MapQuestions questions;
 
     CreateLectureResponse createLectureResponse;
     JoinLectureResponse joinLectureResponse;
@@ -33,8 +32,7 @@ public class Datastore {
     private Datastore() {
         this.currentUnansweredQuestionViews = FXCollections.observableArrayList();
         this.currentAnsweredQuestionViews = FXCollections.observableArrayList();
-        this.questionModels = new MapQuestions();
-        this.questionViews = new MapQuestions();
+        this.questions = new MapQuestions();
         createLectureResponse = null;
         joinLectureResponse = null;
     }
@@ -93,18 +91,31 @@ public class Datastore {
     /**
      * Add unanswered question.
      *
+     *
      * @param question        the question
      * @param sceneController the scene controller
      */
     public void addUnansweredQuestion(QuestionModel question, LectureRoomSceneController sceneController) {
+        if (question == null) {
+            return;
+        }
+
+        if (sceneController == null) {
+            return;
+        }
+
         QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(),
                 question.getUserName(), question.getUserIp(), question.getScore(), question.getUserId());
+
         q.setOwner(sceneController);
         q.updateQuestionView();
-        this.questionModels.addUnansweredQuestion(question.getQuestionId(), question.getScore());
+
+        this.questions.addUnansweredQuestion(question.getQuestionId(), question.getScore());
+
         if (this.getPrivilegeId().equals(1)) {
             q.toggleLecturerMode(sceneController.isInLecturerMode());
         }
+
         this.currentUnansweredQuestionViews.add(q);
     }
 
@@ -115,11 +126,21 @@ public class Datastore {
      * @param sceneController the scene controller
      */
     public void addAnsweredQuestion(QuestionModel question, LectureRoomSceneController sceneController) {
+        if (question == null) {
+            return;
+        }
+
+        if (sceneController == null) {
+            return;
+        }
+
         QuestionView q = new AnsweredQuestionView(question.getQuestionText(), question.getQuestionId(),
                 question.getUserName(), question.getUserIp(), question.getScore(), question.getAnswerText());
+
         q.setOwner(sceneController);
         q.updateQuestionView();
-        this.questionModels.addAnsweredQuestion(question.getQuestionId(), question.getScore());
+
+        this.questions.addAnsweredQuestion(question.getQuestionId(), question.getScore());
         this.currentAnsweredQuestionViews.add(q);
     }
 
@@ -134,7 +155,7 @@ public class Datastore {
             return false;
         }
 
-        return this.questionModels.containsUnansweredQuestion(id);
+        return this.questions.containsUnansweredQuestion(id);
     }
 
     /**
@@ -148,23 +169,33 @@ public class Datastore {
             return false;
         }
 
-        return this.questionModels.containsAnsweredQuestion(id);
+        return this.questions.containsAnsweredQuestion(id);
     }
 
+    /**
+     * Updates a QuestionView entity with a new one.
+     * This may be cause if a User for example has voted on
+     * this question and its view thus must be updated.
+     * @param question to update with
+     */
     public void updateQuestion(QuestionModel question) {
         if (question == null) {
             return;
         }
-        this.questionModels.updateValue(question.getQuestionId(), question.getScore());
+
+        this.questions.updateValue(question.getQuestionId(), question.getScore());
+
         QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(),
                 question.getUserName(), question.getUserIp(), question.getScore(), question.getUserId());
+
         int index = 0;
-        for(int i = 0; i < this.currentUnansweredQuestionViews.size(); i++) {
-            if(this.currentUnansweredQuestionViews.get(i).getQuestionId().equals(question.getQuestionId())) {
+        for (int i = 0; i < this.currentUnansweredQuestionViews.size(); i++) {
+            if (this.currentUnansweredQuestionViews.get(i).getQuestionId().equals(question.getQuestionId())) {
                 index = i;
                 break;
             }
         }
+
         this.currentUnansweredQuestionViews.set(index, q);
     }
 
@@ -209,6 +240,23 @@ public class Datastore {
     }
 
     public Integer getVoteOnQuestion(String questionId) {
-        return this.questionModels.getVoteCountUnanswered(questionId);
+        return this.questions.getVoteCountUnanswered(questionId);
+    }
+
+    public MapQuestions getQuestions() {
+        return this.questions;
+    }
+
+    /**
+     * Deletes a question from the ObservableList of Views.
+     * @param v the QuestionView we want to delete
+     */
+    public void deleteUnansweredQuestionView(QuestionView v) {
+        if (v == null) {
+            return;
+        }
+
+        this.currentUnansweredQuestionViews.remove(v);
+        // this.questions.deleteQuestion(v.getQuestionId());
     }
 }

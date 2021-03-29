@@ -2,13 +2,10 @@ package nl.tudelft.oopp.group54.controllers;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -35,7 +32,6 @@ import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureFeedbackResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureMetadataResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
-import nl.tudelft.oopp.group54.util.RefreshThread;
 import nl.tudelft.oopp.group54.views.ApplicationScene;
 import nl.tudelft.oopp.group54.views.MainView;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
@@ -429,7 +425,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
         if (response.getSuccess()) {
             if (statusDisplay) {
-                this.displayStatusMessage("Refreshed succesfully.");
+                this.displayStatusMessage("Refreshed successfully.");
             }
             // The questions are already sorted by time so only sorting by score is required.
             List<QuestionModel> sortedUnanswered = response.getUnanswered();
@@ -449,11 +445,22 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     }
 
     public void displayQuestions(List<QuestionModel> unanswered, List<QuestionModel> answered) {
+        List<String> idUnanswered = unanswered.stream().map(x -> x.getQuestionId()).collect(Collectors.toList());
+
+        for (QuestionView view : this.ds.getCurrentUnansweredQuestionViews()) {
+            if (!idUnanswered.contains(view.getQuestionId())) {
+                this.ds.deleteUnansweredQuestionView(view);
+            }
+        }
+
+        // Checks for new questions that do not exist in the old list
+        // of answered questions
         for (QuestionModel question : answered) {
             if (!this.ds.containsAnsweredQuestion(question.getQuestionId())) {
                 this.ds.addAnsweredQuestion(question, this);
             }
         }
+
         for (QuestionModel question : unanswered) {
             if (!this.ds.containsUnansweredQuestion(question.getQuestionId())) {
                 this.ds.addUnansweredQuestion(question, this);
