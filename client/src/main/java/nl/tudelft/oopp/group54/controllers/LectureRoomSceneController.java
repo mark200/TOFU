@@ -457,6 +457,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         updateSortOrder();
     }
 
+    /**
+     * Updates the sort order of the question views.
+     */
     public void updateSortOrder() {
         if (voteSort) {
             this.ds.getCurrentUnansweredQuestionViews().sort(new Comparator<QuestionView>() {
