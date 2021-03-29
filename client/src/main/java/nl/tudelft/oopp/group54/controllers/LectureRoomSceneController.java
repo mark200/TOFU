@@ -436,9 +436,6 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             List<QuestionModel> sortedUnanswered = response.getUnanswered();
             List<QuestionModel> sortedAnswered = response.getAnswered();
 
-            sortQuestions(sortedUnanswered);
-            sortQuestions(sortedAnswered);
-
             GetAllQuestionsResponse finalResponse = response;
             Platform.runLater(new Runnable() {
                 @Override
@@ -457,6 +454,24 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     public void displayQuestions(List<QuestionModel> unanswered, List<QuestionModel> answered) {
         updateNewQuestions(unanswered, answered);
         updateDeletedQuestions(unanswered);
+        updateSortOrder();
+    }
+
+    public void updateSortOrder() {
+        if (voteSort) {
+            this.ds.getCurrentUnansweredQuestionViews().sort(new Comparator<QuestionView>() {
+                @Override
+                public int compare(QuestionView o1, QuestionView o2) {
+                    return Integer.compare(o2.getVoteCount(), o1.getVoteCount());
+                }
+            });
+            this.ds.getCurrentAnsweredQuestionViews().sort(new Comparator<QuestionView>() {
+                @Override
+                public int compare(QuestionView o1, QuestionView o2) {
+                    return Integer.compare(o2.getVoteCount(), o1.getVoteCount());
+                }
+            });
+        }
     }
 
     /**
