@@ -42,7 +42,6 @@ public class BanKey implements Serializable, Comparable {
         this.lectureID = lectureID;
     }
 
-    //TODO: implement this compare correctly.
     @Override
     public int compareTo(Object o) {
         BanKey that = (BanKey) o;

@@ -57,7 +57,7 @@ public class AnswerTest {
     }
 
     @Test
-    public void testEmptyAnswerKeyNotNul() {
+    public void testEmptyAnswerKeyNotNull() {
         AnswerKey answerKey = new AnswerKey();
         assertNotNull(answerKey);
     }
