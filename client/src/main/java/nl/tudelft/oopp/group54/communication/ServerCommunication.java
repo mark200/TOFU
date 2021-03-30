@@ -14,6 +14,7 @@ import nl.tudelft.oopp.group54.models.requestentities.EditQuestionRequest;
 import nl.tudelft.oopp.group54.models.requestentities.JoinLectureRequest;
 import nl.tudelft.oopp.group54.models.requestentities.LectureFeedbackRequest;
 import nl.tudelft.oopp.group54.models.requestentities.PostAnswerRequest;
+import nl.tudelft.oopp.group54.models.requestentities.PostPollRequest;
 import nl.tudelft.oopp.group54.models.requestentities.PostQuestionRequest;
 import nl.tudelft.oopp.group54.models.requestentities.VoteRequest;
 import nl.tudelft.oopp.group54.models.responseentities.BanIpResponse;
@@ -27,6 +28,7 @@ import nl.tudelft.oopp.group54.models.responseentities.GetLectureMetadataRespons
 import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.LectureFeedbackResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostPollResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
 import nl.tudelft.oopp.group54.models.responseentities.VoteResponse;
 
@@ -411,5 +413,39 @@ public class ServerCommunication {
         }
 
         return objectMapper.readValue(response.body(), LectureFeedbackResponse.class);
+    }
+
+
+    /**
+     * post Poll.
+     * @param correctAnswer - the answer
+     * @param optionCount - # options
+     * @param title - title of poll
+     * @return - A PostPollResponse which describes whether the operation was successful
+     * @throws IOException - IO exception
+     * @throws InterruptedException - interrupts
+     */
+    public static PostPollResponse postPoll(String correctAnswer, Integer optionCount, String title)
+            throws IOException, InterruptedException {
+
+        PostPollRequest postPollRequest = new PostPollRequest(optionCount, ds.getUserId().toString(), correctAnswer, title);
+        String pprJson = objectMapper.writeValueAsString(postPollRequest);
+
+        System.out.println(pprJson);
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(pprJson))
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId() + "/polls"))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        System.out.println(objectMapper.readValue(response.body(), PostPollResponse.class).getMessage());
+
+        return objectMapper.readValue(response.body(), PostPollResponse.class);
     }
 }

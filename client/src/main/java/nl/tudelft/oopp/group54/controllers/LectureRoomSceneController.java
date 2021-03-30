@@ -2,6 +2,7 @@ package nl.tudelft.oopp.group54.controllers;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -70,6 +71,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
     @FXML
     Accordion feedbackMenu;
+
     @FXML
     ColumnConstraints feedbackMenuContainer;
     Integer feedbackMenuContainerUnfoldedWidth = 140;
@@ -149,32 +151,58 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     }
 
     /**
-     * Dynamically update the choices.
+     * Dynamically update the ChoiceBox.
      */
     private void updateCorrectChoiceBox() {
+
+        // populate alphabet list
+        List<Character> alphabet = new ArrayList<>();
+        for (Character i = 'A'; i <= 'Z'; i++) {
+            alphabet.add(i);
+        }
+
         if (optionCountChoiceBox.getValue().equals("Option Count")) {
             return;
         }
 
-        return;
+        Integer numberOfChoices = Integer.parseInt(optionCountChoiceBox.getValue());
 
-        //Integer numberOfChoices = Integer.parseInt(optionCountChoiceBox.getValue());
+        // Set the default values
+        correctAnswerChoiceBox.getItems().removeAll(correctAnswerChoiceBox.getItems());
+
+        // populate the Choice Box
+        for (int i = 0; i < numberOfChoices; i++) {
+            correctAnswerChoiceBox.getItems().add(i, String.valueOf(alphabet.get(i)));
+        }
+
+        correctAnswerChoiceBox.setValue("Correct Answer");
+        correctAnswerChoiceBox.getItems().add(0, "Correct Answer");
+        correctAnswerChoiceBox.getItems().add(1, "No Answer");
+
     }
 
 
     /**
-     * Button Clicked.
+     * Submit poll button Clicked functionality.
      */
     public void submitPollButtonClicked() {
         if (missingPollInfo()) {
             return;
         }
 
+        try {
+            ServerCommunication.postPoll(correctAnswerChoiceBox.getValue(),
+                    Integer.parseInt(optionCountChoiceBox.getValue()), titleTextField.getText());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            this.displayStatusMessage(e.getMessage());
+        }
 
     }
 
     /**
-     * Checks whether information of poll is missing
+     * Checks whether information of poll is missing.
      */
     public Boolean missingPollInfo() {
         CharSequence pollingTitle = titleTextField.getCharacters();
@@ -206,6 +234,12 @@ public class LectureRoomSceneController extends AbstractApplicationController {
      * Setup the Choice Boxes of the polling.
      */
     private void updatePollingGridPane() {
+        System.out.println(correctAnswerChoiceBox.getItems());
+        System.out.println(optionCountChoiceBox.getItems());
+        correctAnswerChoiceBox.getItems().removeAll(correctAnswerChoiceBox.getItems());
+        optionCountChoiceBox.getItems().removeAll(optionCountChoiceBox.getItems());
+        System.out.println(correctAnswerChoiceBox.getItems());
+        System.out.println(optionCountChoiceBox.getItems());
         optionCountChoiceBox.getItems().addAll("2", "3", "4", "5", "6", "7", "8", "9", "10");
         correctAnswerChoiceBox.getItems().addAll("No Answer","A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
         optionCountChoiceBox.setValue("Option Count");
