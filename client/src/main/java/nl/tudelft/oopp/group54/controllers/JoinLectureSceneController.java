@@ -40,6 +40,7 @@ public class JoinLectureSceneController extends AbstractApplicationController {
         );
     }
 
+
     /**
      * Enter lecture button clicked.
      */
