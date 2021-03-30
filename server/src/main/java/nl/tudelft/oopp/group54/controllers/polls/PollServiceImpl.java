@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 
 import nl.tudelft.oopp.group54.entities.Ban;
 import nl.tudelft.oopp.group54.entities.BanKey;
@@ -205,4 +206,184 @@ public class PollServiceImpl implements PollService {
 
         return status;        
     }
+    
+    
+    @Override
+    public Map<String, Object> getCurrentPoll(Integer lectureId, String userId) {
+        Map<String, Object> status = new LinkedHashMap<>();
+
+        if  (lectureId == null) {
+            status.put("success", false);
+            status.put("message", "LectureID cannot be null!");
+            return status;
+        }
+
+        if (userId == null) {
+            status.put("success", false);
+            status.put("message", "UserID cannot be null!");
+            return status;
+        }
+         
+        Optional<User> findUserRow = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
+
+        if (findUserRow.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized user ID or specified lecture does not exist!");
+            return status;
+        }
+
+        if (foundLecture.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "There does not exist a lecture with this id.");
+            return status;
+        }
+         
+        List<Poll> findPoll = pollRepository.findOpenPoll(lectureId);
+        
+        if (findPoll.isEmpty()) {
+            status.put("success", true);
+            status.put("closed", true);
+            status.put("message", "There is no poll ongoing!");
+            return status;
+        }
+        
+        Poll poll = findPoll.get(0);
+        
+        status.put("success", true);
+        status.put("closed", false);
+        status.put("optionCount", poll.getOptionCount());
+        status.put("title", poll.getTitle());
+    	
+        return status;
+    }
+    
+    @Override
+    public Map<String, Object> endCurrentPoll(Integer lectureId, Integer userId) {
+        Map<String, Object> status = new LinkedHashMap<>();
+        
+        if  (lectureId == null) {
+            status.put("success", false);
+            status.put("message", "LectureID cannot be null!");
+            return status;
+        }
+
+        if (userId == null) {
+            status.put("success", false);
+            status.put("message", "UserID cannot be null!");
+            return status;
+        }
+         
+        Optional<User> findUserRow = userRepository.findById(new UserKey(userId, lectureId));
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
+
+        if (findUserRow.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized user ID or specified lecture does not exist!");
+            return status;
+        }
+
+        if (foundLecture.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "There does not exist a lecture with this id.");
+            return status;
+        }
+         
+        List<Poll> findPoll = pollRepository.findOpenPoll(lectureId);
+        
+        if (findPoll.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "There is currently no ongoing poll/quiz!");
+            return status;
+        }
+        
+        Poll poll = findPoll.get(0);
+        
+        poll.setClosed(true);
+        
+        try {
+            pollRepository.save(poll);
+            status.put("success", true);
+            status.put("message", "Poll/Quiz was closed");
+        } catch (Exception e) {
+            status.put("success", false);
+            status.put("message", e.toString());
+        }
+        
+        return status;
+    }
+    
+    @Override
+    public Map<String, Object> getStatistics(Integer lectureId, String userId) {
+        Map<String, Object> status = new LinkedHashMap<>();
+        
+        if  (lectureId == null) {
+            status.put("success", false);
+            status.put("message", "LectureID cannot be null!");
+            return status;
+        }
+
+        if (userId == null) {
+            status.put("success", false);
+            status.put("message", "UserID cannot be null!");
+            return status;
+        }
+         
+        Optional<User> findUserRow = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
+
+        if (findUserRow.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized user ID or specified lecture does not exist!");
+            return status;
+        }
+
+        if (foundLecture.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "There does not exist a lecture with this id.");
+            return status;
+        }
+        
+        List<Poll> polls = pollRepository.findAllByLectureId(lectureId);
+        Poll newest = null;
+        
+        for (Poll p : polls) {
+            if (newest == null || p.getCreatedAt().after(newest.getCreatedAt())) {
+                newest = p;
+            }
+        }
+        
+        if (newest == null) {
+            status.put("success", false);
+            status.put("message", "There has not been a poll/quiz");
+            return status;
+        }
+        
+        if (!newest.getClosed() && findUserRow.get().getRoleID() == 3) {
+            status.put("success", false);
+            status.put("message", "This poll is still opem");
+            return status;
+        }
+        
+        List<PollVote> votes = pollVoteRepository.findAllByLectureIdAndPollId(lectureId, newest.getPrimaryKey().getId());
+        
+        Map<String, Integer> voteMap = new TreeMap<String, Integer>();
+        
+        for (int i = 0; i < newest.getOptionCount(); i++) {
+            voteMap.put(Character.toString('A' + i), 0);
+        }
+        
+        for (PollVote v : votes) {
+            Integer count = voteMap.get(v.getVote());
+            voteMap.put(v.getVote(), count + 1);
+        }
+        
+        status.put("success", true);
+        status.put("correctAnswer", newest.getCorrectChoice());
+        status.put("statsMap", voteMap);
+        status.put("voteCount", votes.size());
+        
+        return status;
+    }
+    
 }

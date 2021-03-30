@@ -8,10 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -122,6 +125,27 @@ public class PollController {
         
         
         return pollService.votePoll(lectureId, userId, vote);
+    }
+    
+    @GetMapping(value = "/{lectureId}/polls",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> getAllQuestions(@PathVariable(value = "lectureId") Integer lectureId,
+                                               @RequestParam String userId) {
+        return pollService.getCurrentPoll(lectureId, userId);
+    }
+    
+    @PutMapping(
+            value = "/{lectureId}/polls/e",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> endCurrentPoll(@RequestParam String userId, @PathVariable String lectureId) {
+        return pollService.endCurrentPoll(Integer.parseInt(userId), Integer.parseInt(lectureId));
+    }
+    
+    @GetMapping(value = "/{lectureId}/polls/stats",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> getStatistics(@PathVariable(value = "lectureId") Integer lectureId,
+                                               @RequestParam String userId) {
+        return pollService.getStatistics(lectureId, userId);
     }
     
 }

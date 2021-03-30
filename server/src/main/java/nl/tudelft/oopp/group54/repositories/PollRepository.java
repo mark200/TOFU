@@ -10,4 +10,6 @@ public interface PollRepository extends JpaRepository<Poll, PollKey> {
 
     @Query("SELECT p FROM Poll p WHERE p.primaryKey.lectureId = ?1 AND p.closed = FALSE")
     public List<Poll> findOpenPoll(Integer lectureId);
+    
+    public List<Poll> findAllByLectureId(Integer lectureId);
 }
