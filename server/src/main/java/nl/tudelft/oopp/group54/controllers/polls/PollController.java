@@ -77,4 +77,51 @@ public class PollController {
 
         return pollService.postPoll(lectureId, userId, optionCount, correctAnswer, title);
     }
+    
+    /**
+     * Posts a poll vote.
+     * @param lectureId ID of lecture that the new question refers to
+     * @param requestPayload JSON package that contains ID of User that is posting the vote,
+     *                       and the vote itself
+     * @return a response
+     */
+    @PostMapping(value = "/{lectureID}/polls/vote",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> votePoll(@PathVariable(value = "lectureID") Integer lectureId,
+                                        @RequestBody Map<String, Object> requestPayload) {
+        System.out.println(requestPayload);
+        boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
+                 requestPayload,
+                 Arrays.asList("userId", "vote")
+         );
+        
+        if (!containsNecessaryData) {
+
+            Map<String, Object> toBeReturned = new TreeMap<>();
+            toBeReturned.put("success", "false");
+            toBeReturned.put("message", "Expected lectureId, userID and vote to be provided");
+
+            return toBeReturned;
+        }
+        
+        
+        String userId;
+        String vote;
+
+        try {
+            userId = (String) requestPayload.get("userId");
+            vote = (String) requestPayload.get("vote");
+        } catch (Exception e) {
+            Map<String, Object> toBeReturned = new TreeMap<>();
+            toBeReturned.put("success", "false");
+            toBeReturned.put("message", e.getMessage());
+
+            return toBeReturned;
+        }
+        
+        
+        return pollService.votePoll(lectureId, userId, vote);
+    }
+    
 }

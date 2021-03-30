@@ -4,4 +4,6 @@ import java.util.Map;
 
 public interface PollService {
     Map<String, Object> postPoll(Integer lectureId, String userId, Integer optionCount, String correctAnswer, String title);
+    
+    Map<String, Object> votePoll(Integer lectureId, String userId, String vote);
 }

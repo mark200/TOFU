@@ -16,7 +16,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
@@ -31,6 +30,8 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.models.QuestionModel;
@@ -38,6 +39,7 @@ import nl.tudelft.oopp.group54.models.responseentities.EndLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureFeedbackResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureMetadataResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostPollVoteResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
 import nl.tudelft.oopp.group54.views.ApplicationScene;
 import nl.tudelft.oopp.group54.views.MainView;
@@ -108,6 +110,11 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
     @FXML
     Button submitPoll;
+    
+    @FXML
+    GridPane pollGridPane;
+    
+    ChoiceBox voteBox;
 
     Datastore ds = Datastore.getInstance();
 
@@ -140,6 +147,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             this.endLectureButton.setVisible(false);
             this.lecturerModeButton.setVisible(false);
             this.exportQuestionsButton.setVisible(false);
+            this.setupPollVotingMenu();
         }
 
         System.out.println(this.ds.getPrivilegeId());
@@ -205,6 +213,34 @@ public class LectureRoomSceneController extends AbstractApplicationController {
      * Submit poll button Clicked functionality.
      */
     public void submitPollButtonClicked() {
+        if (this.ds.getPrivilegeId() == 3) {
+            submitPollVote();
+        } else {
+            submitPoll();
+        }
+
+    }
+    
+    private void submitPollVote() {
+        String value = (String) voteBox.getValue();
+        PostPollVoteResponse response = null;
+        
+        try {
+
+            response = ServerCommunication.postPollVote(value);
+            
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            this.displayStatusMessage(e.getMessage());
+        }
+        
+        if (response != null && !response.getSuccess()) {
+            this.displayStatusMessage(response.getMessage());
+        }
+    }
+    
+    private void submitPoll() {
         if (missingPollInfo()) {
             return;
         }
@@ -217,7 +253,6 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             System.out.println(e.getMessage());
             this.displayStatusMessage(e.getMessage());
         }
-
     }
 
     /**
@@ -265,6 +300,19 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         correctAnswerChoiceBox.setValue("Correct Answer");
         optionCountChoiceBox.getItems().add(0, "Option Count");
         correctAnswerChoiceBox.getItems().add(0, "Correct Answer");
+    }
+    
+    private void setupPollVotingMenu() {
+        this.titleTextField.setVisible(false);
+        this.pollGridPane.add(new Text("Vote on current:"), 0, 0);
+        this.optionCountChoiceBox.setVisible(false);
+        this.correctAnswerChoiceBox.setVisible(false);
+        this.voteBox = new ChoiceBox<String>();
+        this.voteBox.getItems().addAll("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+        this.voteBox.setValue("A");
+        this.pollGridPane.add(voteBox, 0, 1);
+        this.pollGridPane.getChildren().remove(submitPoll);
+        this.pollGridPane.add(submitPoll, 0, 2);
     }
 
     public void askButtonClicked() {

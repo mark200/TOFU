@@ -1,5 +1,6 @@
 package nl.tudelft.oopp.group54.communication;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URI;
@@ -15,6 +16,7 @@ import nl.tudelft.oopp.group54.models.requestentities.JoinLectureRequest;
 import nl.tudelft.oopp.group54.models.requestentities.LectureFeedbackRequest;
 import nl.tudelft.oopp.group54.models.requestentities.PostAnswerRequest;
 import nl.tudelft.oopp.group54.models.requestentities.PostPollRequest;
+import nl.tudelft.oopp.group54.models.requestentities.PostPollVoteRequest;
 import nl.tudelft.oopp.group54.models.requestentities.PostQuestionRequest;
 import nl.tudelft.oopp.group54.models.requestentities.VoteRequest;
 import nl.tudelft.oopp.group54.models.responseentities.BanIpResponse;
@@ -29,6 +31,7 @@ import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.LectureFeedbackResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostPollResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostPollVoteResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
 import nl.tudelft.oopp.group54.models.responseentities.VoteResponse;
 
@@ -447,5 +450,40 @@ public class ServerCommunication {
         System.out.println(objectMapper.readValue(response.body(), PostPollResponse.class).getMessage());
 
         return objectMapper.readValue(response.body(), PostPollResponse.class);
+    }
+    
+    
+    /**
+     * Votes on a poll/quiz.
+     * 
+     * @param vote The vote
+     * @return The response
+     * @throws IOException - IO exception
+     * @throws InterruptedException - interrupts
+     */
+    public static PostPollVoteResponse postPollVote(String vote) throws IOException, InterruptedException {
+        PostPollVoteRequest ppvr = new PostPollVoteRequest(vote, ds.getUserId().toString());
+        String ppvrJson = objectMapper.writeValueAsString(ppvr);
+        
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(ppvrJson))
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId() + "/polls/vote"))
+                .build();
+        
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+        
+        System.out.println("vote response: " + response);
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
+        return objectMapper.readValue(response.body(), PostPollVoteResponse.class);
     }
 }

@@ -1,7 +1,10 @@
 package nl.tudelft.oopp.group54.controllers.polls;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -10,14 +13,18 @@ import nl.tudelft.oopp.group54.entities.BanKey;
 import nl.tudelft.oopp.group54.entities.Lecture;
 import nl.tudelft.oopp.group54.entities.Poll;
 import nl.tudelft.oopp.group54.entities.PollKey;
+import nl.tudelft.oopp.group54.entities.PollVote;
+import nl.tudelft.oopp.group54.entities.PollVoteKey;
 import nl.tudelft.oopp.group54.entities.Question;
 import nl.tudelft.oopp.group54.entities.QuestionKey;
 import nl.tudelft.oopp.group54.entities.User;
 import nl.tudelft.oopp.group54.entities.UserKey;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.PollRepository;
+import nl.tudelft.oopp.group54.repositories.PollVoteRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,6 +38,9 @@ public class PollServiceImpl implements PollService {
 
     @Autowired
     LectureRepository lectureRepository;
+    
+    @Autowired
+    PollVoteRepository pollVoteRepository;
 
     @Override
     public Map<String, Object> postPoll(Integer lectureId, String userId, Integer optionCount,
@@ -49,9 +59,9 @@ public class PollServiceImpl implements PollService {
             return status;
         }
 
-        if (optionCount == null || optionCount < 2) {
+        if (optionCount == null || optionCount < 2 || optionCount > 10) {
             status.put("success", false);
-            status.put("message", "optionCount cannot be null or be less than 2!");
+            status.put("message", "optionCount cannot be null and must be between 2 and 10!");
             return status;
         }
 
@@ -81,20 +91,28 @@ public class PollServiceImpl implements PollService {
         if (findUserRow.get().getRoleID().equals(3)) {
             if (!foundLecture.get().isLectureOngoing()) {
                 status.put("success", false);
-                status.put("message", "You are unauthorized to create a poll.");
+                status.put("message", "You are unauthorized to create a poll/quiz.");
                 return status;
             }
         }
+        
+        List<Poll> findOpenPoll = pollRepository.findOpenPoll(lectureId);
+        
+        if (!findOpenPoll.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "There is currently an ongoing poll!");
+            return status;
+        }
+        
+        
 
-        System.out.println("this is executed");
-
-        Poll newPoll = new Poll(new PollKey(null, lectureId), title, false,2, "asd", new Date());
+        Poll newPoll = new Poll(new PollKey(null, lectureId), title, false, optionCount, correctAnswer, new Date());
         pollRepository.flush();
 
         try {
             pollRepository.save(newPoll);
             status.put("success", true);
-            status.put("message", "Poll has been created");
+            status.put("message", "Poll/quiz has been created");
         } catch (Exception e) {
             status.put("success", false);
             status.put("message", e.toString());
@@ -102,5 +120,89 @@ public class PollServiceImpl implements PollService {
 
         return status;
 
+    }
+    
+    @Override
+    public Map<String, Object> votePoll(Integer lectureId, String userId, String vote) {
+        Map<String, Object> status = new LinkedHashMap<>();
+
+        if (lectureId == null) {
+            status.put("success", false);
+            status.put("message", "LectureID cannot be null!");
+            return status;
+        }
+
+        if (userId == null) {
+            status.put("success", false);
+            status.put("message", "UserID cannot be null!");
+            return status;
+        }
+
+        if (vote == null || !Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J").contains(vote)) {
+            status.put("success", false);
+            status.put("message", "Vote must be A character between A and J!");
+            return status;
+        }
+        
+        Optional<User> findUserRow = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
+
+        if (findUserRow.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized user ID or specified lecture does not exist!");
+            return status;
+        }
+
+        if (foundLecture.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "There does not exist a lecture with this id.");
+            return status;
+        }
+
+        List<Poll> findPoll = pollRepository.findOpenPoll(lectureId);
+        
+        if (findPoll.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "There is currently no ongoing poll!");
+            return status;
+        }
+        
+        Poll poll = findPoll.get(0);
+        
+        List<String> choices = new ArrayList<String>();
+        
+        for (int i = 0; i < poll.getOptionCount(); i++) {
+            choices.add(i, Character.toString('A' + i));
+        }
+        
+        if (!choices.contains(vote)) {
+            status.put("success", false);
+            status.put("message", "Vote must be between A and " +  choices.get(choices.size() - 1) + "!");
+            return status;
+        }
+        
+        PollVoteKey key = new PollVoteKey(poll.getPrimaryKey().getId(), lectureId, Integer.parseInt(userId));
+        
+        Optional<PollVote> findVote = pollVoteRepository.findById(key);
+        
+        if (findVote.isPresent()) {
+            status.put("success", false);
+            status.put("message", "You can only vote once per poll/quiz!");
+            return status;
+        }
+
+        PollVote newPollVote = new PollVote(key, vote);
+        pollVoteRepository.flush();
+
+        try {
+            pollVoteRepository.save(newPollVote);
+            status.put("success", true);
+            status.put("message", "Vote was placed");
+        } catch (Exception e) {
+            status.put("success", false);
+            status.put("message", e.toString());
+        }
+
+        return status;        
     }
 }
