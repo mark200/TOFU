@@ -5,13 +5,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
@@ -136,6 +142,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             this.exportQuestionsButton.setVisible(false);
         }
 
+        System.out.println(this.ds.getPrivilegeId());
 
         updatePollingGridPane();
         updateOnQuestions(false);
@@ -144,6 +151,18 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         questionField.setOnKeyPressed(event -> {
             keyPressed(event);
         });
+
+        //new Thread(new RefreshThread(this)).start();
+
+        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(new Runnable() {
+            @Override
+            @FXML
+            public void run() {
+                // do stuff
+                refreshButtonClickedAfter();
+            }
+        }, 0, 5, TimeUnit.SECONDS);
 
         optionCountChoiceBox.setOnAction(event -> {
             updateCorrectChoiceBox();
@@ -528,22 +547,103 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
         if (response.getSuccess()) {
             if (statusDisplay) {
-                this.displayStatusMessage("Refreshed succesfully.");
+                this.displayStatusMessage("Refreshed successfully.");
             }
             // The questions are already sorted by time so only sorting by score is required.
             List<QuestionModel> sortedUnanswered = response.getUnanswered();
             List<QuestionModel> sortedAnswered = response.getAnswered();
 
-            sortQuestions(sortedUnanswered);
-            sortQuestions(sortedAnswered);
+            GetAllQuestionsResponse finalResponse = response;
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    displayQuestions(sortedUnanswered, sortedAnswered);
+                }
+            });
+        }
+    }
 
-            this.ds.setCurrentUnansweredQuestionViews(null);
-            this.ds.setCurrentAnsweredQuestionViews(null);
-            for (QuestionModel question : sortedAnswered) {
+    /**
+     * Updates the list of question that the User sees and all changes to them.
+     * @param unanswered list of new unanswered questions retrieved from the server
+     * @param answered list of new answered questions retrieved from the server
+     */
+    public void displayQuestions(List<QuestionModel> unanswered, List<QuestionModel> answered) {
+        updateNewQuestions(unanswered, answered);
+        updateDeletedQuestions(unanswered);
+        updateSortOrder();
+    }
+
+    /**
+     * Updates the sort order of the question views.
+     */
+    public void updateSortOrder() {
+        if (voteSort) {
+            this.ds.getCurrentUnansweredQuestionViews().sort(new Comparator<QuestionView>() {
+                @Override
+                public int compare(QuestionView o1, QuestionView o2) {
+                    return Integer.compare(o2.getVoteCount(), o1.getVoteCount());
+                }
+            });
+            this.ds.getCurrentAnsweredQuestionViews().sort(new Comparator<QuestionView>() {
+                @Override
+                public int compare(QuestionView o1, QuestionView o2) {
+                    return Integer.compare(o2.getVoteCount(), o1.getVoteCount());
+                }
+            });
+        }
+    }
+
+    /**
+     * Updates the listview with new questions from the database.
+     * @param unanswered list of new unanswered questions
+     * @param answered list of new answered questions
+     */
+    public void updateNewQuestions(List<QuestionModel> unanswered, List<QuestionModel> answered) {
+        if (unanswered == null) {
+            return;
+        }
+
+        if (answered == null) {
+            return;
+        }
+
+        // Checks for new questions that do not exist in the old list
+        // of answered questions
+        for (QuestionModel question : answered) {
+            if (!this.ds.containsAnsweredQuestion(question.getQuestionId())) {
                 this.ds.addAnsweredQuestion(question, this);
             }
-            for (QuestionModel question : sortedUnanswered) {
+        }
+
+        for (QuestionModel question : unanswered) {
+            if (!this.ds.containsUnansweredQuestion(question.getQuestionId())) {
                 this.ds.addUnansweredQuestion(question, this);
+            } else if (question.getScore() != this.ds.getVoteOnQuestion(question.getQuestionId())) {
+                this.ds.updateQuestion(question);
+            }
+        }
+    }
+
+    /**
+     * Removes all deleted questions from the current listview.
+     * Implemented in linear time.
+     * @param unanswered list of new unanswered questions
+     */
+    public void updateDeletedQuestions(List<QuestionModel> unanswered) {
+        if (unanswered == null) {
+            return;
+        }
+
+        Set<String> bufferedQuestionIDs = new HashSet<>();
+
+        for (QuestionModel question : unanswered) {
+            bufferedQuestionIDs.add(question.getQuestionId());
+        }
+
+        for (QuestionView questionView : this.ds.getCurrentUnansweredQuestionViews()) {
+            if (!bufferedQuestionIDs.contains(questionView.getQuestionId())) {
+                this.ds.deleteUnansweredQuestionView(questionView);
             }
         }
     }
@@ -706,6 +806,10 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
     public Datastore getDs() {
         return ds;
+    }
+
+    public Boolean isLectureEnded() {
+        return this.ended;
     }
 
     public Boolean isInLecturerMode() {
