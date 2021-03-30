@@ -23,6 +23,9 @@ public class LectureFeedbackTest {
     static LectureFeedbackCode lectureFeedbackCode2 = LectureFeedbackCode.LECTURE_IS_TOO_SLOW;
 
 
+    /**
+     * Init.
+     */
     @BeforeEach
     public void init() {
         userKey = new UserKey(2, 3);
