@@ -161,12 +161,13 @@ public class QuestionTest {
     @Test
     public void testQuestionToString() {
         question = new Question(key, 321, "192.158.1.38", "231", 231, true, new Date(0));
+        question.setAnswerText("answer");
         String expected = "Question{primaryKey=nl.tudelft.oopp"
                 + ".group54.entities.QuestionKey@13e7,"
                 + " student_id=321, studentIp='192.158.1.38',"
                 + " content='231', vote_counter=231, answered=true,"
                 + " created_at=Thu Jan 01 02:00:00 EET 1970,"
-                + " answerText=''}";
+                + " answerText='answer'}";
         assertEquals(expected, question.toString());
     }
 }
