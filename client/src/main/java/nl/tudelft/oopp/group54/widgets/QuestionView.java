@@ -97,6 +97,25 @@ public abstract class QuestionView extends AnchorPane {
 
     }
 
+    public Integer getVoteCount() {
+        return voteCount;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public String getUserNameString() {
+        return userNameString;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getQuestionId() {
+        return questionId;
+    }
 
     private void addOuterGridPane() {
         this.outerGridPane = new GridPane();

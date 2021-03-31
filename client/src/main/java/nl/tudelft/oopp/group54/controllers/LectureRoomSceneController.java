@@ -1,23 +1,27 @@
 package nl.tudelft.oopp.group54.controllers;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
@@ -27,14 +31,21 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
-import javax.swing.JOptionPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.models.QuestionModel;
 import nl.tudelft.oopp.group54.models.responseentities.EndLectureResponse;
+import nl.tudelft.oopp.group54.models.responseentities.EndPollResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
+import nl.tudelft.oopp.group54.models.responseentities.GetCurrentPollResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureFeedbackResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureMetadataResponse;
+import nl.tudelft.oopp.group54.models.responseentities.GetPollStatsResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostPollResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostPollVoteResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
 import nl.tudelft.oopp.group54.views.ApplicationScene;
 import nl.tudelft.oopp.group54.views.MainView;
@@ -74,6 +85,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
     @FXML
     Accordion feedbackMenu;
+
     @FXML
     ColumnConstraints feedbackMenuContainer;
     Integer feedbackMenuContainerUnfoldedWidth = 140;
@@ -93,13 +105,39 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     @FXML
     MenuButton sortDrop;
 
+    @FXML
+    TextField titleTextField;
+
+    @FXML
+    ChoiceBox<String> optionCountChoiceBox;
+
+    @FXML
+    ChoiceBox<String> correctAnswerChoiceBox;
+
+    @FXML
+    Button submitPoll;
+    
+    @FXML
+    GridPane pollGridPane;
+    
+    GridPane statsPane;
+    
+    ChoiceBox voteBox;
+    
+    Button endPoll;
+    
+    Text pollTitle;
+
     Datastore ds = Datastore.getInstance();
 
     private Boolean ended = false;
     private Boolean inLecturerMode = false;
     private boolean voteSort = false;
-    
+    private boolean openPoll = false;
     private Set<Integer> votedQuestions = new HashSet<Integer>();
+
+    
+
 
 
     @Override
@@ -126,16 +164,350 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             this.endLectureButton.setVisible(false);
             this.lecturerModeButton.setVisible(false);
             this.exportQuestionsButton.setVisible(false);
+            this.setupPollVotingMenu();
         }
 
         System.out.println(this.ds.getPrivilegeId());
 
+        updatePollingGridPane();
         updateOnQuestions(false);
         updateOnMetadata();
 
         questionField.setOnKeyPressed(event -> {
             keyPressed(event);
         });
+
+        //new Thread(new RefreshThread(this)).start();
+
+        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(new Runnable() {
+            @Override
+            @FXML
+            public void run() {
+                // do stuff
+                refreshButtonClickedAfter();
+            }
+        }, 0, 5, TimeUnit.SECONDS);
+
+        optionCountChoiceBox.setOnAction(event -> {
+            updateCorrectChoiceBox();
+        });
+    }
+
+    /**
+     * Dynamically update the ChoiceBox.
+     */
+    private void updateCorrectChoiceBox() {
+
+        // populate alphabet list
+        List<Character> alphabet = new ArrayList<>();
+        for (Character i = 'A'; i <= 'Z'; i++) {
+            alphabet.add(i);
+        }
+
+        if (optionCountChoiceBox.getValue().equals("Option Count")) {
+            return;
+        }
+
+        Integer numberOfChoices = Integer.parseInt(optionCountChoiceBox.getValue());
+
+        // Set the default values
+        correctAnswerChoiceBox.getItems().removeAll(correctAnswerChoiceBox.getItems());
+
+        // populate the Choice Box
+        for (int i = 0; i < numberOfChoices; i++) {
+            correctAnswerChoiceBox.getItems().add(i, String.valueOf(alphabet.get(i)));
+        }
+
+        correctAnswerChoiceBox.setValue("Correct Answer");
+        correctAnswerChoiceBox.getItems().add(0, "Correct Answer");
+        correctAnswerChoiceBox.getItems().add(1, "No Answer");
+
+    }
+
+
+    /**
+     * Submit poll button Clicked functionality.
+     */
+    public void submitPollButtonClicked() {
+        if (this.ds.getPrivilegeId() == 3) {
+            submitPollVote();
+        } else {
+            submitPoll();
+        }
+    }
+    
+    /**
+     * ends the current poll.
+     */
+    public void endPollButtonClicked() {
+        EndPollResponse response = null;
+        
+        try {
+            response = ServerCommunication.endCurrentPoll();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            this.displayStatusMessage(e.getMessage());
+            return;
+        }
+        
+        if (response.getSuccess()) {
+            refreshButtonClickedAfter();
+        } else {
+            this.displayStatusMessage(response.getMessage());
+        }
+        
+        
+    }
+    
+    private void togglePollView(boolean open, Integer optionCount, String pollTitle) {
+        if  (this.ds.getPrivilegeId() == 3) {
+            if (open) {
+                this.pollTitle.setText(pollTitle + ":");
+                this.voteBox.setVisible(true);
+                this.voteBox.getItems().clear();
+                
+                // populate alphabet list
+                List<Character> alphabet = new ArrayList<>();
+                for (Character i = 'A'; i <= 'Z'; i++) {
+                    alphabet.add(i);
+                }
+                
+                // populate the vote Box
+                for (int i = 0; i < optionCount; i++) {
+                    voteBox.getItems().add(i, String.valueOf(alphabet.get(i)));
+                }
+                
+                voteBox.setValue("A");
+                submitPoll.setVisible(true);
+                
+            } else {
+                this.pollTitle.setText("No current polls/quizzes");
+                this.voteBox.setVisible(false);
+                this.submitPoll.setVisible(false);
+            }
+        } else {
+            if (open) {
+                this.titleTextField.setVisible(false);
+                this.correctAnswerChoiceBox.setVisible(false);
+                this.optionCountChoiceBox.setVisible(false);
+                this.submitPoll.setVisible(false);
+                this.pollGridPane.add(endPoll, 0, 0);
+            } else {
+                this.pollGridPane.getChildren().remove(endPoll);
+                this.titleTextField.setVisible(true);
+                this.correctAnswerChoiceBox.setVisible(true);
+                this.optionCountChoiceBox.setVisible(true);
+                this.submitPoll.setVisible(true);
+            }
+        }
+    }
+    
+    private void submitPollVote() {
+        String value = (String) voteBox.getValue();
+        PostPollVoteResponse response = null;
+        
+        try {
+
+            response = ServerCommunication.postPollVote(value);
+            
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            this.displayStatusMessage(e.getMessage());
+            return;
+        }
+        
+        if (!response.getSuccess()) {
+            this.displayStatusMessage(response.getMessage());
+            return;
+        }
+        
+        this.pollTitle.setText("You have voted!");
+        this.voteBox.setVisible(false);
+        this.submitPoll.setVisible(false);
+    }
+    
+    private void submitPoll() {
+        if (missingPollInfo()) {
+            return;
+        }
+        
+        PostPollResponse response = null;
+
+        try {
+            response = ServerCommunication.postPoll(correctAnswerChoiceBox.getValue(),
+                    Integer.parseInt(optionCountChoiceBox.getValue()), titleTextField.getText());
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            this.displayStatusMessage(e.getMessage());
+            return;
+        }
+        
+        if (!response.getSuccess()) {
+            this.displayStatusMessage(response.getMessage());
+        } else {
+            this.titleTextField.clear();
+            this.correctAnswerChoiceBox.setValue("Correct Answer");
+            this.optionCountChoiceBox.setValue("Option Count");
+            refreshButtonClickedAfter();
+        }
+        
+        
+    }
+
+    /**
+     * Checks whether information of poll is missing.
+     */
+    public Boolean missingPollInfo() {
+        CharSequence pollingTitle = titleTextField.getCharacters();
+        Boolean titleTextFieldMissing = pollingTitle.length() == 0;
+
+        if (titleTextFieldMissing) {
+            this.shakeWidget(this.titleTextField);
+            this.displayStatusMessage("Please enter the title of the poll/quiz");
+            return true;
+        }
+
+        if (optionCountChoiceBox.getValue().equals("Option Count")) {
+            this.shakeWidget(optionCountChoiceBox);
+            this.displayStatusMessage("Please enter option count");
+            return true;
+        }
+
+        if (correctAnswerChoiceBox.getValue().equals("Correct Answer")) {
+            this.shakeWidget(correctAnswerChoiceBox);
+            this.displayStatusMessage("Please choose the correct answer or No Answer");
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Setup the Choice Boxes of the polling.
+     */
+    private void updatePollingGridPane() {
+        System.out.println(correctAnswerChoiceBox.getItems());
+        System.out.println(optionCountChoiceBox.getItems());
+        correctAnswerChoiceBox.getItems().removeAll(correctAnswerChoiceBox.getItems());
+        optionCountChoiceBox.getItems().removeAll(optionCountChoiceBox.getItems());
+        System.out.println(correctAnswerChoiceBox.getItems());
+        System.out.println(optionCountChoiceBox.getItems());
+        optionCountChoiceBox.getItems().addAll("Option Count", "2", "3", "4", "5", "6", "7", "8", "9", "10");
+        correctAnswerChoiceBox.getItems().addAll("Correct Answer", "No Answer","A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+        optionCountChoiceBox.setValue("Option Count");
+        correctAnswerChoiceBox.setValue("Correct Answer");
+        endPoll = new Button("End current");
+        endPoll.setOnAction(event -> {
+            endPollButtonClicked();
+        });
+        statsPane = new GridPane();
+        pollGridPane.add(statsPane, 0, 4);
+    }
+    
+    private void setupPollVotingMenu() {
+        this.titleTextField.setVisible(false);
+        this.pollTitle = new Text("No current polls/quizzes");
+        this.pollGridPane.add(pollTitle, 0, 0);
+        this.optionCountChoiceBox.setVisible(false);
+        this.correctAnswerChoiceBox.setVisible(false);
+        this.voteBox = new ChoiceBox<String>();
+        this.voteBox.setVisible(false);
+        this.pollGridPane.add(voteBox, 0, 1);
+        this.pollGridPane.getChildren().remove(submitPoll);
+        this.pollGridPane.add(submitPoll, 0, 2);
+        this.submitPoll.setVisible(false);
+    }
+    
+    /**
+     * updates the polls.
+     */
+    public void updatePoll() {
+        GetCurrentPollResponse response = null;
+    
+        try {
+            response = ServerCommunication.getCurrentPoll();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            this.displayStatusMessage(e.getMessage());
+            return;
+        }
+        
+        if (!response.getSuccess()) {
+            this.displayStatusMessage(response.getMessage());
+            return;
+        }
+        
+        if (openPoll && response.getClosed()) {
+            this.displayStatusMessage("Poll/Quiz has closed!");
+            this.togglePollView(false, null, null);
+            this.updateStats();
+            this.openPoll = false;
+        }
+        
+        if (!openPoll && !response.getClosed()) {
+            this.displayStatusMessage("Poll/Quiz has opened!");
+            this.togglePollView(true, response.getOptionCount(), response.getTitle());
+            this.statsPane.getChildren().clear();
+            this.openPoll = true;
+        }
+        
+        if (this.ds.getPrivilegeId() != 3 && openPoll) {
+            updateStats();
+        }
+    }
+    
+    private void updateStats() {
+        GetPollStatsResponse response = null;
+    
+        try {
+            response = ServerCommunication.getPollStats();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            this.displayStatusMessage(e.getMessage());
+            return;
+        }
+        
+        if (!response.getSuccess()) {
+            this.displayStatusMessage(response.getMessage());
+            return;
+        }
+        
+        displayStats(response.getStatsMap(), response.getOptionCount(), response.getVoteCount(), response.getCorrectAnswer());
+    }
+    
+    private void displayStats(Map<String, Integer> votes, Integer optionCount, Integer voteCount, String correctAnswer) {
+        statsPane.getChildren().clear();
+        statsPane.add(new Text("Statistics:"), 0, 0);
+        statsPane.add(new Text(voteCount + " votes"), 0, 1);
+        
+        for (int i = 0; i < optionCount; i++) {
+            Color color = Color.BLACK;
+            String currentOption = Character.toString('A' + i);
+            if (currentOption.equals(correctAnswer)) {
+                color = color.LIME;
+            }
+            Text option = new Text(currentOption + ": ");
+            option.setFill(color);
+            
+            statsPane.add(option, 0, i + 2);
+            
+            Integer percentage = 0;
+            if (voteCount != 0) {
+                percentage = votes.get(currentOption) * 100 / voteCount;
+            }
+            
+            Text value = new Text(percentage + "%");
+            value.setFill(color);
+            statsPane.add(value, 1, i + 2);
+        }
+        
     }
 
     public void askButtonClicked() {
@@ -188,7 +560,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         }
 
         GetAllQuestionsResponse response = getQuestions();
-        List<QuestionModel> questions = sortQuestions(response);
+        List<QuestionModel> questions = sortQuestionResponse(response);
         FileWriter exports = createFile(textFile);
         writeToFile(questions, exports);
     }
@@ -245,7 +617,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
      * @param response - The response of the request.
      * @return - sorted list of questions.
      */
-    private List<QuestionModel> sortQuestions(GetAllQuestionsResponse response) {
+    private List<QuestionModel> sortQuestionResponse(GetAllQuestionsResponse response) {
         if (response == null) {
             return null;
         }
@@ -386,6 +758,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
      * New questions will be added.
      * Lecture metadata(whether it is ended) will be reflected.
      * Lecture feedback will be updated
+     * Polls will be updated
      */
     public void refreshButtonClicked() {
         updateOnQuestions(true);
@@ -418,22 +791,104 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
         if (response.getSuccess()) {
             if (statusDisplay) {
-                this.displayStatusMessage("Refreshed succesfully.");
+                this.displayStatusMessage("Refreshed successfully.");
             }
             // The questions are already sorted by time so only sorting by score is required.
             List<QuestionModel> sortedUnanswered = response.getUnanswered();
             List<QuestionModel> sortedAnswered = response.getAnswered();
 
-            sortQuestions(sortedUnanswered);
-            sortQuestions(sortedAnswered);
+            GetAllQuestionsResponse finalResponse = response;
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    displayQuestions(sortedUnanswered, sortedAnswered);
+                    updatePoll();
+                }
+            });
+        }
+    }
 
-            this.ds.setCurrentUnansweredQuestionViews(null);
-            this.ds.setCurrentAnsweredQuestionViews(null);
-            for (QuestionModel question : sortedAnswered) {
+    /**
+     * Updates the list of question that the User sees and all changes to them.
+     * @param unanswered list of new unanswered questions retrieved from the server
+     * @param answered list of new answered questions retrieved from the server
+     */
+    public void displayQuestions(List<QuestionModel> unanswered, List<QuestionModel> answered) {
+        updateNewQuestions(unanswered, answered);
+        updateDeletedQuestions(unanswered);
+        updateSortOrder();
+    }
+
+    /**
+     * Updates the sort order of the question views.
+     */
+    public void updateSortOrder() {
+        if (voteSort) {
+            this.ds.getCurrentUnansweredQuestionViews().sort(new Comparator<QuestionView>() {
+                @Override
+                public int compare(QuestionView o1, QuestionView o2) {
+                    return Integer.compare(o2.getVoteCount(), o1.getVoteCount());
+                }
+            });
+            this.ds.getCurrentAnsweredQuestionViews().sort(new Comparator<QuestionView>() {
+                @Override
+                public int compare(QuestionView o1, QuestionView o2) {
+                    return Integer.compare(o2.getVoteCount(), o1.getVoteCount());
+                }
+            });
+        }
+    }
+
+    /**
+     * Updates the listview with new questions from the database.
+     * @param unanswered list of new unanswered questions
+     * @param answered list of new answered questions
+     */
+    public void updateNewQuestions(List<QuestionModel> unanswered, List<QuestionModel> answered) {
+        if (unanswered == null) {
+            return;
+        }
+
+        if (answered == null) {
+            return;
+        }
+
+        // Checks for new questions that do not exist in the old list
+        // of answered questions
+        for (QuestionModel question : answered) {
+            if (!this.ds.containsAnsweredQuestion(question.getQuestionId())) {
                 this.ds.addAnsweredQuestion(question, this);
             }
-            for (QuestionModel question : sortedUnanswered) {
+        }
+
+        for (QuestionModel question : unanswered) {
+            if (!this.ds.containsUnansweredQuestion(question.getQuestionId())) {
                 this.ds.addUnansweredQuestion(question, this);
+            } else if (question.getScore() != this.ds.getVoteOnQuestion(question.getQuestionId())) {
+                this.ds.updateQuestion(question);
+            }
+        }
+    }
+
+    /**
+     * Removes all deleted questions from the current listview.
+     * Implemented in linear time.
+     * @param unanswered list of new unanswered questions
+     */
+    public void updateDeletedQuestions(List<QuestionModel> unanswered) {
+        if (unanswered == null) {
+            return;
+        }
+
+        Set<String> bufferedQuestionIDs = new HashSet<>();
+
+        for (QuestionModel question : unanswered) {
+            bufferedQuestionIDs.add(question.getQuestionId());
+        }
+
+        for (QuestionView questionView : this.ds.getCurrentUnansweredQuestionViews()) {
+            if (!bufferedQuestionIDs.contains(questionView.getQuestionId())) {
+                this.ds.deleteUnansweredQuestionView(questionView);
             }
         }
     }
@@ -596,6 +1051,10 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
     public Datastore getDs() {
         return ds;
+    }
+
+    public Boolean isLectureEnded() {
+        return this.ended;
     }
 
     public Boolean isInLecturerMode() {
