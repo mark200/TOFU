@@ -83,6 +83,14 @@ public class Poll {
     public void setClosed(Boolean closed) {
         this.closed = closed;
     }
+    
+    public void setOptionCount(Integer count) {
+        this.optionCount = count;
+    }
+    
+    public Integer getOptionCount() {
+        return optionCount;
+    }
 
     public String getCorrectChoice() {
         return correctChoice;
