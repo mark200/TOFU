@@ -24,9 +24,12 @@ import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.DeleteQuestionResponse;
 import nl.tudelft.oopp.group54.models.responseentities.EditQuestionResponse;
 import nl.tudelft.oopp.group54.models.responseentities.EndLectureResponse;
+import nl.tudelft.oopp.group54.models.responseentities.EndPollResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
+import nl.tudelft.oopp.group54.models.responseentities.GetCurrentPollResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureFeedbackResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureMetadataResponse;
+import nl.tudelft.oopp.group54.models.responseentities.GetPollStatsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.LectureFeedbackResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
@@ -476,14 +479,77 @@ public class ServerCommunication {
         if (response.statusCode() != 200) {
             System.out.println("Status: " + response.statusCode());
         }
-        
-        System.out.println("vote response: " + response);
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
 
         return objectMapper.readValue(response.body(), PostPollVoteResponse.class);
+    }
+    
+    /**
+     * Gets the current poll.
+     * @return information about the current poll
+     * @throws IOException - IO exception
+     * @throws InterruptedException - interrupts
+     */
+    public static GetCurrentPollResponse getCurrentPoll() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId() + "/polls?userId=" + ds.getUserId()))
+                .build();
+        
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), GetCurrentPollResponse.class);
+    }
+    
+    /**
+     * Ends the current poll.
+     * 
+     * @return information about the poll
+     * @throws IOException - IO exception
+     * @throws InterruptedException - interrupts
+     */
+    public static EndPollResponse endCurrentPoll() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .PUT(HttpRequest.BodyPublishers.ofString(""))
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId()
+                                 + "/polls/end?userId=" + ds.getUserId()))
+                .build();
+        
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), EndPollResponse.class);
+    }
+    
+    /**
+     * Gets statistics for the most recent poll.
+     * 
+     * @return the stats
+     * @throws IOException - IO exception
+     * @throws InterruptedException - interrupts
+     */
+    public static GetPollStatsResponse getPollStats() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId()
+                                 + "/polls/end?userId=" + ds.getUserId()))
+                .build();
+   
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), GetPollStatsResponse.class);
     }
 }

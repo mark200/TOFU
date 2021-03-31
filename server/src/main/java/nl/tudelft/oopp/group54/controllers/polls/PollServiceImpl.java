@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-
 import nl.tudelft.oopp.group54.entities.Ban;
 import nl.tudelft.oopp.group54.entities.BanKey;
 import nl.tudelft.oopp.group54.entities.Lecture;
@@ -254,7 +253,7 @@ public class PollServiceImpl implements PollService {
         status.put("closed", false);
         status.put("optionCount", poll.getOptionCount());
         status.put("title", poll.getTitle());
-    	
+    
         return status;
     }
     
