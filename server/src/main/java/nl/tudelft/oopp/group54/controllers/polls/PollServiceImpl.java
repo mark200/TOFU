@@ -385,6 +385,7 @@ public class PollServiceImpl implements PollService {
         status.put("correctAnswer", newest.getCorrectChoice());
         status.put("statsMap", voteMap);
         status.put("voteCount", votes.size());
+        status.put("optionCount", newest.getOptionCount());
         
         return status;
     }
@@ -393,33 +394,33 @@ public class PollServiceImpl implements PollService {
         return pollRepository;
     }
 
-	public void setPollRepository(PollRepository pollRepository) {
-		this.pollRepository = pollRepository;
-	}
+    public void setPollRepository(PollRepository pollRepository) {
+        this.pollRepository = pollRepository;
+    }
 
-	public UserRepository getUserRepository() {
-		return userRepository;
-	}
+    public UserRepository getUserRepository() {
+        return userRepository;
+    }
 
-	public void setUserRepository(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-	public LectureRepository getLectureRepository() {
-		return lectureRepository;
-	}
+    public LectureRepository getLectureRepository() {
+        return lectureRepository;
+    }
 
-	public void setLectureRepository(LectureRepository lectureRepository) {
-		this.lectureRepository = lectureRepository;
-	}
+    public void setLectureRepository(LectureRepository lectureRepository) {
+        this.lectureRepository = lectureRepository;
+    }
 
-	public PollVoteRepository getPollVoteRepository() {
-		return pollVoteRepository;
-	}
+    public PollVoteRepository getPollVoteRepository() {
+        return pollVoteRepository;
+    }
 
-	public void setPollVoteRepository(PollVoteRepository pollVoteRepository) {
-		this.pollVoteRepository = pollVoteRepository;
-	}
+    public void setPollVoteRepository(PollVoteRepository pollVoteRepository) {
+        this.pollVoteRepository = pollVoteRepository;
+    }
     
     
 }

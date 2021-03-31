@@ -541,7 +541,7 @@ public class ServerCommunication {
                 .GET()
                 .header("content-type", "application/json")
                 .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId()
-                                 + "/polls/end?userId=" + ds.getUserId()))
+                                 + "/polls/stats?userId=" + ds.getUserId()))
                 .build();
    
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
