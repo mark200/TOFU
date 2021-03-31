@@ -1,14 +1,13 @@
 package nl.tudelft.oopp.group54;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DatastoreTest {
     Datastore datastore;
@@ -36,7 +35,7 @@ class DatastoreTest {
     void setCurrentUnansweredQuestionViews() {
         ObservableList<QuestionView> list = FXCollections.observableArrayList();
         datastore.setCurrentUnansweredQuestionViews(list);
-        assertEquals(datastore.getCurrentAnsweredQuestionViews(), list);
+        assertEquals(datastore.getCurrentUnansweredQuestionViews(), list);
     }
 
     @Test
@@ -46,6 +45,9 @@ class DatastoreTest {
 
     @Test
     void setCurrentAnsweredQuestionViews() {
+        ObservableList<QuestionView> list = FXCollections.observableArrayList();
+        datastore.setCurrentAnsweredQuestionViews(list);
+        assertEquals(datastore.getCurrentAnsweredQuestionViews(), list);
     }
 
     @Test
