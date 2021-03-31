@@ -41,6 +41,10 @@ public class PollServiceImpl implements PollService {
     
     @Autowired
     PollVoteRepository pollVoteRepository;
+    
+    public PollServiceImpl() {
+    
+    }
 
     @Override
     public Map<String, Object> postPoll(Integer lectureId, String userId, Integer optionCount,
@@ -384,5 +388,38 @@ public class PollServiceImpl implements PollService {
         
         return status;
     }
+
+    public PollRepository getPollRepository() {
+        return pollRepository;
+    }
+
+	public void setPollRepository(PollRepository pollRepository) {
+		this.pollRepository = pollRepository;
+	}
+
+	public UserRepository getUserRepository() {
+		return userRepository;
+	}
+
+	public void setUserRepository(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
+
+	public LectureRepository getLectureRepository() {
+		return lectureRepository;
+	}
+
+	public void setLectureRepository(LectureRepository lectureRepository) {
+		this.lectureRepository = lectureRepository;
+	}
+
+	public PollVoteRepository getPollVoteRepository() {
+		return pollVoteRepository;
+	}
+
+	public void setPollVoteRepository(PollVoteRepository pollVoteRepository) {
+		this.pollVoteRepository = pollVoteRepository;
+	}
+    
     
 }

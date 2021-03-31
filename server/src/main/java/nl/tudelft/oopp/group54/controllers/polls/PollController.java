@@ -138,7 +138,7 @@ public class PollController {
             value = "/{lectureId}/polls/end",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> endCurrentPoll(@RequestParam String userId, @PathVariable String lectureId) {
-        return pollService.endCurrentPoll(Integer.parseInt(userId), Integer.parseInt(lectureId));
+        return pollService.endCurrentPoll(Integer.parseInt(lectureId), Integer.parseInt(userId));
     }
     
     @GetMapping(value = "/{lectureId}/polls/stats",

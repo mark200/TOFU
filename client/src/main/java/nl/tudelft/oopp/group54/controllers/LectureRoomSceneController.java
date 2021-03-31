@@ -36,9 +36,11 @@ import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.communication.ServerCommunication;
 import nl.tudelft.oopp.group54.models.QuestionModel;
 import nl.tudelft.oopp.group54.models.responseentities.EndLectureResponse;
+import nl.tudelft.oopp.group54.models.responseentities.EndPollResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureFeedbackResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureMetadataResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostPollResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostPollVoteResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
 import nl.tudelft.oopp.group54.views.ApplicationScene;
@@ -115,12 +117,15 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     GridPane pollGridPane;
     
     ChoiceBox voteBox;
+    
+    Button endPoll;
 
     Datastore ds = Datastore.getInstance();
 
     private Boolean ended = false;
     private Boolean inLecturerMode = false;
     private boolean voteSort = false;
+    private boolean openPoll = false;
 
 
     @Override
@@ -218,7 +223,50 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         } else {
             submitPoll();
         }
-
+    }
+    
+    /**
+     * ends the current poll.
+     */
+    public void endPollButtonClicked() {
+        EndPollResponse response = null;
+        
+        try {
+            response = ServerCommunication.endCurrentPoll();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            this.displayStatusMessage(e.getMessage());
+            return;
+        }
+        
+        if (response.getSuccess()) {
+            togglePollView(false);
+        } else {
+            this.displayStatusMessage(response.getMessage());
+        }
+        
+        
+    }
+    
+    private void togglePollView(boolean open) {
+        if  (this.ds.getPrivilegeId() == 3) {
+            //TODO student view
+        } else {
+            if (open) {
+                this.titleTextField.setVisible(false);
+                this.correctAnswerChoiceBox.setVisible(false);
+                this.optionCountChoiceBox.setVisible(false);
+                this.submitPoll.setVisible(false);
+                this.pollGridPane.add(endPoll, 0, 0);
+            } else {
+                this.pollGridPane.getChildren().remove(endPoll);
+                this.titleTextField.setVisible(true);
+                this.correctAnswerChoiceBox.setVisible(true);
+                this.optionCountChoiceBox.setVisible(true);
+                this.submitPoll.setVisible(true);
+            }
+        }
     }
     
     private void submitPollVote() {
@@ -237,6 +285,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         
         if (response != null && !response.getSuccess()) {
             this.displayStatusMessage(response.getMessage());
+            return;
         }
     }
     
@@ -244,15 +293,29 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         if (missingPollInfo()) {
             return;
         }
+        
+        PostPollResponse response = null;
 
         try {
-            ServerCommunication.postPoll(correctAnswerChoiceBox.getValue(),
+            response = ServerCommunication.postPoll(correctAnswerChoiceBox.getValue(),
                     Integer.parseInt(optionCountChoiceBox.getValue()), titleTextField.getText());
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
             this.displayStatusMessage(e.getMessage());
+            return;
         }
+        
+        if (!response.getSuccess()) {
+            this.displayStatusMessage(response.getMessage());
+        } else {
+            this.titleTextField.clear();
+            this.correctAnswerChoiceBox.setValue("Correct Answer");
+            this.optionCountChoiceBox.setValue("Option Count");
+            togglePollView(true);
+        }
+        
+        
     }
 
     /**
@@ -264,7 +327,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
         if (titleTextFieldMissing) {
             this.shakeWidget(this.titleTextField);
-            this.displayStatusMessage("Please enter the title of the poll");
+            this.displayStatusMessage("Please enter the title of the poll/quiz");
             return true;
         }
 
@@ -298,6 +361,10 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         correctAnswerChoiceBox.getItems().addAll("Correct Answer", "No Answer","A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
         optionCountChoiceBox.setValue("Option Count");
         correctAnswerChoiceBox.setValue("Correct Answer");
+        endPoll = new Button("End current");
+        endPoll.setOnAction(event -> {
+            endPollButtonClicked();
+        });
     }
     
     private void setupPollVotingMenu() {
