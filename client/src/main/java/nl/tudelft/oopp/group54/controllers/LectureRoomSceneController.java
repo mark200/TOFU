@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -96,6 +98,8 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     private Boolean ended = false;
     private Boolean inLecturerMode = false;
     private boolean voteSort = false;
+    
+    private Set<Integer> votedQuestions = new HashSet<Integer>();
 
 
     @Override
@@ -596,6 +600,10 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
     public Boolean isInLecturerMode() {
         return inLecturerMode;
+    }
+    
+    public Set<Integer> getVotedQuestions() {
+        return votedQuestions;
     }
 
 }

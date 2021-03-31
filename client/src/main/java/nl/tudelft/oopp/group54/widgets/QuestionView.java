@@ -132,6 +132,11 @@ public abstract class QuestionView extends AnchorPane {
 
         this.voteGridPane.add(this.upvoteButton, 0, 0);
         this.voteGridPane.add(this.currentScore, 0, 1);
+        
+        ColumnConstraints c = new ColumnConstraints();
+        c.setHalignment(HPos.CENTER);
+        
+        this.voteGridPane.getColumnConstraints().add(c);
 
         this.outerGridPane.add(this.voteGridPane, 0, 0);
     }
@@ -162,7 +167,6 @@ public abstract class QuestionView extends AnchorPane {
         this.horizontalGridPane = new GridPane();
 
         this.userName = new Label(userNameString);
-
 
         this.horizontalGridPane.add(this.userName, 0, 0);
 
@@ -244,8 +248,16 @@ public abstract class QuestionView extends AnchorPane {
         });
     }
 
+    /**
+     * Setter for owner, also updates the upvote button.
+     * 
+     * @param owner The owner
+     */
     public void setOwner(LectureRoomSceneController owner) {
         this.owner = owner;
+        if (owner.getVotedQuestions().contains(Integer.parseInt(questionId))) {
+            this.upvoteButton.setDisable(true);
+        }
     }
 
     public LectureRoomSceneController getOwner() {
@@ -268,16 +280,17 @@ public abstract class QuestionView extends AnchorPane {
             response = ServerCommunication.voteOnQuestion(Integer.valueOf(questionId));
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+            return;
         }
         if (!response.isSuccess()) {
             System.out.println(response.getMessage());
         }
-
-        if (response != null) {
-            owner.displayStatusMessage(response.getMessage());
+        
+        if (response.isSuccess()) {
+            owner.getVotedQuestions().add(Integer.parseInt(this.questionId));
         }
-
         owner.refreshButtonClickedAfter();
+        
     }
 
     protected void delete() {
