@@ -213,7 +213,12 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             @FXML
             public void run() {
                 // do stuff
-                refreshButton.fire();
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshButton.fire();
+                    }
+                });
             }
         }, 0, 5, TimeUnit.SECONDS);
 
