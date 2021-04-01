@@ -147,5 +147,12 @@ public class PollController {
                                                @RequestParam String userId) {
         return pollService.getStatistics(lectureId, userId);
     }
+
+    @PutMapping(value = "/{lectureId}/polls/r",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> reopenPoll(@PathVariable(value = "lectureId") Integer lectureId,
+                                          @RequestParam String userId) {
+        return pollService.reopenPoll(lectureId, userId);
+    }
     
 }

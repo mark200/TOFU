@@ -257,6 +257,7 @@ public class PollServiceImpl implements PollService {
         status.put("closed", false);
         status.put("optionCount", poll.getOptionCount());
         status.put("title", poll.getTitle());
+        status.put("pollId", poll.getPrimaryKey().getId());
     
         return status;
     }
@@ -364,7 +365,7 @@ public class PollServiceImpl implements PollService {
         
         if (!newest.getClosed() && findUserRow.get().getRoleID() == 3) {
             status.put("success", false);
-            status.put("message", "This poll is still opem");
+            status.put("message", "This poll is still open");
             return status;
         }
         
@@ -380,15 +381,88 @@ public class PollServiceImpl implements PollService {
             Integer count = voteMap.get(v.getVote());
             voteMap.put(v.getVote(), count + 1);
         }
-        
+
+        if (findUserRow.get().getRoleID().equals(3)) {
+            status.put("correctAnswer", "");
+        } else {
+            status.put("correctAnswer", newest.getCorrectChoice());
+        }
+
         status.put("success", true);
-        status.put("correctAnswer", newest.getCorrectChoice());
         status.put("statsMap", voteMap);
         status.put("voteCount", votes.size());
         status.put("optionCount", newest.getOptionCount());
         
         return status;
     }
+
+    @Override
+    public Map<String, Object> reopenPoll(Integer lectureId, String userId) {
+
+        Map<String, Object> status = new LinkedHashMap<>();
+
+        if  (lectureId == null) {
+            status.put("success", false);
+            status.put("message", "LectureID cannot be null!");
+            return status;
+        }
+
+        if (userId == null) {
+            status.put("success", false);
+            status.put("message", "UserID cannot be null!");
+            return status;
+        }
+
+        Optional<User> findUserRow = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
+
+        if (findUserRow.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized user ID or specified lecture does not exist!");
+            return status;
+        }
+
+        if (foundLecture.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "There does not exist a lecture with this id.");
+            return status;
+        }
+
+        if (findUserRow.get().getRoleID().equals(3)) {
+            status.put("success", false);
+            status.put("message", "Only lecturers and moderators are allowed to reopen polls.");
+            return status;
+        }
+
+        Optional<Poll> lastPollInserted = pollRepository.findTopByOrderByIdDesc();
+
+        if (lastPollInserted.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "There are no polls in the history!");
+            return status;
+        }
+
+        List<Poll> openPoll = pollRepository.findOpenPoll(lectureId);
+        if (openPoll.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "There are no polls we can currently reopen!");
+            return status;
+        }
+
+        lastPollInserted.get().setClosed(false);
+
+        try {
+            pollRepository.save(lastPollInserted.get());
+            status.put("success", true);
+            status.put("message", "Poll/Quiz was reopened");
+        } catch (Exception e) {
+            status.put("success", false);
+            status.put("message", e.toString());
+        }
+
+        return status;
+    }
+
 
     public PollRepository getPollRepository() {
         return pollRepository;
