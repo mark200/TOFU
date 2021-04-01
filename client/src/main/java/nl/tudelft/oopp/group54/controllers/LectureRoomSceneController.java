@@ -75,6 +75,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     Button askButton;
 
     @FXML
+    Button refreshButton;
+
+    @FXML
     Button lecturerModeButton;
 
     @FXML
@@ -210,7 +213,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             @FXML
             public void run() {
                 // do stuff
-                refreshButtonClickedAfter();
+                refreshButton.fire();
             }
         }, 0, 5, TimeUnit.SECONDS);
 
@@ -809,6 +812,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
      * Polls will be updated
      */
     public void refreshButtonClicked() {
+        this.spinWidget(this.refreshButton);
         updateOnQuestions(true);
         updateOnMetadata();
         updateLectureFeedback();
@@ -838,9 +842,6 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         }
 
         if (response.getSuccess()) {
-            if (statusDisplay) {
-                this.displayStatusMessage("Refreshed successfully.");
-            }
             // The questions are already sorted by time so only sorting by score is required.
             List<QuestionModel> sortedUnanswered = response.getUnanswered();
             List<QuestionModel> sortedAnswered = response.getAnswered();

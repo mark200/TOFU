@@ -72,8 +72,23 @@ public abstract class AbstractApplicationController {
         fadeTransition.setAutoReverse(true);
         fadeTransition.setCycleCount(1);
 
-        fadeTransition.setNode(this.systemStatus);
+        fadeTransition.setNode(widget);
         fadeTransition.play();
+    }
+
+
+    /**
+     * Spin widget.
+     *
+     * @param widget the widget
+     */
+    public void spinWidget(Node widget) {
+        RotateTransition rotateTransition = new RotateTransition(Duration.seconds(1));
+        rotateTransition.setToAngle(360);
+        rotateTransition.setFromAngle(0);
+        rotateTransition.setCycleCount(1);
+        rotateTransition.setNode(widget);
+        rotateTransition.play();
     }
 
     public void utilityToolbarBackButtonPressed() {

@@ -36,7 +36,7 @@
             <ToolBar fx:id="utilityToolbar" maxHeight="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0">
                <items>
                   <Button id="backButton" fx:id="utilityToolbarBackButton" mnemonicParsing="false" onAction="#utilityToolbarBackButtonPressed" styleClass="imageButton" />
-                  <Button id="refreshButton" mnemonicParsing="false" onAction="#refreshButtonClicked" styleClass="imageButton" />
+                  <Button id="refreshButton" fx:id="refreshButton" mnemonicParsing="false" onAction="#refreshButtonClicked" styleClass="imageButton" />
                   <Button id="lectureModeButton" fx:id="lecturerModeButton" mnemonicParsing="false" onAction="#lecturerModeButtonClicked" styleClass="imageButton" />
                   <Button id="exportButton" fx:id="exportQuestionsButton" mnemonicParsing="false" onAction="#exportQuestionsButtonClicked" styleClass="imageButton" />
                </items>
