@@ -50,6 +50,7 @@ import nl.tudelft.oopp.group54.models.responseentities.GetPollStatsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostPollResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostPollVoteResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
+import nl.tudelft.oopp.group54.models.responseentities.ReopenPollResponse;
 import nl.tudelft.oopp.group54.views.ApplicationScene;
 import nl.tudelft.oopp.group54.views.MainView;
 import nl.tudelft.oopp.group54.widgets.QuestionView;
@@ -121,6 +122,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     Button submitPoll;
     
     @FXML
+    Button reopenPoll;
+    
+    @FXML
     GridPane pollGridPane;
     
     @FXML
@@ -158,7 +162,8 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     private boolean voteSort = false;
     private boolean openPoll = false;
     private Set<Integer> votedQuestions = new HashSet<Integer>();
-
+    private Set<String> votedPolls = new HashSet<String>();
+    private String currentPollId;
     
 
 
@@ -263,6 +268,31 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     }
     
     /**
+     * Reopens last poll.
+     */
+    public void reopenPollButtonClicked() {
+        ReopenPollResponse response = null;
+
+        try {
+            response = ServerCommunication.reopenPoll();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            this.displayStatusMessage(e.getMessage());
+            return;
+        }
+        
+        if (!response.getSuccess()) {
+            this.displayStatusMessage(response.getMessage());
+        } else {
+            this.titleTextField.clear();
+            this.correctAnswerChoiceBox.setValue("Correct Answer");
+            this.optionCountChoiceBox.setValue("Option Count");
+            refreshButtonClickedAfter();
+        }
+    }
+    
+    /**
      * ends the current poll.
      */
     public void endPollButtonClicked() {
@@ -286,9 +316,9 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         
     }
     
-    private void togglePollView(boolean open, Integer optionCount, String pollTitle) {
+    private void togglePollView(boolean open, Integer optionCount, String pollTitle, String pollId) {
         if  (this.ds.getPrivilegeId() == 3) {
-            if (open) {
+            if (open && !votedPolls.contains(pollId)) {
                 this.pollTitle.setText(pollTitle + ":");
                 this.voteBox.setVisible(true);
                 this.voteBox.getItems().clear();
@@ -307,6 +337,10 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                 voteBox.setValue("A");
                 submitPoll.setVisible(true);
                 
+            } else if (votedPolls.contains(pollId)) {
+                this.pollTitle.setText("You have voted!");
+                this.voteBox.setVisible(false);
+                this.submitPoll.setVisible(false);
             } else {
                 this.pollTitle.setText("No current polls/quizzes");
                 this.voteBox.setVisible(false);
@@ -318,6 +352,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                 this.correctAnswerChoiceBox.setVisible(false);
                 this.optionCountChoiceBox.setVisible(false);
                 this.submitPoll.setVisible(false);
+                this.reopenPoll.setVisible(false);
                 this.pollGridPane.add(endPoll, 0, 0);
             } else {
                 this.pollGridPane.getChildren().remove(endPoll);
@@ -325,6 +360,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                 this.correctAnswerChoiceBox.setVisible(true);
                 this.optionCountChoiceBox.setVisible(true);
                 this.submitPoll.setVisible(true);
+                this.reopenPoll.setVisible(true);
             }
         }
     }
@@ -352,6 +388,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         this.pollTitle.setText("You have voted!");
         this.voteBox.setVisible(false);
         this.submitPoll.setVisible(false);
+        this.votedPolls.add(currentPollId);
     }
     
     private void submitPoll() {
@@ -444,6 +481,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         this.pollGridPane.getChildren().remove(submitPoll);
         this.pollGridPane.add(submitPoll, 0, 2);
         this.submitPoll.setVisible(false);
+        this.reopenPoll.setVisible(false);
     }
     
     /**
@@ -468,16 +506,17 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         
         if (openPoll && response.getClosed()) {
             this.displayStatusMessage("Poll/Quiz has closed!");
-            this.togglePollView(false, null, null);
+            this.togglePollView(false, null, null, null);
             this.updateStats();
             this.openPoll = false;
         }
         
         if (!openPoll && !response.getClosed()) {
             this.displayStatusMessage("Poll/Quiz has opened!");
-            this.togglePollView(true, response.getOptionCount(), response.getTitle());
+            this.togglePollView(true, response.getOptionCount(), response.getTitle(), response.getPollId());
             this.statsView.getItems().clear();
             this.openPoll = true;
+            this.currentPollId = response.getPollId();
         }
         
         if (this.ds.getPrivilegeId() != 3 && openPoll) {
@@ -518,7 +557,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             String currentOption = Character.toString('A' + i);
             Label option = new Label(currentOption + ": ");
             if (currentOption.equals(correctAnswer)) {
-                option.setTextFill(Color.LIME);
+                option.setId("#correctAnswer");
             }
             
             
@@ -531,7 +570,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             
             Label value = new Label(percentage + "%");
             if (currentOption.equals(correctAnswer)) {
-                option.setTextFill(Color.LIME);
+                value.setId("#correctAnswer");
             }
             pane.add(value, 1, 0);
             
