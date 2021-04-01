@@ -40,19 +40,23 @@
                   <Button fx:id="copyStudentLinkButton" mnemonicParsing="false" onAction="#copyStudentLinkButtonClicked" text="Copy student link" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM" />
                   <Button fx:id="copyModeratorLinkButton" mnemonicParsing="false" onAction="#copyModeratorLinkButtonClicked" text="Copy moderator link" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM" />
                   <Button fx:id="goToLectureButton" mnemonicParsing="false" onAction="#goToLectureButtonClicked" text="Go to lecture" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                  <TextField fx:id="usernameField" promptText="Enter username" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <TextField fx:id="usernameField" promptText="Enter username" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
                </children>
             </GridPane>
-            <ToolBar fx:id="utilityToolbar" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0">
+            <ToolBar fx:id="utilityToolbar" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0">
               <items>
-                <Button fx:id="utilityToolbarBackButton" mnemonicParsing="false" onAction="#utilityToolbarBackButtonPressed" text="Back" />
+                <Button id="backButton" fx:id="utilityToolbarBackButton" mnemonicParsing="false" onAction="#utilityToolbarBackButtonPressed" styleClass="imageButton" />
               </items>
             </ToolBar>
-            <Text fx:id="systemStatus" fill="RED" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="This is the current system status" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Text>
+            <AnchorPane styleClass="statusBar" GridPane.rowIndex="2">
+               <children>
+                  <Text fx:id="systemStatus" fill="RED" layoutX="0.041015625" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="This is the current system status" AnchorPane.bottomAnchor="0.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
          </children>
       </GridPane>
    </children>

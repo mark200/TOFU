@@ -57,6 +57,7 @@ public class MainView extends Application {
         Parent root = null;
         try {
             root = loader.load();
+            root.getStylesheets().add("stylesheets/defaultTheme.css");
         } catch (IOException e) {
             e.printStackTrace();
         }

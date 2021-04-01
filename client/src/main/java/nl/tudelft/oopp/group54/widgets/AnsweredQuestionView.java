@@ -19,5 +19,8 @@ public class AnsweredQuestionView extends QuestionView {
             super.answerTextArea.setEditable(false);
             super.answerTextArea.setText(answer);
         }
+        //this is the only way I could get the alignment of the username to be consistent
+        super.addDropDown();
+        super.dropDown.setVisible(false);
     }
 }

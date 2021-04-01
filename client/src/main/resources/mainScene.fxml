@@ -45,16 +45,20 @@
                   </Button>
                </children>
             </GridPane>
-            <ToolBar fx:id="utilityToolbar" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0">
+            <ToolBar fx:id="utilityToolbar" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0">
               <items>
-                <Button fx:id="utilityToolbarBackButton" disable="true" mnemonicParsing="false" onAction="#utilityToolbarBackButtonPressed" text="Back" />
+                <Button id="backButton" fx:id="utilityToolbarBackButton" disable="true" mnemonicParsing="false" onAction="#utilityToolbarBackButtonPressed" styleClass="imageButton" visible="false" />
               </items>
             </ToolBar>
-            <Text fx:id="systemStatus" fill="RED" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="This is the current system status" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Text>
+            <AnchorPane styleClass="statusBar" GridPane.rowIndex="2">
+               <children>
+                  <Text fx:id="systemStatus" fill="RED" layoutX="0.041015625" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="This is the current system status">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
          </children>
       </GridPane>
    </children>

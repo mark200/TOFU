@@ -26,8 +26,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.ColumnConstraints;
@@ -120,13 +123,33 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     @FXML
     GridPane pollGridPane;
     
-    GridPane statsPane;
+    @FXML
+    TitledPane lectureFeedbackPane;
+    
+    @FXML
+    TitledPane sortingPane;
+    
+    @FXML
+    TitledPane pollPane;
+    
+    @FXML
+    TitledPane lectureSettingsPane;
+    
+    @FXML
+    ListView<GridPane> statsView;
+    
+    @FXML
+    TabPane tabPane;
+    
+    @FXML
+    Tab answerTab;
+    
     
     ChoiceBox voteBox;
     
     Button endPoll;
     
-    Text pollTitle;
+    Label pollTitle;
 
     Datastore ds = Datastore.getInstance();
 
@@ -134,6 +157,10 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     private Boolean inLecturerMode = false;
     private boolean voteSort = false;
     private boolean openPoll = false;
+    private Set<Integer> votedQuestions = new HashSet<Integer>();
+
+    
+
 
 
     @Override
@@ -152,6 +179,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             //TODO: GUI elements for the moderator
             this.endLectureButton.setVisible(false);
             this.lecturerModeButton.setVisible(false);
+            this.lectureSettingsPane.setVisible(false);
         }
 
         // student
@@ -160,6 +188,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             this.endLectureButton.setVisible(false);
             this.lecturerModeButton.setVisible(false);
             this.exportQuestionsButton.setVisible(false);
+            this.lectureSettingsPane.setVisible(false);
             this.setupPollVotingMenu();
         }
 
@@ -401,13 +430,11 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         endPoll.setOnAction(event -> {
             endPollButtonClicked();
         });
-        statsPane = new GridPane();
-        pollGridPane.add(statsPane, 0, 4);
     }
     
     private void setupPollVotingMenu() {
         this.titleTextField.setVisible(false);
-        this.pollTitle = new Text("No current polls/quizzes");
+        this.pollTitle = new Label("No current polls/quizzes");
         this.pollGridPane.add(pollTitle, 0, 0);
         this.optionCountChoiceBox.setVisible(false);
         this.correctAnswerChoiceBox.setVisible(false);
@@ -449,7 +476,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         if (!openPoll && !response.getClosed()) {
             this.displayStatusMessage("Poll/Quiz has opened!");
             this.togglePollView(true, response.getOptionCount(), response.getTitle());
-            this.statsPane.getChildren().clear();
+            this.statsView.getItems().clear();
             this.openPoll = true;
         }
         
@@ -479,29 +506,40 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     }
     
     private void displayStats(Map<String, Integer> votes, Integer optionCount, Integer voteCount, String correctAnswer) {
-        statsPane.getChildren().clear();
-        statsPane.add(new Text("Statistics:"), 0, 0);
-        statsPane.add(new Text(voteCount + " votes"), 0, 1);
+        statsView.getItems().clear();
+        
+        GridPane voteCountPane = new GridPane();
+        voteCountPane.add(new Label(voteCount + " votes"), 0, 0);
+        statsView.getItems().add(voteCountPane);
         
         for (int i = 0; i < optionCount; i++) {
-            Color color = Color.BLACK;
+            GridPane pane = new GridPane();
+        
             String currentOption = Character.toString('A' + i);
+            Label option = new Label(currentOption + ": ");
             if (currentOption.equals(correctAnswer)) {
-                color = color.LIME;
+                option.setTextFill(Color.LIME);
             }
-            Text option = new Text(currentOption + ": ");
-            option.setFill(color);
             
-            statsPane.add(option, 0, i + 2);
+            
+            pane.add(option, 0, 0);
             
             Integer percentage = 0;
             if (voteCount != 0) {
                 percentage = votes.get(currentOption) * 100 / voteCount;
             }
             
-            Text value = new Text(percentage + "%");
-            value.setFill(color);
-            statsPane.add(value, 1, i + 2);
+            Label value = new Label(percentage + "%");
+            if (currentOption.equals(correctAnswer)) {
+                option.setTextFill(Color.LIME);
+            }
+            pane.add(value, 1, 0);
+            
+            ColumnConstraints cc = new ColumnConstraints();
+            cc.setPrefWidth(20);
+            pane.getColumnConstraints().add(cc);
+            
+            statsView.getItems().add(pane);
         }
         
     }
@@ -704,6 +742,15 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         for (QuestionView q : unansweredQuestionView.getItems()) {
             q.toggleLecturerMode(true);
         }
+        this.exportQuestionsButton.setVisible(false);
+        this.sortingPane.setVisible(false);
+        this.pollPane.setVisible(false);
+        this.lectureSettingsPane.setVisible(false);
+        this.lectureFeedbackPane.setExpanded(true);
+        this.tabPane.getSelectionModel().select(0);
+        this.tabPane.getTabs().remove(answerTab);
+        this.voteSort = true;
+        refreshButtonClickedAfter();
     }
 
     private void exitLecturerMode() {
@@ -712,6 +759,11 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         for (QuestionView q : unansweredQuestionView.getItems()) {
             q.toggleLecturerMode(false);
         }
+        this.exportQuestionsButton.setVisible(true);
+        this.sortingPane.setVisible(true);
+        this.pollPane.setVisible(true);
+        this.lectureSettingsPane.setVisible(true);
+        this.tabPane.getTabs().add(answerTab);
     }
 
     public void endLectureButtonClicked() {
@@ -1055,6 +1107,10 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
     public Boolean isInLecturerMode() {
         return inLecturerMode;
+    }
+    
+    public Set<Integer> getVotedQuestions() {
+        return votedQuestions;
     }
 
 }
