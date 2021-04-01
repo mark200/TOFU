@@ -37,8 +37,8 @@
                <items>
                   <Button id="backButton" fx:id="utilityToolbarBackButton" mnemonicParsing="false" onAction="#utilityToolbarBackButtonPressed" styleClass="imageButton" />
                   <Button id="refreshButton" mnemonicParsing="false" onAction="#refreshButtonClicked" styleClass="imageButton" />
-                  <Button id="exportButton" fx:id="exportQuestionsButton" mnemonicParsing="false" onAction="#exportQuestionsButtonClicked" styleClass="imageButton" />
                   <Button id="lectureModeButton" fx:id="lecturerModeButton" mnemonicParsing="false" onAction="#lecturerModeButtonClicked" styleClass="imageButton" />
+                  <Button id="exportButton" fx:id="exportQuestionsButton" mnemonicParsing="false" onAction="#exportQuestionsButtonClicked" styleClass="imageButton" />
                </items>
             </ToolBar>
             <GridPane GridPane.rowIndex="1">
@@ -51,7 +51,7 @@
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <TabPane prefHeight="332.0" prefWidth="477.0" tabClosingPolicy="UNAVAILABLE">
+                  <TabPane fx:id="tabPane" prefHeight="332.0" prefWidth="477.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
                       <Tab text="Pending">
                            <content>
@@ -75,7 +75,7 @@
                               </AnchorPane>
                            </content>
                         </Tab>
-                      <Tab text="Answered">
+                      <Tab fx:id="answerTab" text="Answered">
                            <content>
                               <AnchorPane>
                                  <children>
@@ -98,7 +98,7 @@
                   </TabPane>
                   <Accordion fx:id="feedbackMenu" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                     <panes>
-                      <TitledPane animated="false" text="Lecture feedback">
+                      <TitledPane fx:id="lectureFeedbackPane" text="Lecture feedback">
                            <font>
                               <Font size="12.0" />
                            </font>
@@ -143,7 +143,7 @@
                               </VBox>
                            </content>
                         </TitledPane>
-                        <TitledPane prefHeight="200.0" prefWidth="200.0" text="Sort By Function">
+                        <TitledPane fx:id="sortingPane" prefHeight="200.0" prefWidth="200.0" text="Sort By Function">
                            <content>
                               <VBox prefHeight="200.0" prefWidth="100.0">
                                  <children>
@@ -160,7 +160,7 @@
                               <Font size="12.0" />
                            </font>
                         </TitledPane>
-                        <TitledPane animated="false" text="Poll/Quiz">
+                        <TitledPane fx:id="pollPane" text="Poll/Quiz">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
@@ -180,12 +180,13 @@
                                           <ChoiceBox fx:id="optionCountChoiceBox" prefWidth="150.0" GridPane.rowIndex="1" />
                                           <ChoiceBox fx:id="correctAnswerChoiceBox" prefWidth="150.0" GridPane.rowIndex="2" />
                                           <Button fx:id="submitPoll" mnemonicParsing="false" onAction="#submitPollButtonClicked" prefHeight="30.0" prefWidth="100.0" text="Submit" GridPane.rowIndex="3" />
+                                          <ListView fx:id="statsView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4" />
                                        </children>
                                     </GridPane>
                                  </children></AnchorPane>
                           </content>
                         </TitledPane>
-                        <TitledPane prefHeight="200.0" prefWidth="200.0" text="Lecture settings">
+                        <TitledPane fx:id="lectureSettingsPane" prefHeight="200.0" prefWidth="200.0" text="Lecture settings">
                             <content>
                                 <VBox alignment="TOP_CENTER">
                                     <children>

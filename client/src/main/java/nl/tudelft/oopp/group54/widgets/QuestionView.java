@@ -120,10 +120,7 @@ public abstract class QuestionView extends AnchorPane {
     private void addOuterGridPane() {
         this.outerGridPane = new GridPane();
 
-        setTopAnchor(this.outerGridPane, 0.0);
-        setRightAnchor(this.outerGridPane, 0.0);
-        setLeftAnchor(this.outerGridPane, 0.0);
-        setBottomAnchor(this.outerGridPane, 0.0);
+        setAnchors();
 
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setMinWidth(30);
@@ -131,7 +128,8 @@ public abstract class QuestionView extends AnchorPane {
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setFillWidth(true);
         col2.setHgrow(Priority.ALWAYS);
-
+        
+        this.outerGridPane.getColumnConstraints().clear();
         this.outerGridPane.getColumnConstraints().addAll(col1, col2);
         
         RowConstraints row1 = new RowConstraints();
@@ -284,13 +282,11 @@ public abstract class QuestionView extends AnchorPane {
     }
 
 
-    private void childConfiguration() {
-        setBottomAnchor(outerGridPane, 0.0);
-        setTopAnchor(outerGridPane, 0.0);
-        setLeftAnchor(outerGridPane, 0.0);
-        setRightAnchor(outerGridPane, 0.0);
-        setLeftAnchor(menuBar, 0.0);
-        setRightAnchor(menuBar, 0.0);
+    private void setAnchors() {
+        setTopAnchor(this.outerGridPane, 0.0);
+        setRightAnchor(this.outerGridPane, 0.0);
+        setLeftAnchor(this.outerGridPane, 0.0);
+        setBottomAnchor(this.outerGridPane, 0.0);
     }
 
     private void vote() {
@@ -479,8 +475,44 @@ public abstract class QuestionView extends AnchorPane {
 
     }
 
-    public void toggleLecturerMode(boolean b) {
-        //implemented in child class
+    /**
+     * updates the questionView when entering and exiting lecturer mode.
+     * 
+     * @param enter whether to enter or exit lecturer mode
+     */
+    public void toggleLecturerMode(boolean enter) {
+        if (enter) {
+            this.upvoteButton.setVisible(false);
+            this.currentScore.setVisible(false);
+            
+            setAnchors();
+            
+            ColumnConstraints col1 = new ColumnConstraints();
+            col1.setPrefWidth(0);
+            
+            ColumnConstraints col2 = new ColumnConstraints();
+            col2.setFillWidth(true);
+            col2.setHgrow(Priority.ALWAYS);
+            
+            this.outerGridPane.getColumnConstraints().clear();
+            this.outerGridPane.getColumnConstraints().addAll(col1, col2);
+        } else {
+            
+            setAnchors();
+        
+            ColumnConstraints col1 = new ColumnConstraints();
+            col1.setMinWidth(30);
+
+            ColumnConstraints col2 = new ColumnConstraints();
+            col2.setFillWidth(true);
+            col2.setHgrow(Priority.ALWAYS);
+            
+            this.outerGridPane.getColumnConstraints().clear();
+            this.outerGridPane.getColumnConstraints().addAll(col1, col2);
+            
+            this.upvoteButton.setVisible(true);
+            this.currentScore.setVisible(true);
+        }
     }
 
 }

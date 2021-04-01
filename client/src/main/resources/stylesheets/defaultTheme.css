@@ -22,8 +22,9 @@
 
 .label{
     -fx-text-fill: -fx-54-foreground;
-    -fx-alignment: CENTER;
 }
+
+
 
 /* =================================================== */
 /* ================== POPUP WINDOWS ================== */
@@ -52,6 +53,10 @@
 .menu-item:focused {
     -fx-background-color: -fx-54-primary;
     -fx-text-fill: -fx-54-foreground;
+}
+
+.choice-box {
+	-fx-text-alignment: left;
 }
 
 /*
@@ -368,12 +373,13 @@
 }
 
 /* =================================================== */
-/* =================== DATEPICKER ==================== */
+/* =================== SIDEMENU ====================== */
 /* =================================================== */
 
 .titled-pane {
     -fx-text-fill: -fx-54-foreground;
     -fx-background-color: derive(-fx-54-background, 20%);
+    -fx-box-border: transparent;
 }
 
 .titled-pane:focused {
@@ -414,3 +420,4 @@
 .titled-pane:focused > .title > .arrow-button .arrow {
     -fx-background-color: white;
 }
+
