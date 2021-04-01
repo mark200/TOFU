@@ -433,8 +433,17 @@ public class PollServiceImpl implements PollService {
             status.put("message", "Only lecturers and moderators are allowed to reopen polls.");
             return status;
         }
+        
+        List<Poll> polls = pollRepository.findAllByLectureId(lectureId);
+        Poll newest = null;
+        
+        for (Poll p : polls) {
+            if (newest == null || p.getCreatedAt().after(newest.getCreatedAt())) {
+                newest = p;
+            }
+        }
 
-        Optional<Poll> lastPollInserted = pollRepository.findTopByOrderByIdDesc();
+        Optional<Poll> lastPollInserted = Optional.ofNullable(newest);
 
         if (lastPollInserted.isEmpty()) {
             status.put("success", false);
@@ -442,7 +451,7 @@ public class PollServiceImpl implements PollService {
             return status;
         }
 
-        List<Poll> openPoll = pollRepository.findOpenPoll(lectureId);
+        List<Poll> openPoll = pollRepository.findAllByLectureId(lectureId);
         if (openPoll.isEmpty()) {
             status.put("success", false);
             status.put("message", "There are no polls we can currently reopen!");

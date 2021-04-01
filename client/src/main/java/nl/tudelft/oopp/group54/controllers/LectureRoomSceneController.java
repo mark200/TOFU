@@ -336,15 +336,18 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                 
                 voteBox.setValue("A");
                 submitPoll.setVisible(true);
+                this.statsView.setVisible(false);
                 
             } else if (votedPolls.contains(pollId)) {
                 this.pollTitle.setText("You have voted!");
                 this.voteBox.setVisible(false);
                 this.submitPoll.setVisible(false);
+                this.statsView.setVisible(false);
             } else {
                 this.pollTitle.setText("No current polls/quizzes");
                 this.voteBox.setVisible(false);
                 this.submitPoll.setVisible(false);
+                this.statsView.setVisible(true);
             }
         } else {
             if (open) {
@@ -354,6 +357,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                 this.submitPoll.setVisible(false);
                 this.reopenPoll.setVisible(false);
                 this.pollGridPane.add(endPoll, 0, 0);
+                this.statsView.setVisible(true);
             } else {
                 this.pollGridPane.getChildren().remove(endPoll);
                 this.titleTextField.setVisible(true);
@@ -467,6 +471,8 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         endPoll.setOnAction(event -> {
             endPollButtonClicked();
         });
+        reopenPoll.setVisible(false);
+        statsView.setVisible(false);
     }
     
     private void setupPollVotingMenu() {
@@ -548,7 +554,11 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         statsView.getItems().clear();
         
         GridPane voteCountPane = new GridPane();
-        voteCountPane.add(new Label(voteCount + " votes"), 0, 0);
+        String voteAmount = voteCount + " vote";
+        if (voteCount != 1) {
+            voteAmount += "s";
+        }
+        voteCountPane.add(new Label(voteAmount), 0, 0);
         statsView.getItems().add(voteCountPane);
         
         for (int i = 0; i < optionCount; i++) {
@@ -557,7 +567,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             String currentOption = Character.toString('A' + i);
             Label option = new Label(currentOption + ": ");
             if (currentOption.equals(correctAnswer)) {
-                option.setId("#correctAnswer");
+                option.setId("correctAnswer");
             }
             
             
@@ -570,7 +580,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             
             Label value = new Label(percentage + "%");
             if (currentOption.equals(correctAnswer)) {
-                value.setId("#correctAnswer");
+                value.setId("correctAnswer");
             }
             pane.add(value, 1, 0);
             

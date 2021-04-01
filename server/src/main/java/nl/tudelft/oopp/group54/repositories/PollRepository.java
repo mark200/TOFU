@@ -16,5 +16,5 @@ public interface PollRepository extends JpaRepository<Poll, PollKey> {
     @Query("SELECT p FROM Poll p WHERE p.primaryKey.lectureId = ?1")
     public List<Poll> findAllByLectureId(Integer lectureId);
 
-    Optional<Poll> findTopByOrderByIdDesc();
+    //    Optional<Poll> findTopByOrderByIdDesc();
 }
