@@ -172,7 +172,8 @@
                                         <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
                                         <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
                                           <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="100.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
                                           <RowConstraints vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
@@ -180,7 +181,8 @@
                                           <ChoiceBox fx:id="optionCountChoiceBox" prefWidth="150.0" GridPane.rowIndex="1" />
                                           <ChoiceBox fx:id="correctAnswerChoiceBox" prefWidth="150.0" GridPane.rowIndex="2" />
                                           <Button fx:id="submitPoll" mnemonicParsing="false" onAction="#submitPollButtonClicked" prefHeight="30.0" prefWidth="100.0" text="Submit" GridPane.rowIndex="3" />
-                                          <ListView fx:id="statsView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4" />
+                                          <Button fx:id="reopenPoll" mnemonicParsing="false" onAction="#reopenPollButtonClicked" prefHeight="30.0" prefWidth="100.0" text="Reopen last" GridPane.rowIndex="4" />
+                                          <ListView fx:id="statsView" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="5" />
                                        </children>
                                     </GridPane>
                                  </children></AnchorPane>

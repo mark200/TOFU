@@ -36,6 +36,7 @@ import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostPollResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostPollVoteResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
+import nl.tudelft.oopp.group54.models.responseentities.ReopenPollResponse;
 import nl.tudelft.oopp.group54.models.responseentities.VoteResponse;
 
 public class ServerCommunication {
@@ -551,5 +552,29 @@ public class ServerCommunication {
         }
 
         return objectMapper.readValue(response.body(), GetPollStatsResponse.class);
+    }
+    
+    /**
+     * Reopens a poll.
+     * 
+     * @return the response
+     * @throws IOException - IO exception
+     * @throws InterruptedException - interrupts
+     */
+    public static ReopenPollResponse reopenPoll() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .PUT(HttpRequest.BodyPublishers.ofString(""))
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId()
+                                 + "/polls/r?userId=" + ds.getUserId()))
+                .build();
+        
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), ReopenPollResponse.class);
     }
 }

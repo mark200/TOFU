@@ -421,3 +421,7 @@
     -fx-background-color: white;
 }
 
+#correctAnswer {
+	-fx-text-fill: #55ff00;
+}
+

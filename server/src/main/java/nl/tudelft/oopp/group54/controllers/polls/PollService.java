@@ -12,4 +12,6 @@ public interface PollService {
     Map<String, Object> endCurrentPoll(Integer lectureId, Integer userId);
     
     Map<String, Object> getStatistics(Integer lectureId, String userId);
+
+    Map<String, Object> reopenPoll(Integer lectureId, String userId);
 }
