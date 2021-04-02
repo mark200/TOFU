@@ -1,11 +1,16 @@
 package nl.tudelft.oopp.group54.controllers.questions;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
+import nl.tudelft.oopp.group54.controllers.lectures.LectureController;
+import nl.tudelft.oopp.group54.entities.MapLoggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
@@ -21,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/lectures")
 public class QuestionController {
+
+    private Logger logger = LoggerFactory.getLogger(QuestionController.class);
 
     @Autowired
     QuestionServiceImplementation questionService;
@@ -70,6 +77,10 @@ public class QuestionController {
             return toBeReturned;
         }
 
+        String logMessage = "User " + userId + " asked a question " + questionText;
+        logger.info(logMessage);
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+
         return questionService.postQuestion(lectureId, userId, userIp, questionText);
     }
 
@@ -88,6 +99,11 @@ public class QuestionController {
                                               @PathVariable(value = "questionId") Integer questionId,
                                               @RequestParam String userId) {
         System.out.println("requested");
+
+        String logMessage = "User " + userId + " deletes question " + questionId;
+        logger.info(logMessage);
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+
         return questionService.deleteQuestion(lectureId, questionId, userId);
     }
     
@@ -130,6 +146,10 @@ public class QuestionController {
         
         Integer questionId = Integer.parseInt((String)requestPayload.get("questionId"));
         String newContent = (String)requestPayload.get("newContent");
+
+        String logMessage = "User " + userId + " edits question " + questionId;
+        logger.info(logMessage);
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
         
         return questionService.editQuestion(lectureId, questionId, userId, newContent);
     }

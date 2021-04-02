@@ -1,11 +1,16 @@
 package nl.tudelft.oopp.group54.controllers.votes;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
 import nl.tudelft.oopp.group54.controllers.questions.MockQuestionServiceImplementation;
+import nl.tudelft.oopp.group54.controllers.questions.QuestionController;
+import nl.tudelft.oopp.group54.entities.MapLoggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/lectures/{lectureID}/questions/{questionID}/")
 public class VoteController {
+
+    private Logger logger = LoggerFactory.getLogger(VoteController.class);
 
     @Autowired
     VoteServiceImpl voteService;
@@ -62,6 +69,10 @@ public class VoteController {
 
             return toBeReturned;
         }
+
+        String logMessage = "User " + userId + " votes on question " + questionId;
+        logger.info(logMessage);
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
 
         return voteService.voteOnQuestion(lectureId, userId, questionId, isUpvote);
     }

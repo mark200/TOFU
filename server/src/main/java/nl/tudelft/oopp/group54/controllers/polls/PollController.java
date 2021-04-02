@@ -1,11 +1,17 @@
 package nl.tudelft.oopp.group54.controllers.polls;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
+import nl.tudelft.oopp.group54.controllers.lectures.LectureController;
+import nl.tudelft.oopp.group54.controllers.votes.VoteController;
+import nl.tudelft.oopp.group54.entities.MapLoggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/lectures")
 public class PollController {
+
+    private Logger logger = LoggerFactory.getLogger(PollController.class);
 
     @Autowired
     PollServiceImpl pollService;
@@ -78,6 +86,10 @@ public class PollController {
             return toBeReturned;
         }
 
+        String logMessage = "User " + userId + " posts a new poll " + title + " with correct answer " + correctAnswer;
+        logger.info(logMessage);
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+
         return pollService.postPoll(lectureId, userId, optionCount, correctAnswer, title);
     }
     
@@ -122,8 +134,11 @@ public class PollController {
 
             return toBeReturned;
         }
-        
-        
+
+        String logMessage = "User " + userId + " votes on current poll";
+        logger.info(logMessage);
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+
         return pollService.votePoll(lectureId, userId, vote);
     }
     
@@ -138,6 +153,10 @@ public class PollController {
             value = "/{lectureId}/polls/end",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> endCurrentPoll(@RequestParam String userId, @PathVariable String lectureId) {
+        String logMessage = "User " + userId + " ends current poll";
+        logger.info(logMessage);
+        MapLoggers.getInstance().logWarning(Integer.parseInt(lectureId), new Date() + " - " + logMessage);
+
         return pollService.endCurrentPoll(Integer.parseInt(lectureId), Integer.parseInt(userId));
     }
     
@@ -145,6 +164,10 @@ public class PollController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> getStatistics(@PathVariable(value = "lectureId") Integer lectureId,
                                                @RequestParam String userId) {
+        String logMessage = "User " + userId + " requests statistics on current poll";
+        logger.info(logMessage);
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+
         return pollService.getStatistics(lectureId, userId);
     }
 
@@ -152,6 +175,10 @@ public class PollController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> reopenPoll(@PathVariable(value = "lectureId") Integer lectureId,
                                           @RequestParam String userId) {
+        String logMessage = "User " + userId + " wants to reopen last poll";
+        logger.info(logMessage);
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+
         return pollService.reopenPoll(lectureId, userId);
     }
     
