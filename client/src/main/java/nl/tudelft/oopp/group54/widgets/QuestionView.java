@@ -144,7 +144,10 @@ public abstract class QuestionView extends AnchorPane {
     private void addVoteGridPane() {
         this.voteGridPane = new GridPane();
 
-        this.upvoteButton = new Button("^");
+        this.upvoteButton = new Button();
+        this.upvoteButton.getStyleClass().add("imageButton");
+        this.upvoteButton.setId("upvoteButton");
+
         this.currentScore = new Label(this.voteCount.toString());
 
         this.voteGridPane.add(this.upvoteButton, 0, 0);

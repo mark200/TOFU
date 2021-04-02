@@ -118,6 +118,10 @@ public class MainView extends Application {
         launch(args);
     }
 
+    public static void clearHistory() {
+        history.clear();
+    }
+
     private void batchLoadAllSceneLocations() throws IOException {
         URL xmlUrl;
 

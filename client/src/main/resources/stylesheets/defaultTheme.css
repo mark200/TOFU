@@ -143,8 +143,24 @@
 
 }
 
+#upvoteButton {
+    -fx-background-image: url('../images/upvoteButton.png');
+
+}
+
 #refreshButton {
     -fx-background-image: url('../images/refreshButton.png');
+    -fx-background-radius: 100;
+    -fx-border-radius: 100;
+}
+
+#mainLogo {
+
+    -fx-text-fill: -fx-54-foreground;
+    -fx-border-width: 3;
+    -fx-padding: 10;
+    -fx-border-radius: 5;
+    -fx-border-color: -fx-54-primary;
 
 }
 
