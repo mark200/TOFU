@@ -950,6 +950,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     public void displayQuestions(List<QuestionModel> unanswered, List<QuestionModel> answered) {
         updateNewQuestions(unanswered, answered);
         updateDeletedQuestions(unanswered);
+        updateEditedQuestions(unanswered);
         updateSortOrder();
     }
 
@@ -1023,6 +1024,24 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         for (QuestionView questionView : this.ds.getCurrentUnansweredQuestionViews()) {
             if (!bufferedQuestionIDs.contains(questionView.getQuestionId())) {
                 this.ds.deleteUnansweredQuestionView(questionView);
+            }
+        }
+    }
+
+    public void updateEditedQuestions(List<QuestionModel> unanswered) {
+        if (unanswered == null) {
+            return;
+        }
+
+        Set<String> bufferedQuestionTexts = new HashSet<>();
+
+        for (QuestionView question : this.ds.getCurrentUnansweredQuestionViews()) {
+            bufferedQuestionTexts.add(question.getText());
+        }
+
+        for (QuestionModel questionModel : unanswered) {
+            if (!bufferedQuestionTexts.contains(questionModel.getQuestionText())) {
+                this.ds.updateQuestion(questionModel);
             }
         }
     }
