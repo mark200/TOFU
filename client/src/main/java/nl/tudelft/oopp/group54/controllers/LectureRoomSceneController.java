@@ -491,8 +491,12 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         optionCountChoiceBox.getItems().removeAll(optionCountChoiceBox.getItems());
         System.out.println(correctAnswerChoiceBox.getItems());
         System.out.println(optionCountChoiceBox.getItems());
-        optionCountChoiceBox.getItems().addAll(optionCountPrompt, "2", "3", "4", "5", "6", "7", "8", "9", "10");
-        correctAnswerChoiceBox.getItems().addAll(correctAnswerPrompt, "No Answer","A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+        optionCountChoiceBox.getItems().addAll(
+                optionCountPrompt, "2", "3", "4", "5", "6", "7", "8", "9", "10"
+        );
+        correctAnswerChoiceBox.getItems().addAll(
+                correctAnswerPrompt, "No Answer","A", "B", "C", "D", "E", "F", "G", "H", "I", "J"
+        );
         optionCountChoiceBox.setValue(optionCountPrompt);
         correctAnswerChoiceBox.setValue(correctAnswerPrompt);
         endPoll = new Button("End current");
