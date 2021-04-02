@@ -7,7 +7,6 @@ import java.util.TreeMap;
 
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
 import nl.tudelft.oopp.group54.controllers.bans.BanController;
-import nl.tudelft.oopp.group54.entities.MapLoggers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/lectures")
 public class AnswerController {
 
-    private Logger logger = LoggerFactory.getLogger(BanController.class);
+    private Logger logger = LoggerFactory.getLogger(AnswerController.class);
 
     @Autowired
     AnswerServiceImpl answerService;
@@ -72,7 +71,6 @@ public class AnswerController {
 
         String logMessage = "User " + userId + " answered question " + questionId;
         logger.info(logMessage);
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
 
         return answerService.answerQuestion(lectureId, userId, questionId, answerText);
     }
