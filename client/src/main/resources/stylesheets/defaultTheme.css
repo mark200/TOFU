@@ -154,8 +154,14 @@
     -fx-border-radius: 100;
 }
 
-#flashingTab {
-    -fx-background-color: green;
+#mainLogo {
+
+    -fx-text-fill: -fx-54-foreground;
+    -fx-border-width: 3;
+    -fx-padding: 10;
+    -fx-border-radius: 5;
+    -fx-border-color: -fx-54-primary;
+
 }
 
 #askButton {
