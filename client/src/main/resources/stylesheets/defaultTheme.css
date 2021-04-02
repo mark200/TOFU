@@ -143,9 +143,19 @@
 
 }
 
+#upvoteButton {
+    -fx-background-image: url('../images/upvoteButton.png');
+
+}
+
 #refreshButton {
     -fx-background-image: url('../images/refreshButton.png');
+    -fx-background-radius: 100;
+    -fx-border-radius: 100;
+}
 
+#flashingTab {
+    -fx-background-color: green;
 }
 
 #askButton {
