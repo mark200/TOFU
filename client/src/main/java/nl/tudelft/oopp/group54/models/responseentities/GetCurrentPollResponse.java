@@ -8,6 +8,7 @@ public class GetCurrentPollResponse implements Serializable {
     private Integer optionCount;
     private Boolean closed;
     private String title;
+    private String pollId;
 
     public GetCurrentPollResponse() {
     
@@ -21,13 +22,16 @@ public class GetCurrentPollResponse implements Serializable {
      * @param optionCount the amount of options
      * @param closed whether the poll is open
      * @param title the title
+     * @param pollId the poll id
      */
-    public GetCurrentPollResponse(Boolean success, String message, Integer optionCount, Boolean closed, String title) {
+    public GetCurrentPollResponse(Boolean success, String message, Integer optionCount, Boolean closed, String title, 
+                                  String pollId) {
         this.success = success;
         this.message = message;
         this.optionCount = optionCount;
         this.closed = closed;
         this.title = title;
+        this.pollId = pollId;
     }
 
     public Boolean getSuccess() {
@@ -68,6 +72,14 @@ public class GetCurrentPollResponse implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+    
+    public String getPollId() {
+        return pollId;
+    }
+    
+    public void setPollId() {
+        this.pollId = pollId;
     }
 
 }
