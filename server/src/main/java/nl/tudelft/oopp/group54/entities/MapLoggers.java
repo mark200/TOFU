@@ -1,9 +1,13 @@
 package nl.tudelft.oopp.group54.entities;
 
-import org.slf4j.Logger;
-
-import java.io.*;
-import java.util.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class MapLoggers {
     private Map<Integer, List<String>> map;
@@ -11,7 +15,7 @@ public class MapLoggers {
     private static MapLoggers instance;
 
     /**
-     * Empty constructor
+     * Empty constructor.
      */
     private MapLoggers() {
         map = new HashMap<>();
@@ -22,8 +26,10 @@ public class MapLoggers {
      * @return a static instance
      */
     public static MapLoggers getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new MapLoggers();
+        }
+
         return instance;
     }
 
@@ -53,6 +59,11 @@ public class MapLoggers {
         }
     }
 
+    /**
+     * Writes to a file.
+     * @param lectureId the lecture id
+     * @throws IOException exception when writing to file
+     */
     public void writeToFile(Integer lectureId) throws IOException {
         if (lectureId == null) {
             return;
@@ -72,6 +83,11 @@ public class MapLoggers {
         bw.close();
     }
 
+    /**
+     * Updates the value for a specific lecture.
+     * @param lectureId the lecture id
+     * @param newList the new value
+     */
     public void setMapValue(Integer lectureId, List<String> newList) {
         if (lectureId == null) {
             return;

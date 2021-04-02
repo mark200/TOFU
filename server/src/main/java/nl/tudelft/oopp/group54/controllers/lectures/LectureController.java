@@ -39,6 +39,12 @@ public class LectureController {
     }
 
 
+    /**
+     * Ends a lecture.
+     * @param userId the user id
+     * @param lectureId the lecture id
+     * @return
+     */
     @PutMapping(
             value = "/e/{lectureId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -204,6 +210,12 @@ public class LectureController {
         return lectureService.postLectureFeedback(lectureID, userId, lectureFeedbackCode);
     }
 
+    /**
+     * Gets feedback about lecture.
+     * @param lectureID the lecture id
+     * @param userId the user id
+     * @return
+     */
     @GetMapping(
             value = "/{lectureID}/feedback",
             produces = {MediaType.APPLICATION_JSON_VALUE})

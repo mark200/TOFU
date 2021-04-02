@@ -148,7 +148,13 @@ public class PollController {
                                                @RequestParam String userId) {
         return pollService.getCurrentPoll(lectureId, userId);
     }
-    
+
+    /**
+     * Ends current poll.
+     * @param userId the user id
+     * @param lectureId the lecture id
+     * @return
+     */
     @PutMapping(
             value = "/{lectureId}/polls/end",
             produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -159,7 +165,13 @@ public class PollController {
 
         return pollService.endCurrentPoll(Integer.parseInt(lectureId), Integer.parseInt(userId));
     }
-    
+
+    /**
+     * Gets statistics.
+     * @param lectureId the lecture id
+     * @param userId the user id
+     * @return
+     */
     @GetMapping(value = "/{lectureId}/polls/stats",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> getStatistics(@PathVariable(value = "lectureId") Integer lectureId,
@@ -171,6 +183,12 @@ public class PollController {
         return pollService.getStatistics(lectureId, userId);
     }
 
+    /**
+     * Reopens last poll.
+     * @param lectureId the lecture id
+     * @param userId the user id
+     * @return
+     */
     @PutMapping(value = "/{lectureId}/polls/r",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> reopenPoll(@PathVariable(value = "lectureId") Integer lectureId,

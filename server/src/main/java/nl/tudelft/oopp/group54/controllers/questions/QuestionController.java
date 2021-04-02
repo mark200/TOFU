@@ -64,7 +64,6 @@ public class QuestionController {
 
         String userId;
         String questionText;
-        String userIp = request.getRemoteAddr();
 
         try {
             userId = (String) requestPayload.get("userId");
@@ -76,6 +75,8 @@ public class QuestionController {
 
             return toBeReturned;
         }
+
+        String userIp = request.getRemoteAddr();
 
         String logMessage = "User " + userId + " asked a question " + questionText;
         logger.info(logMessage);
@@ -92,6 +93,13 @@ public class QuestionController {
         return questionService.getAllQuestions(lectureId, userId);
     }
 
+    /**
+     * Deletes a question.
+     * @param lectureId the lecture id
+     * @param questionId the question to be deleted
+     * @param userId the user id
+     * @return
+     */
     @DeleteMapping(value = "/{lectureId}/questions/{questionId}",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
