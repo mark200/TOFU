@@ -1000,7 +1000,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             if (!this.ds.containsUnansweredQuestion(question.getQuestionId())) {
                 this.ds.addUnansweredQuestion(question, this);
             } else if (question.getScore() != this.ds.getVoteOnQuestion(question.getQuestionId())) {
-                this.ds.updateQuestion(question);
+                this.ds.updateQuestion(question, this);
             }
         }
     }
@@ -1028,6 +1028,11 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         }
     }
 
+    /**
+     * Update edited questions.
+     *
+     * @param unanswered the unanswered questions
+     */
     public void updateEditedQuestions(List<QuestionModel> unanswered) {
         if (unanswered == null) {
             return;
@@ -1041,7 +1046,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
 
         for (QuestionModel questionModel : unanswered) {
             if (!bufferedQuestionTexts.contains(questionModel.getQuestionText())) {
-                this.ds.updateQuestion(questionModel);
+                this.ds.updateQuestion(questionModel, this);
             }
         }
     }
