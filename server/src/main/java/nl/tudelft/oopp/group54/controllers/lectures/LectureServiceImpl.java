@@ -33,8 +33,16 @@ public class LectureServiceImpl implements LectureService {
     private LectureFeedbackRepository lectureFeedbackRepository;
 
 
-    public void setRepository(LectureRepository repository) {
-        this.lectureRepository = repository;
+    public void setLectureRepository(LectureRepository lectureRepository) {
+        this.lectureRepository = lectureRepository;
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void setLectureFeedbackRepository(LectureFeedbackRepository lectureFeedbackRepository) {
+        this.lectureFeedbackRepository = lectureFeedbackRepository;
     }
 
     /**
