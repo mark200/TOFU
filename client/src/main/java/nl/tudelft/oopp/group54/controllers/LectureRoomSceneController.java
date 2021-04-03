@@ -190,7 +190,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         if (this.ds.getPrivilegeId().equals(2)) {
             //TODO: GUI elements for the moderator
             this.endLectureButton.setVisible(false);
-            this.lecturerModeButton.setVisible(false);
+            this.utilityToolbar.getItems().remove(lecturerModeButton);
             this.lectureSettingsPane.setVisible(false);
         }
 
