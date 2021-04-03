@@ -72,7 +72,6 @@ public class VoteController {
 
         String logMessage = "User " + userId + " votes on question " + questionId;
         logger.info(logMessage);
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
 
         return voteService.voteOnQuestion(lectureId, userId, questionId, isUpvote);
     }

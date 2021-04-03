@@ -8,15 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
-import nl.tudelft.oopp.group54.entities.Ban;
-import nl.tudelft.oopp.group54.entities.BanKey;
+
 import nl.tudelft.oopp.group54.entities.Lecture;
+import nl.tudelft.oopp.group54.entities.MapLoggers;
 import nl.tudelft.oopp.group54.entities.Poll;
 import nl.tudelft.oopp.group54.entities.PollKey;
 import nl.tudelft.oopp.group54.entities.PollVote;
 import nl.tudelft.oopp.group54.entities.PollVoteKey;
-import nl.tudelft.oopp.group54.entities.Question;
-import nl.tudelft.oopp.group54.entities.QuestionKey;
 import nl.tudelft.oopp.group54.entities.User;
 import nl.tudelft.oopp.group54.entities.UserKey;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
@@ -122,8 +120,16 @@ public class PollServiceImpl implements PollService {
             status.put("message", e.toString());
         }
 
-        return status;
+        String logMessage = "User " + userId
+                + " (" + findUserRow.get().getIpAddress()
+                + ") posted a new poll "
+                + title
+                + " with correct answer "
+                + correctAnswer;
 
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+
+        return status;
     }
     
     @Override
@@ -207,6 +213,9 @@ public class PollServiceImpl implements PollService {
             status.put("message", e.toString());
         }
 
+        String logMessage = "User " + userId + " (" + findUserRow.get().getIpAddress() + ") voted on current poll";
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+
         return status;        
     }
     
@@ -258,6 +267,9 @@ public class PollServiceImpl implements PollService {
         status.put("optionCount", poll.getOptionCount());
         status.put("title", poll.getTitle());
         status.put("pollId", poll.getPrimaryKey().getId());
+
+        String logMessage = "User " + userId + " (" + findUserRow.get().getIpAddress() + ") requested current poll";
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
     
         return status;
     }
@@ -313,6 +325,9 @@ public class PollServiceImpl implements PollService {
             status.put("success", false);
             status.put("message", e.toString());
         }
+
+        String logMessage = "User " + userId + " (" + findUserRow.get().getIpAddress() + ") ended current poll";
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
         
         return status;
     }
@@ -392,6 +407,12 @@ public class PollServiceImpl implements PollService {
         status.put("statsMap", voteMap);
         status.put("voteCount", votes.size());
         status.put("optionCount", newest.getOptionCount());
+
+        String logMessage = "User " + userId
+                + " (" + findUserRow.get().getIpAddress()
+                + ") requested statistics on current poll";
+
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
         
         return status;
     }
@@ -468,6 +489,9 @@ public class PollServiceImpl implements PollService {
             status.put("success", false);
             status.put("message", e.toString());
         }
+
+        String logMessage = "User " + userId + " (" + findUserRow.get().getIpAddress() + ") reopened last poll";
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
 
         return status;
     }

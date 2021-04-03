@@ -1,9 +1,12 @@
 package nl.tudelft.oopp.group54.controllers.votes;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+
 import nl.tudelft.oopp.group54.entities.Lecture;
+import nl.tudelft.oopp.group54.entities.MapLoggers;
 import nl.tudelft.oopp.group54.entities.Question;
 import nl.tudelft.oopp.group54.entities.QuestionKey;
 import nl.tudelft.oopp.group54.entities.User;
@@ -113,6 +116,9 @@ public class VoteServiceImpl implements VoteService {
             toBeReturned.put("success", false);
             toBeReturned.put("message", e.toString());
         }
+
+        String logMessage = "User " + userId + " (" + foundUser.get().getIpAddress() + ") voted on question " + questionId;
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
 
         return toBeReturned;
     }
