@@ -147,7 +147,13 @@ build
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
 
+# Ignore DS_Store for mac users
 .DS_Store
 
+# Ignore database
 group54.mv.db
-server/Logs/
+group54.trace.db
+
+# Ignore logs, but keep the Logs directory
+server/Logs/*
+!server/Logs/.gitkeep
