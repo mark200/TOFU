@@ -950,6 +950,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     public void displayQuestions(List<QuestionModel> unanswered, List<QuestionModel> answered) {
         updateNewQuestions(unanswered, answered);
         updateDeletedQuestions(unanswered);
+        updateEditedQuestions(unanswered);
         updateSortOrder();
     }
 
@@ -999,7 +1000,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             if (!this.ds.containsUnansweredQuestion(question.getQuestionId())) {
                 this.ds.addUnansweredQuestion(question, this);
             } else if (question.getScore() != this.ds.getVoteOnQuestion(question.getQuestionId())) {
-                this.ds.updateQuestion(question);
+                this.ds.updateQuestion(question, this);
             }
         }
     }
@@ -1023,6 +1024,29 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         for (QuestionView questionView : this.ds.getCurrentUnansweredQuestionViews()) {
             if (!bufferedQuestionIDs.contains(questionView.getQuestionId())) {
                 this.ds.deleteUnansweredQuestionView(questionView);
+            }
+        }
+    }
+
+    /**
+     * Update edited questions.
+     *
+     * @param unanswered the unanswered questions
+     */
+    public void updateEditedQuestions(List<QuestionModel> unanswered) {
+        if (unanswered == null) {
+            return;
+        }
+
+        Set<String> bufferedQuestionTexts = new HashSet<>();
+
+        for (QuestionView question : this.ds.getCurrentUnansweredQuestionViews()) {
+            bufferedQuestionTexts.add(question.getText());
+        }
+
+        for (QuestionModel questionModel : unanswered) {
+            if (!bufferedQuestionTexts.contains(questionModel.getQuestionText())) {
+                this.ds.updateQuestion(questionModel, this);
             }
         }
     }

@@ -178,7 +178,7 @@ public class Datastore {
      * this question and its view thus must be updated.
      * @param question to update with
      */
-    public void updateQuestion(QuestionModel question) {
+    public void updateQuestion(QuestionModel question, LectureRoomSceneController sceneController) {
         if (question == null) {
             return;
         }
@@ -187,6 +187,9 @@ public class Datastore {
 
         QuestionView q = new UnansweredQuestionView(question.getQuestionText(), question.getQuestionId(),
                 question.getUserName(), question.getUserIp(), question.getScore(), question.getUserId());
+
+        q.setOwner(sceneController);
+        q.updateQuestionView();
 
         int index = 0;
         for (int i = 0; i < this.currentUnansweredQuestionViews.size(); i++) {
