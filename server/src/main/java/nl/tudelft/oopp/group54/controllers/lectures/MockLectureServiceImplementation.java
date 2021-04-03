@@ -1,10 +1,10 @@
 package nl.tudelft.oopp.group54.controllers.lectures;
 
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
+
+import org.springframework.stereotype.Service;
 
 @Service
 public class MockLectureServiceImplementation implements LectureService {
@@ -44,5 +44,15 @@ public class MockLectureServiceImplementation implements LectureService {
         toBeReturned.put("count", 139);
 
         return toBeReturned;
+    }
+
+    @Override
+    public Map<String, Object> postLectureFeedback(Integer lectureID, String userId, Integer lectureFeedbackId) {
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> getLectureFeedback(Integer lectureID, String userId) {
+        return null;
     }
 }

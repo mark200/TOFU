@@ -1,38 +1,48 @@
 package nl.tudelft.oopp.group54.controllers.lectures;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import nl.tudelft.oopp.group54.entities.Lecture;
+import nl.tudelft.oopp.group54.entities.LectureFeedback;
+import nl.tudelft.oopp.group54.entities.MapLoggers;
 import nl.tudelft.oopp.group54.entities.User;
 import nl.tudelft.oopp.group54.entities.UserKey;
+import nl.tudelft.oopp.group54.repositories.LectureFeedbackRepository;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 @Service
 public class LectureServiceImpl implements LectureService {
 
     @Autowired
-    private LectureRepository repository;
+    private LectureRepository lectureRepository;
 
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private LectureFeedbackRepository lectureFeedbackRepository;
+
 
     public void setRepository(LectureRepository repository) {
-        this.repository = repository;
+        this.lectureRepository = repository;
     }
 
     /**
-     * create a new lecture by adding it to the database
+     * create a new lecture by adding it to the database.
      *
-     * @param startTime   - Date of the planned start time of the lecture
-     * @param lectureName - lecture name given as string
+     * @param startTime   - Date of the planned start time of the lecture.
+     * @param lectureName - lecture name given as string.
      * @return - Map, which returns the status of the request to create
-     * a new lecture, the message of the execution result and if it was successful
-     * the UUIDs of the join ids for student, lecturer and moderator.
      */
     @Override
     public Map<String, Object> createNewLecture(Date startTime, String lectureName) {
@@ -82,37 +92,36 @@ public class LectureServiceImpl implements LectureService {
         }
 
 
-        String studentJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "s").getBytes())
+        String lecturerJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "s").getBytes())
                 .toString().replaceAll("-", "");
-        String moderatorJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "m").getBytes())
+        String studentJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "m").getBytes())
                 .toString().replaceAll("-", "");
-        String lecturerJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "l").getBytes())
+        String moderatorJoinId = UUID.nameUUIDFromBytes((currentTime.toString() + "l").getBytes())
                 .toString().replaceAll("-", "");
         Lecture newLecture = new
                 Lecture(null, lectureName, startTime, studentJoinId, moderatorJoinId, lecturerJoinId, true);
         newLecture.setLectureOngoing(true);
 
-        repository.flush();
-        repository.save(newLecture);
+        lectureRepository.flush();
+        lectureRepository.save(newLecture);
 
-        // FIXME the order of those IDs should be fixed
         toBeReturned.put("success", true);
         toBeReturned.put("lectureId", newLecture.getId());
-        toBeReturned.put("lecturerId", studentJoinId);
-        toBeReturned.put("studentId", moderatorJoinId);
-        toBeReturned.put("moderatorId", lecturerJoinId);
+        toBeReturned.put("lecturerId", lecturerJoinId);
+        toBeReturned.put("studentId", studentJoinId);
+        toBeReturned.put("moderatorId", moderatorJoinId);
 
         return toBeReturned;
     }
 
     /**
      * Creates a new User when joining the specified lecture
-     * and assigns them a role
+     * and assigns them a role.
      *
-     * @param lectureId
-     * @param roleCode
-     * @param userName
-     * @return
+     * @param lectureId id
+     * @param roleCode code
+     * @param userName userName
+     * @return Map
      */
     @Override
     public Map<String, Object> joinOngoingLecture(Integer lectureId, String roleCode, String userName) {
@@ -142,7 +151,7 @@ public class LectureServiceImpl implements LectureService {
             return toBeReturned;
         }
 
-        Optional<Lecture> foundLecture = repository.findById(lectureId);
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
         Date timeNow = new Date();
 
         // Lecture does not exist
@@ -160,32 +169,49 @@ public class LectureServiceImpl implements LectureService {
         }
 
         int usersWatchingLecture = userRepository.findAll().stream()
-                .filter(x -> x.getKey().getLecture_id() == lectureId.intValue())
+                .filter(x -> x.getKey().getLectureID() == lectureId.intValue())
                 .collect(Collectors.toList()).size();
 
         User newUser = new User(new UserKey(usersWatchingLecture, lectureId), userName, "127.0.0.1", null, 0);
 
         // Determine role of student
+        // 1 - lecturer
+        // 2 - moderator
+        // 3 - student
         if (foundLecture.get().getStudentJoinId().equals(roleCode)) {
-            newUser.setRoleID(1);
-        } else if (foundLecture.get().getLecturerJoinId().equals(roleCode)) {
-            newUser.setRoleID(2);
-        } else if (foundLecture.get().getModeratorJoinId().equals(roleCode)) {
             newUser.setRoleID(3);
+        } else if (foundLecture.get().getLecturerJoinId().equals(roleCode)) {
+            newUser.setRoleID(1);
+        } else if (foundLecture.get().getModeratorJoinId().equals(roleCode)) {
+            newUser.setRoleID(2);
         } else {
             toBeReturned.put("success", false);
             toBeReturned.put("message", "Unrecognized roleCode/user ID.");
             return toBeReturned;
         }
 
+        // if the lecture has ended don't let students join it.
+        if (newUser.getRoleID().equals(3)) {
+            if (!foundLecture.get().isLectureOngoing()) {
+                toBeReturned.put("success", false);
+                toBeReturned.put("message", "The lecture has ended.");
+                return toBeReturned;
+            }
+        }
+
         userRepository.flush();
+
+        String logMessage = "User " + userName + " (" + newUser.getIpAddress() + ") joined";
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
 
         try {
             userRepository.save(newUser);
             toBeReturned.put("success", true);
             toBeReturned.put("userID", newUser.getKey().getId());
             toBeReturned.put("userName", newUser.getName());
-            toBeReturned.put("role", (newUser.getRoleID() == 1) ? "Student" : ((newUser.getRoleID() == 2) ? "Lecturer" : "Moderator"));
+            toBeReturned.put("role",
+                    (newUser.getRoleID() == 1) ? "Lecturer" : ((newUser.getRoleID() == 2) ? "Moderator" : "Student"));
+            toBeReturned.put("privilegeId", newUser.getRoleID());
         } catch (Exception e) {
             toBeReturned.put("success", false);
             toBeReturned.put("message", e.toString());
@@ -195,10 +221,10 @@ public class LectureServiceImpl implements LectureService {
     }
 
     /**
-     * For now this method only returns the number of people watching the lecture
+     * For now this method only returns the number of people watching the lecture.
      * (meaning only this new functionality is implemented)
      *
-     * @param lectureId
+     * @param lectureId description
      * @return
      */
     @Override
@@ -211,7 +237,7 @@ public class LectureServiceImpl implements LectureService {
             return toBeReturned;
         }
 
-        Optional<Lecture> foundLecture = repository.findById(lectureId);
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
 
         if (foundLecture.isEmpty()) {
             toBeReturned.put("success", false);
@@ -220,22 +246,24 @@ public class LectureServiceImpl implements LectureService {
         }
 
         int usersWatchingLecture = userRepository.findAll().stream()
-                .filter(x -> x.getKey().getLecture_id() == lectureId.intValue())
+                .filter(x -> x.getKey().getLectureID() == lectureId.intValue())
                 .collect(Collectors.toList()).size();
 
         toBeReturned.put("success", true);
         toBeReturned.put("lectureID", lectureId);
-        toBeReturned.put("People", usersWatchingLecture);
+        toBeReturned.put("people", usersWatchingLecture);
         toBeReturned.put("studentJoinID", foundLecture.get().getStudentJoinId());
         toBeReturned.put("moderatorJoinID", foundLecture.get().getModeratorJoinId());
         toBeReturned.put("lecturerJoinID", foundLecture.get().getLecturerJoinId());
+        toBeReturned.put("lectureOngoing", foundLecture.get().isLectureOngoing());
 
         return toBeReturned;
     }
 
     /**
      * Changes lecture's lectureOngoing value to false.
-     * @param userId - Id of the user
+     *
+     * @param userId    - Id of the user
      * @param lectureId - Id of the lecture
      * @return status of the request
      */
@@ -254,7 +282,7 @@ public class LectureServiceImpl implements LectureService {
             return status;
         }
 
-        Optional<Lecture> lectureToBeEnded = repository.findById(lectureId);
+        Optional<Lecture> lectureToBeEnded = lectureRepository.findById(lectureId);
         Optional<User> requestAuthor = userRepository.findById(new UserKey(userId, lectureId));
 
         if (lectureToBeEnded.isEmpty()) {
@@ -275,19 +303,115 @@ public class LectureServiceImpl implements LectureService {
             return status;
         }
 
-        if(!lectureToBeEnded.get().isLectureOngoing()){
+        if (!lectureToBeEnded.get().isLectureOngoing()) {
             status.put("success", false);
             status.put("message", "The lecture has already been ended.");
             return status;
         }
 
-        repository.flush();
+        lectureRepository.flush();
 
         try {
             lectureToBeEnded.get().setLectureOngoing(false);
-            repository.save(lectureToBeEnded.get());
+            lectureRepository.save(lectureToBeEnded.get());
             status.put("success", true);
             status.put("message", "The lecture was successfully ended.");
+        } catch (Exception e) {
+            status.put("success", false);
+            status.put("message", e.toString());
+        }
+
+        return status;
+    }
+
+    @Override
+    public Map<String, Object> postLectureFeedback(Integer lectureId, String userId, Integer lectureFeedbackCode) {
+
+        Map<String, Object> status = new TreeMap<>();
+
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
+
+        if (foundLecture.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "There does not exist a lecture with this id.");
+            return status;
+        }
+
+        if (!foundLecture.get().isLectureOngoing()) {
+            status.put("success", false);
+            status.put("message", "The lecture has already ended.");
+            return status;
+        }
+
+        UserKey userKey = new UserKey(Integer.parseInt(userId), lectureId);
+        Optional<User> findUserRow = userRepository.findById(userKey);
+
+        if (findUserRow.isEmpty()) {
+            status.put("code", "401 UNAUTHORIZED");
+            status.put("success", false);
+            status.put("message", "Unrecognized user ID or specified lecture does not exist!");
+            return status;
+        }
+
+        lectureFeedbackRepository.flush();
+
+        try {
+            if (findUserRow.get().getRoleID().equals(3)) {
+                LectureFeedback lf = new LectureFeedback(userKey, lectureFeedbackCode);
+                lectureFeedbackRepository.save(lf);
+                status.put("success", true);
+                status.put("message", "The lecture was successfully ended.");
+            } else {
+                lectureFeedbackRepository.deleteAllByLectureFeedbackCode(lectureFeedbackCode);
+                status.put("success", true);
+                status.put("message", "The lecture was cleared successfully.");
+            }
+
+        } catch (Exception e) {
+            status.put("success", false);
+            status.put("message", e.toString());
+        }
+
+        return status;
+    }
+
+    @Override
+    public Map<String, Object> getLectureFeedback(Integer lectureId, String userId) {
+
+        Map<String, Object> status = new TreeMap<>();
+
+        Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
+
+        if (foundLecture.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "There does not exist a lecture with this id.");
+            return status;
+        }
+
+        if (!foundLecture.get().isLectureOngoing()) {
+            status.put("success", false);
+            status.put("message", "The lecture has already ended.");
+            return status;
+        }
+
+        UserKey userKey = new UserKey(Integer.parseInt(userId), lectureId);
+        Optional<User> findUserRow = userRepository.findById(userKey);
+
+        if (findUserRow.isEmpty()) {
+            status.put("code", "401 UNAUTHORIZED");
+            status.put("success", false);
+            status.put("message", "Unrecognized user ID or specified lecture does not exist!");
+            return status;
+        }
+
+        lectureFeedbackRepository.flush();
+
+        try {
+            status.put("success", true);
+            HashMap<String, Integer> lectureFeedbackMap = new HashMap<>();
+            lectureFeedbackMap.put("1", lectureFeedbackRepository.countAllByLectureFeedbackCode(1));
+            lectureFeedbackMap.put("2", lectureFeedbackRepository.countAllByLectureFeedbackCode(2));
+            status.put("lectureFeedbackMap", lectureFeedbackMap);
         } catch (Exception e) {
             status.put("success", false);
             status.put("message", e.toString());

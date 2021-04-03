@@ -1,5 +1,7 @@
 package nl.tudelft.oopp.group54.controllers;
 
+import com.sun.tools.javac.Main;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -31,5 +33,14 @@ public class MainSceneController extends AbstractApplicationController {
     @Override
     public void performControllerSpecificSetup() {
         System.out.println("Main controller config");
+        MainView.clearHistory();
+    }
+
+    /**
+     * display the message that lecture has been ended when students gets kicked out of the room.
+     */
+    @Override
+    public void switchToMainFromLecture() {
+        super.switchToMainFromLecture();
     }
 }

@@ -1,9 +1,15 @@
 package nl.tudelft.oopp.group54.entities;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "Lecture")
@@ -42,7 +48,7 @@ public class Lecture {
     }
 
     /**
-     * Constructor for Lecture Entity
+     * Constructor for Lecture Entity.
      *
      * @param id              - Integer
      * @param lectureName     - String
@@ -51,7 +57,9 @@ public class Lecture {
      * @param moderatorJoinId - Integer
      * @param lecturerJoinId  - Integer
      */
-    public Lecture(Integer id, @NotNull String lectureName, @NotNull Date startTime, @NotNull String studentJoinId, @NotNull String moderatorJoinId, @NotNull String lecturerJoinId, Boolean lectureOngoing) {
+    public Lecture(Integer id, @NotNull String lectureName, @NotNull Date startTime,
+                   @NotNull String studentJoinId, @NotNull String moderatorJoinId,
+                   @NotNull String lecturerJoinId, Boolean lectureOngoing) {
         this.id = id;
         this.lectureName = lectureName;
         this.startTime = startTime;
@@ -68,7 +76,7 @@ public class Lecture {
 
     public Boolean isLectureStarted() {
         Date current = new Date();
-        return startTime.before(current);
+        return !(getStartTime().compareTo(current) > 0);
     }
 
     public Boolean isJoinable() {
@@ -129,38 +137,54 @@ public class Lecture {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
         Lecture lecture = (Lecture) o;
-        return getId().equals(lecture.getId()) &&
-                getLectureName().equals(lecture.getLectureName()) &&
-                getStartTime().equals(lecture.getStartTime()) &&
-                getStudentJoinId().equals(lecture.getStudentJoinId()) &&
-                getModeratorJoinId().equals(lecture.getModeratorJoinId()) &&
-                getLecturerJoinId().equals(lecture.getLecturerJoinId());
+        return getId().equals(lecture.getId())
+                && getLectureName().equals(lecture.getLectureName())
+                && getStartTime().equals(lecture.getStartTime())
+                && getStudentJoinId().equals(lecture.getStudentJoinId())
+                && getModeratorJoinId().equals(lecture.getModeratorJoinId())
+                && getLecturerJoinId().equals(lecture.getLecturerJoinId());
     }
 
+    /**
+     * Compares two primary keys.
+     * @param o the object that is going to be compared to this
+     * @return
+     */
     public boolean equalsPrimaryKeys(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Lecture lecture = (Lecture) o;
         return getId().equals(lecture.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getLectureName(), getStartTime(), getStudentJoinId(), getModeratorJoinId(), getLecturerJoinId());
+        return Objects.hash(getId(), getLectureName(), getStartTime(),
+                getStudentJoinId(), getModeratorJoinId(), getLecturerJoinId());
     }
 
     @Override
     public String toString() {
-        return "Lecture{" +
-                "id=" + id +
-                ", lectureName='" + lectureName + '\'' +
-                ", startTime=" + startTime +
-                ", studentJoinId=" + studentJoinId +
-                ", moderatorJoinId=" + moderatorJoinId +
-                ", lecturerJoinId=" + lecturerJoinId +
-                '}';
+        return "Lecture{"
+                + "id=" + id
+                + ", lectureName='" + lectureName + '\''
+                + ", startTime=" + startTime
+                + ", studentJoinId=" + studentJoinId
+                + ", moderatorJoinId=" + moderatorJoinId
+                + ", lecturerJoinId=" + lecturerJoinId
+                + '}';
     }
 }

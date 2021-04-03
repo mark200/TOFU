@@ -1,8 +1,11 @@
 package nl.tudelft.oopp.group54.entities;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "User")
@@ -29,15 +32,18 @@ public class User {
 
     }
 
+
     /**
-     * Constructor
-     * @param primaryKey
-     * @param name
-     * @param ipAddress
-     * @param lastQuestion
-     * @param roleID
+     * Instantiates a new User.
+     *
+     * @param primaryKey   the primary key
+     * @param name         the name
+     * @param ipAddress    the ip address
+     * @param lastQuestion the last question
+     * @param roleID       the role id
      */
-    public User(@NotNull UserKey primaryKey, @NotNull String name, @NotNull String ipAddress, Date lastQuestion, @NotNull int roleID) {
+    public User(@NotNull UserKey primaryKey, @NotNull String name, @NotNull String ipAddress,
+                Date lastQuestion, @NotNull int roleID) {
         this.primaryKey = primaryKey;
         this.name = name;
         this.ipAddress = ipAddress;
@@ -45,48 +51,59 @@ public class User {
         this.roleID = roleID;
     }
 
+
     /**
-     * Updates the Identification number and the Lecture ID of the question
-     * @return
+     * Gets key.
+     *
+     * @return the key
      */
     public UserKey getKey() {
         return this.primaryKey;
     }
 
+
     /**
-     * Updates the Identification number and the Lecture ID of the question
-     * @param primaryKey
+     * Sets key.
+     *
+     * @param primaryKey the primary key
      */
     public void setKey(UserKey primaryKey) {
         this.primaryKey = primaryKey;
     }
 
+
     /**
-     * Returns the name of the user
-     * @return A String-based representation of the specific user's name
+     * Gets name.
+     *
+     * @return the name
      */
     public String getName() {
         return name;
     }
 
+
     /**
-     * Updates the name of the user to a new one
-     * @param name New name
+     * Sets name.
+     *
+     * @param name the name
      */
     public void setName(String name) {
         this.name = name;
     }
 
+
     /**
-     * Returns the IP address of the user
-     * @return
+     * Gets ip address.
+     *
+     * @return the ip address
      */
     public String getIpAddress() {
         return ipAddress;
     }
 
     /**
-     * Changes the IP address of the user
+     * Changes the IP address of the user.
+     *
      * @param ipAddress a new IP address
      */
     public void setIpAddress(String ipAddress) {
@@ -94,58 +111,78 @@ public class User {
     }
 
     /**
-     * Returns the date of the last question that the User asked
+     * Returns the date of the last question that the User asked.
+     *
      * @return
      */
     public Date getlastQuestion() {
         return lastQuestion;
     }
 
+
     /**
-     * Changes the date to a new time
-     * @param lastQuestion
+     * Sets last question.
+     *
+     * @param lastQuestion the last question
      */
     public void setLastQuestion(Date lastQuestion) {
         this.lastQuestion = lastQuestion;
     }
 
     /**
-     * Returns the role
+     * Returns the role.
+     *
      * @return
      */
     public Integer getRoleID() {
         return roleID;
     }
 
+
     /**
-     * Changes the role
-     * @param roleID
+     * Sets role id.
+     *
+     * @param roleID the role id
      */
     public void setRoleID(int roleID) {
         this.roleID = roleID;
     }
 
     /**
-     * Checks if either o is either the same object or an instance of User and has the same attributes
-     * @param o
+     * Checks if either o is either the same object or an instance of User and has the same attributes.
+     *
+     * @param o the object to check
      * @return True/False
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof User)) {
+            return false;
+        }
 
         User user = (User) o;
 
-        if (getRoleID() != user.getRoleID()) return false;
-        if (!primaryKey.equals(user.primaryKey)) return false;
-        if (!getName().equals(user.getName())) return false;
-        if (!getIpAddress().equals(user.getIpAddress())) return false;
+        if (getRoleID() != user.getRoleID()) {
+            return false;
+        }
+        if (!primaryKey.equals(user.primaryKey)) {
+            return false;
+        }
+        if (!getName().equals(user.getName())) {
+            return false;
+        }
+        if (!getIpAddress().equals(user.getIpAddress())) {
+            return false;
+        }
         return lastQuestion.equals(user.lastQuestion);
     }
 
     /**
-     * Computes the hashcode
+     * Computes the hashcode.
+     *
      * @return
      */
     @Override
@@ -159,17 +196,18 @@ public class User {
     }
 
     /**
-     * Returns a String-based representation of the User object
+     * Returns a String-based representation of the User object.
+     *
      * @return
      */
     @Override
     public String toString() {
-        return "User{" +
-                "primaryKey=" + primaryKey +
-                ", name='" + name + '\'' +
-                ", ipAddress='" + ipAddress + '\'' +
-                ", lastQuestion=" + lastQuestion +
-                ", roleID=" + roleID +
-                '}';
+        return "User{"
+                + "primaryKey=" + primaryKey
+                + ", name='" + name + '\''
+                + ", ipAddress='" + ipAddress + '\''
+                + ", lastQuestion=" + lastQuestion
+                + ", roleID=" + roleID
+                + '}';
     }
 }

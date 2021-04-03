@@ -1,19 +1,35 @@
 package nl.tudelft.oopp.group54.controllers.lectures;
 
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
 
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
+import nl.tudelft.oopp.group54.entities.MapLoggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.*;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 // TODO: Validation of input should be happening in a seperate object!
 
 @RestController
 @RequestMapping(value = "/lectures")
 public class LectureController {
+
+    private Logger logger = LoggerFactory.getLogger(LectureController.class);
 
     @Autowired
     LectureServiceImpl lectureService;
@@ -23,13 +39,31 @@ public class LectureController {
     }
 
 
+    /**
+     * Ends a lecture.
+     * @param userId the user id
+     * @param lectureId the lecture id
+     * @return
+     */
     @PutMapping(
             value = "/e/{lectureId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> endLecture(@RequestParam String userId, @PathVariable String lectureId) {
+        try {
+            MapLoggers.getInstance().writeToFile(Integer.parseInt(lectureId));
+            MapLoggers.getInstance().setMapValue(Integer.parseInt(lectureId), null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return lectureService.endLecture(Integer.parseInt(userId), Integer.parseInt(lectureId));
     }
 
+    /**
+     * Create new lecture map.
+     *
+     * @param requestPayload the request payload
+     * @return the map
+     */
     @PostMapping(
             value = "",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
@@ -57,8 +91,6 @@ public class LectureController {
         String lectureName;
 
         try {
-            // Fixme: The Date constructor expects milliseconds. We should be able
-            //   to differentiate between input given in milliseconds and seconds!
             long startTimeTimestamp = Long.parseLong(requestPayload.get("startTime").toString());
             startTime = new Date(startTimeTimestamp);
             lectureName = (String) requestPayload.get("lectureName");
@@ -76,6 +108,14 @@ public class LectureController {
         return lectureService.createNewLecture(startTime, lectureName);
     }
 
+    /**
+     * Join ongoing lecture map.
+     *
+     * @param lectureID      the lecture id
+     * @param roleCode       the role code
+     * @param requestPayload the request payload
+     * @return the map
+     */
     @PostMapping(
             value = "/j/{lectureID}/{roleCode}",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
@@ -107,6 +147,9 @@ public class LectureController {
             return toBeReturned;
         }
 
+        String logMessage = "User " + userName + " joined";
+        logger.info(logMessage);
+
         return lectureService.joinOngoingLecture(lectureID, roleCode, userName);
     }
 
@@ -117,5 +160,70 @@ public class LectureController {
         return lectureService.getLectureMetadata(lectureID);
     }
 
+    /**
+     * Post lecture feedback. If the poster is a student, it will add to the amount of people
+     * who have the same feedback regarding a lecture. If the poster is a lecturer or moderator,
+     * it will clear (remove) all feedback given on the specific matter.
+     * @param lectureID The lecture for which this feedback is being given.
+     * @param requestPayload The specifics of the actual feedback.
+     *                       Check the LectureFeedbackCode enum for specifics.
+     * @return Whether the operation was successful.
+     */
+    @PostMapping(
+            value = "/{lectureID}/feedback",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> postLectureFeedback(@PathVariable("lectureID") Integer lectureID,
+                                                   @RequestBody Map<String, Object> requestPayload) {
+
+        boolean containsNecessaryData = ParamResolver.checkContainsRequiredParams(
+                requestPayload,
+                Arrays.asList("userId", "lectureFeedbackCode")
+        );
+
+        if (!containsNecessaryData) {
+            Map<String, Object> toBeReturned = new TreeMap<>();
+            toBeReturned.put("success", "false");
+            toBeReturned.put("message", "Expected userId and lectureFeedbackId to be provided.");
+            return toBeReturned;
+        }
+
+        String userId;
+        Integer lectureFeedbackCode;
+
+        try {
+            userId = requestPayload.get("userId").toString();
+            lectureFeedbackCode = (Integer) requestPayload.get("lectureFeedbackCode");
+        } catch (Exception e) {
+            Map<String, Object> toBeReturned = new TreeMap<>();
+            toBeReturned.put("success", "false");
+            toBeReturned.put("message", e.getMessage());
+            return toBeReturned;
+        }
+
+        String logMessage = "User " + userId + " posted feedback";
+        logger.info(logMessage);
+        MapLoggers.getInstance().logWarning(lectureID, new Date() + " - " + logMessage);
+
+        return lectureService.postLectureFeedback(lectureID, userId, lectureFeedbackCode);
+    }
+
+    /**
+     * Gets feedback about lecture.
+     * @param lectureID the lecture id
+     * @param userId the user id
+     * @return
+     */
+    @GetMapping(
+            value = "/{lectureID}/feedback",
+            produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, Object> getLectureFeedback(@PathVariable("lectureID") Integer lectureID,
+                                                  @RequestParam String userId) {
+
+        String logMessage = "User " + userId + " requested feedback about lecture";
+        logger.info(logMessage);
+        MapLoggers.getInstance().logWarning(lectureID, new Date() + " - " + logMessage);
+
+        return lectureService.getLectureFeedback(lectureID, userId);
+    }
 
 }

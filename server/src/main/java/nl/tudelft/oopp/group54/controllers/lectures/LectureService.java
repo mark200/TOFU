@@ -9,4 +9,10 @@ public interface LectureService {
     Map<String, Object> joinOngoingLecture(Integer lectureId, String roleCode, String userName);
 
     Map<String, Object> getLectureMetadata(Integer lectureId);
+
+    Map<String, Object> postLectureFeedback(Integer lectureID,
+                                            String userId,
+                                            Integer lectureFeedbackId);
+
+    Map<String, Object> getLectureFeedback(Integer lectureID, String userId);
 }
