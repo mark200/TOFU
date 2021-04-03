@@ -1,0 +1,590 @@
+GUI TESTING
+
+CreateLectureNowTest {
+    Open the application
+    Press on the Create lecture button
+    Fill in the Lecture name
+    Press on the Create now button
+    Expect no error and redirect to Copy Links view "Successfully created a lecture room."
+}
+
+createLectureNowTest_NoLectureName {
+    Open the application
+    Press on the Create lecture button
+    Don't fill in the lecture name
+    Press on the Create now button
+    Expect lecture name text field to wiggle and a status message "Please fill in the lecture name."
+}
+
+JoinLectureAsLecturerTest {
+    Open the application
+    Press the Join lecture button
+    Enter the lecturer link
+    Enter a username
+    Press on the Enter button
+    Expect no error and redirect to Lecturer Lecture view
+}
+
+JoinLectureAsLecturerTest_NoName {
+    Open the application
+    Press the Join lecture button
+    Enter the lecturer link
+    Don't enter a username
+    Press on the Enter button
+    Expect Enter your name text field to wiggle and a status message "Please fill in the missing necessary information."
+}
+
+JoinLectureAsModeratorTest {
+    Open the application
+    Press the Join lecture button
+    Enter the moderator link
+    Enter a username
+    Press on the Enter button
+    Expect no error and redirect to Moderator Lecture view
+}
+
+JoinLectureAsModeratorTest_NoName {
+    Open the application
+    Press the Join lecture button
+    Enter the moderator link
+    Don't enter a username
+    Press on the Enter button
+    Expect Enter your name text field to wiggle and a status message "Please fill in the missing necessary information."
+}
+
+JoinLectureAsStudentTest {
+    Open the application
+    Press the Join lecture button
+    Enter the student link
+    Enter a username
+    Press on the Enter button
+    Expect no error and redirect to Moderator Lecture view
+}
+
+JoinLectureAsStudentTest_NoName {
+    Open the application
+    Press the Join lecture button
+    Enter the student link
+    Don't enter a username
+    Press on the Enter button
+    Expect Enter your name text field to wiggle and a status message "Please fill in the missing necessary information."
+}
+
+JoinLectureAsStudentTest_WrongJoinID {
+    Open the application
+    Press the Join lecture button
+    Enter something random in the Join ID field
+    Enter a username
+    Press on the Enter button
+    Expect no error and redirect to Moderator Lecture view
+}
+
+JoinLectureTest_NoJoinID {
+    Open the application
+    Press the Join lecture button
+    Don't enter a join ID
+    Enter a username
+    Press on the Enter button
+    Expect Enter join ID text field to wiggle and a status message "Please fill in the missing necessary information."
+}
+
+JoinLectureTest_NoJoinIDAndName {
+    Open the application
+    Press the Join lecture button
+    Don't enter a join ID
+    Don't enter a username
+    Press on the Enter button
+    Expect Enter join ID and Enter your name text fields to wiggle and a status message "Please fill in the missing necessary information."
+}
+
+ScheduleLectureTest_DateInThePast {
+    Open the application
+    Press on the Create lecture button
+    Fill in the Lecture name
+    Select a date and time in the past
+    Press the Schedule now button
+    Expect status message "Lecture start time was unacceptable"
+}
+
+ScheduleLectureTest_NoLectureName {
+    Open the application
+    Press on the Create lecture button
+    Don't fill in the Lecture name
+    Select the date
+    Enter the time
+    Press the Schedule now button
+    Expect Lecture name text field to wiggle and a status message "Please fill in the missing necessary information"
+}
+
+ScheduleLectureTest_NoDate {
+    Open the application
+    Press on the Create lecture button
+    Fill in the Lecture name
+    Don't select the date
+    Enter the time
+    Press the Schedule now button
+    Expect Select date text field to wiggle and a status message "Please fill in the missing necessary information"
+}
+
+ScheduleLectureTest_NoTime {
+    Open the application
+    Press on the Create lecture button
+    Fill in the Lecture name
+    Select the date
+    Don't enter the time
+    Press the Schedule now button
+    Expect Enter local time (24h) text field to wiggle and a status message "Please fill in the missing necessary information"
+}
+
+ScheduleLectureTest_NoDateAndTime {
+    Open the application
+    Press on the Create lecture button
+    Fill in the Lecture name
+    Don't elect the date
+    Don't enter the time
+    Press the Schedule now button
+    Expect Select date and Enter local time (24h) text fields to wiggle and a status message "Please fill in the missing necessary information"
+}
+
+ScheduleLectureTest_NoNameAndTime {
+    Open the application
+    Press on the Create lecture button
+    Don't fill in the Lecture name
+    Select the date
+    Don't enter the time
+    Press the Schedule now button
+    Expect Lecture name and Enter local time (24h) text fields to wiggle and a status message "Please fill in the missing necessary information"
+}
+
+ScheduleLectureTest_NoDateAndName {
+    Open the application
+    Press on the Create lecture button
+    Don't fill in the Lecture name
+    Don't select the date
+    Enter the time
+    Press the Schedule now button
+    Expect Lecture name and Select date text fields to wiggle and a status message "Please fill in the missing necessary information"
+}
+
+ScheduleLectureTest_NoDateAndTimeAndName {
+    Open the application
+    Press on the Create lecture button
+    Don't fill in the Lecture name
+    Don't select the date
+    Don't enter the time
+    Press the Schedule now button
+    Expect Lecture name, Select date and Enter local time (24h) text fields to wiggle and a status message "Please fill in the missing necessary information"
+}
+
+GoToLectureTest {
+    Press on the copy moderator link, copy lecturer link and copy student link button
+    Fill in a username
+    Press on the Go to lecture button
+    Expect no error and redirect to Lecturer Lecture view
+}
+
+GoToLectureTest_NotAllButtonsPressed {
+    Don't press on one or multiple of the copy link buttons
+    Fill in a username
+    Press on the Go to lecture button
+    Expect a status message "You should claim all of the links before proceeding!"
+    }
+
+GoToLectureTest_NoUsername {
+    Press on the copy moderator link, copy lecturer link and copy student link button
+    Don't fill in a username
+    Press on the Go to lecture button
+    Expect Enter username text field to wiggle and a status message "Please enter a username!"
+}
+
+GoToLectureTest_NoStartedLecture {
+    Schedule a lecture in the future
+    Press on the copy moderator link, copy lecturer link and copy student link button
+    Fill in a username
+    Press on the Go to lecture button
+    Expect a status message "The lecture has not started yet."
+}
+
+SwapToAnsweredQuestionViewFromPendingQuestionViewTest {
+    Press on the Pending button
+    Press on the Answered button
+    Expect no error and redirect to Answered question view
+}
+
+SwapToAnsweredQuestionViewFromPollQuizViewTest {
+    Press on the Poll/Quiz button
+    Press on the Answered button
+    Expect no error and redirect to Answered question view
+}
+
+SwapToPendingQuestionViewFromAnsweredQuestionViewTest {
+    Press on the Answered button
+    Press on the Pending button
+    Expect no error and redirect to Pending question view
+}
+
+SwapToPendingQuestionViewFromPollQuizViewTest {
+    Press on the Poll/quiz button
+    Press on the Pending button
+    Expect no error and redirect to Pending question view
+}
+
+SwapToPollQuizViewFromAnsweredQuestionViewTest {
+    Press on the Answered button
+    Press on the Poll/Quiz button
+    Expect no error and redirect to Poll/Quiz view
+}
+
+SwapToPollQuizViewFromPendingQuestionViewTest {
+    Press on the Pending button
+    Press on the Poll/Quiz button
+    Expect no error and redirect to Poll/Quiz view
+}
+
+OpenSidebarAsStudentOrModeratorTest {
+    Press on the closed sidebar or the right hand side
+    Expect no error and the sidebar to expand, showing a new Sidebar view containing a Lecture feedback and Sort By Function drop-down menu
+}
+
+OpenSidebarAsLecturerTest {
+    Press on the closed sidebar or the right hand side
+    Expect no error and the sidebar to expand, showing a new Sidebar view containing a Lecture feedback, Sort By Function and Lecture settings drop-down menu
+}
+
+CloseSidebarTest {
+    Press on the opened sidebar on the right hand side
+    Expect no error and the sidebar to close
+}
+
+OpenLectureFeedbackTest {
+    Press on the sidebar so it expands
+    Press on the Lecture feedback drop-down menu
+    Expect no error and a Lecture feedback view to appear
+}
+
+OpenSortByFunctionTest {
+    Press on the sidebar so it expands
+    Press on the Sort By Function drop-down menu
+    Expect no error and a Sort By Function view to appear
+}
+
+OpenLectureSettingsTest {
+    As a lecturer press on the sidebar so it expands
+    Press on the Lecture settings drop-down menu
+    Expect no error and a Lecture settings view to appear
+}
+
+RefreshButtonTest {
+    Press the round arrow on the top left hand side
+    Expect no error and the page to load all new developments
+}
+
+ExportQuestionsTest {
+    As a lecturer or moderator, press the square button with a triangle on the the top left hand side
+    Enter a file name in the pop-up
+    Press OK
+    Expect no error and the questions to be exported to the filled in file name
+}
+
+ExportQuestionsTest_PressCancel {
+    As a lecturer or moderator, press the square button with a triangle on the the top left hand side
+    Enter a file name in the pop-up
+    Press Cancel
+    Expect no error and the pop-up to close
+}
+
+EnterLecturerModeTest {
+    As a lecturer, press on the button with the L icon
+    Expect no error, the Lecturer mode button to light up and the Options drop-down menu to change into a Mark Answered button
+    Also expect the up-votes to disappear next to each question and the Sort By Function drop-down button to disappear from the sidebar
+}
+
+CloseLecturerModeTest {
+    As a lecturer, press on the enlightened Lecturer mode button
+    Expect no error, the Lecturer mode button to dim down and the Mark answered button to change into a Options drop-down menu
+    Also expect the up-votes to appear next to each question and the Sort By Function drop-down button to appear in the sidebar
+}
+
+PostQuestionTest {
+    Fill in a question in the Your question here... field with 1 to 420 characters
+    Press on the send button on the right hand side
+    Expect no error and a new asked question to appear in the Pending Question view
+}
+
+PostQuestionTest_NoText {
+    Don't fill in a question in the Your question here... field
+    Press on the send button on the right hand side
+    Expect a status message "Question cannot be null and must be between 1 and 420 characters."
+}
+
+PostQuestionTest_TooManyCharacters {
+    Fill in a question in the Your question here... field with 421 characters
+    Press on the send button on the right hand side
+    Expect a status message "Question cannot be null and must be between 1 and 420 characters."
+}
+
+PostQuestionAsStudentTest_AskTooFast {
+    Join the lecture as a student
+    Fill in a question in the Your question here... field with 1 to 420 characters
+    Press on the send button on the right hand side
+    Expect no error and a new asked question to appear in the Question view
+    Within a minute fill in another question in the Your question here... field with 1 to 420 characters
+    Press on the send button on the right hand side
+    Expect a status message "Cannot post more than 1 question in 1 minute."
+}
+
+PostQuestionTest_WhileIpIsBanned {
+    Get Ip Banned by a lecturer or moderator
+    Fill in a question in the Your question here... field with 1 to 420 characters
+    Press on the send button on the right hand side
+    Expect and a status message "Ip address has been banned from posting questions"
+}
+
+DeleteQuestionAsStudentTest {
+    Post a question
+    Press on the Delete button in the Pending Question view on the top right of the posted question
+    Expect no error, the question to be deleted from the Question view and a status message "message was deleted successfully!"
+}
+
+DeleteQuestionAsModeratorTest {
+    Press on the Options drop-down menu button on the top right hand side of a question
+    Press on delete
+    Expect no error, the question to be deleted from the Question view and a status message "message was deleted successfully!"
+}
+
+DeleteQuestionAsLecturerTest {
+    Press on the Options drop-down menu button on the top right hand side of a question
+    Press on delete
+    Expect no error, the question to be deleted from the Question view and a status message "message was deleted successfully!"
+}
+
+EditQuestionTest {
+    As a lecturer or moderator, press on the Options drop-down menu button on the top right hand side of a question
+    Press on edit
+    Edit the question
+    Expect no error, the question to be edited and a status message "message was edited successfully!"
+}
+
+****
+EditQuestionTest_MoreThan420Characters {
+    As a lecturer or moderator, press on the Options drop-down menu button on the top right hand side of a question
+    Press on edit
+    Edit the question
+    Expect the question to be edited and a status message "message was edited successfully!"
+}
+****
+EditQuestionTest_NoCharacters {
+    As a lecturer or moderator, press on the Options drop-down menu button on the top right hand side of a question
+    Press on edit
+    Edit the question
+    Expect the question to be edited and a status message "message was edited successfully!"
+}
+
+MarkQuestionAsAnsweredLecturerModeTest {
+    As a lecturer in lecturer mode, press on the Mark Answered button on the right hand side of a question
+    Expect no error, the question to disappear from the Pending question view and appear in the Answered question view
+}
+
+MarkQuestionAsAnsweredTest {
+    As a lecturer or moderator, press on the Options drop-down menu button on the top right hand side of a question
+    Press on Mark as answered
+    Expect no error, the question to disappear from the Pending question view and appear in the Answered question view
+}
+
+MarkQuestionAsAnswerWithTextTest {
+    As a lecturer or moderator, press on the Options drop-down menu button on the top right hand side of a question
+    Press on Answer with text
+    Answer the question with less than 420 characters
+    Press enter
+    Expect no error, the question and answer to disappear from the Pending Question view and appear in the Answered question View
+}
+
+MarkQuestionAsAnswerWithTextTest_TooManyCharacters {
+    As a lecturer or moderator, press on the Options drop-down menu button on the top right hand side of a question
+    Press on Answer with text
+    Answer the question with more than 420 characters
+    Press enter
+    Expect and a status message "Answer text was unacceptable"
+}
+
+MarkQuestionAsAnswerWithTextTest {
+    As a lecturer or moderator, press on the Options drop-down menu button on the top right hand side of a question
+    Press on Answer with text
+    Answer the question with 0 characters
+    Press enter
+    Expect no error, the question to disappear from the Pending Question view and appear in the Answered question View without any answer text
+}
+
+BanAuthorOfQuestionTest {
+    As a lecturer or moderator, press on the Options drop-down menu button on the top right hand side of a question
+    Press on Ban Author
+    Expect no error
+}
+
+LectureFeedbackVoteTooFastAsStudentTest {
+    Open the lecture feedback as a student
+    Press on the Too fast button
+    Expect no error and the number next to the Too fast button to increment by 1
+}
+
+LectureFeedbackVoteTooFastAsStudentTest_WhileVotedTooSlow {
+    Open the lecture feedback as a student
+    Press on the Too fast button
+    Expect the number next to the Too fast button to increment by 1 and the number next to the Too slow button to decrement by 1
+}
+
+LectureFeedbackVoteTooSlowAsStudentTest {
+    Open the lecture feedback as a student
+    Press on the Too slow button
+    Expect no error and the number next to the Too slow button to increment by 1
+}
+
+LectureFeedbackVoteTooSlowAsStudentTest_WhileVotedTooFast {
+    Open the lecture feedback as a student
+    Press on the Too slow button
+    Expect and the number next to the Too slow button to increment by 1 and the number next to the Too fast button to decrement by 1
+}
+
+ResetLectureFeedbackTooFastTest {
+    Open the lecture feedback as a lecturer or moderator
+    Press on the Too fast button
+    Expect no error and the number next to the Too fast button to be set to 0
+}
+
+ResetLectureFeedbackTooSlowTest {
+    Open the lecture feedback as a lecturer or moderator
+    Press on the Too slow button
+    Expect no error and the number next to the Too slow button to be set to 0
+}
+
+****
+SortByFunctionTest {
+
+}
+
+****
+EndLectureAsLecturerTest {
+
+}
+
+CreatePollTest {
+    As a lecturer or moderator, open the Poll/Quiz view
+    Fill in the Question title
+    Select the option count
+    Select the right answer
+    Press submit
+    Expect no error, the Poll/Quiz button to turn green for everyone and a status message "Poll/Quiz has opened!"
+    For the lecturers and moderators expect the current Poll/Quiz view to disappear and an End current button to appear
+    Also expect the amount of casted votes, the options and the percentage of voters for every option to appear
+    Also expect the right option to turn green
+    For the students expect the question title, a drop-down menu for choosing an answer and a submit button to appear
+}
+
+CreatePollTest_NoQuestionTitle {
+    As a lecturer or moderator, open the Poll/Quiz view
+    Don't fill in the Question title
+    Select the option count
+    Select the right answer
+    Press submit
+    Expect the question title field to wiggle and a status message "Please enter the title of the poll/quiz"
+}
+
+CreatePollTest_NoOptionCount {
+    As a lecturer or moderator, open the Poll/Quiz view
+    Fill in the Question title
+    Don't select the option count
+    Select the right answer
+    Press submit
+    Expect the option count field to wiggle and a status message "Please enter option count"
+}
+
+CreatePollTest_NoAnswerOption {
+    As a lecturer or moderator, open the Poll/Quiz view
+    Fill in the Question title
+    Select the option count
+    Don't select a right answer
+    Press submit
+    Expect the Answer field to wiggle and a status message "Please choose the correct answer or No Answer"
+}
+
+EndCurrentPollTest {
+    As a lecturer or moderator, create a poll
+    Press on the End current button
+    Expect no error and the current Poll/Quiz view to disappear for all students
+    Expect the amount of casted votes, the options and the percentage of voters for every option and a status message "Poll/Quiz has closed!" to appear for everyone
+    Also expect the text "No current polls/quizzes" to appear in the Poll/Quiz view for all students
+    Also expect the view to create a poll to reappear and a new Reopen last button to appear for lecturers and moderators
+}
+
+ReopenLastPollButtonTest {
+    Press the Reopen last button
+    Expect no error, the Poll/Quiz button to turn green for everyone and a status message "Poll/Quiz has opened!"
+    For the lecturers and moderators expect the current Poll/Quiz view to disappear and an End current button to appear
+    Also expect the amount of casted votes, the options and the percentage of voters for every option from the last poll to appear
+    Also expect the right option to turn green
+    For the students expect the question title, a drop-down menu for choosing an answer and a submit button to appear
+}
+
+AnswerPollAsStudentTest {
+    Press the answer dropdown menu in the Poll/Quiz view
+    Press Submit
+    Expect no error, the current view to disappear and a new text line "You have voted!" to appear
+}
+
+AnswerPollAsStudentTest_ReopenedAndAlreadyAnswered {
+    Press the answer dropdown menu in the Poll/Quiz view
+    Press Submit
+    Expect the status message "You can only vote once per poll/quiz!"
+}
+
+UpvoteQuestionTest {
+    Press on the upwards arrow button on the left hand side of a pending question
+    Expect no error the number under the arrow to get incremented by 1
+}
+
+UpvoteQuestionTest_OwnQuestion {
+    Press on the upwards arrow button on the left hand side of your own pending question
+    Expect no error and nothing to happen
+}
+
+UpvoteQuestionTest_AnsweredQuestion {
+    Press on the upwards arrow button on the left hand side of a answered question
+    Expect no error and nothing to happen
+}
+
+ReturnToCreateAndJoinLectureViewTest_CreatedLecture {
+    Press on the Create lecture button
+    Press on the left-facing arrow in the upper left corner
+    Expect no error and redirect to Create and Join Lecture view
+}
+
+ReturnToCreateAndJoinLectureViewTest_JoinedLecture {
+    Press on the join lecture button
+    Press on the left-facing arrow in the upper left corner
+    Expect no error and redirect to Create and Join Lecture view
+}
+
+ReturnToCreateLectureNowOrScheduleLectureViewTest_LectureCreatedNow {
+    Create a lecture now
+    Press on the left-facing arrow in the upper left corner
+    Expect no error and redirect to Create lecture now or Schedule lecture view
+}
+
+ReturnToCreateLectureNowOrScheduleLectureViewTest_LectureScheduled {
+    Schedule a lecture
+    Press on the left-facing arrow in the upper left corner
+    Expect no error and redirect to Create lecture now or Schedule lecture view
+}
+
+ReturnToCopyLinksViewTest {
+    Go to a lecture
+    Press on the left-facing arrow in the upper left corner
+    Expect no error and redirect to Copy links view
+}
+
+ReturnToJoinLectureView {
+    Join a lecture
+    Press on the left-facing arrow in the upper left corner
+    Expect no error and redirect to Join lecture view
+}
+
