@@ -80,7 +80,6 @@ public class QuestionController {
 
         String logMessage = "User " + userId + " asked a question " + questionText;
         logger.info(logMessage);
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
 
         return questionService.postQuestion(lectureId, userId, userIp, questionText);
     }
@@ -110,7 +109,6 @@ public class QuestionController {
 
         String logMessage = "User " + userId + " deletes question " + questionId;
         logger.info(logMessage);
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
 
         return questionService.deleteQuestion(lectureId, questionId, userId);
     }
@@ -157,7 +155,6 @@ public class QuestionController {
 
         String logMessage = "User " + userId + " edits question " + questionId;
         logger.info(logMessage);
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
         
         return questionService.editQuestion(lectureId, questionId, userId, newContent);
     }

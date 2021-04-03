@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import nl.tudelft.oopp.group54.entities.Lecture;
 import nl.tudelft.oopp.group54.entities.LectureFeedback;
-import nl.tudelft.oopp.group54.entities.LectureFeedbackKey;
+import nl.tudelft.oopp.group54.entities.MapLoggers;
 import nl.tudelft.oopp.group54.entities.User;
 import nl.tudelft.oopp.group54.entities.UserKey;
 import nl.tudelft.oopp.group54.repositories.LectureFeedbackRepository;
@@ -200,6 +200,9 @@ public class LectureServiceImpl implements LectureService {
         }
 
         userRepository.flush();
+
+        String logMessage = "User " + userName + " (" + newUser.getIpAddress() + ") joined";
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
 
         try {
             userRepository.save(newUser);

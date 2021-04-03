@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import nl.tudelft.oopp.group54.entities.Ban;
 import nl.tudelft.oopp.group54.entities.BanKey;
 import nl.tudelft.oopp.group54.entities.Lecture;
+import nl.tudelft.oopp.group54.entities.MapLoggers;
 import nl.tudelft.oopp.group54.entities.Question;
 import nl.tudelft.oopp.group54.entities.QuestionKey;
 import nl.tudelft.oopp.group54.entities.User;
@@ -129,6 +130,9 @@ public class QuestionServiceImplementation implements QuestionService {
 
         questionRepository.flush();
 
+        String logMessage = "User " + userId + " (" + findUserRow.get().getIpAddress() + ") asked a question " + questionText;
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+
         try {
             questionRepository.save(newQuestion);
             status.put("success", true);
@@ -190,6 +194,9 @@ public class QuestionServiceImplementation implements QuestionService {
                 .filter(x -> x.getAnswered() == false)
                 .map(x -> transformQuestion(x, lectureId))
                 .collect(Collectors.toList());
+
+        String logMessage = "User " + userId + " (" + foundUser.get().getIpAddress() + ") requests all questions";
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
 
         toBeReturned.put("answered", answeredQuestions);
         toBeReturned.put("unanswered", unAnsweredQuestions);
@@ -305,6 +312,14 @@ public class QuestionServiceImplementation implements QuestionService {
             status.put("message", e.toString());
         }
 
+        String logMessage = "User "
+                + userId
+                + " ("
+                + authorOfTheDeletionRequest.get().getIpAddress()
+                + ") deletes question "
+                + questionId;
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+
         return status;
     }
     
@@ -387,7 +402,15 @@ public class QuestionServiceImplementation implements QuestionService {
             status.put("success", false);
             status.put("message", e.toString());
         }
-         
+
+        String logMessage = "User "
+                + userId
+                + " ("
+                + authorOfTheEditRequest.get().getIpAddress()
+                + ") edits question "
+                + questionId;
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+
         return status;
     }
 

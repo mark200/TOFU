@@ -147,11 +147,8 @@ public class LectureController {
             return toBeReturned;
         }
 
-        MapLoggers.getInstance().logWarning(lectureID, "User " + userName + " joined the lecture");
-
         String logMessage = "User " + userName + " joined";
         logger.info(logMessage);
-        MapLoggers.getInstance().logWarning(lectureID, new Date() + " - " + logMessage);
 
         return lectureService.joinOngoingLecture(lectureID, roleCode, userName);
     }
