@@ -417,7 +417,8 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             this.displayStatusMessage(response.getMessage());
             return;
         }
-
+        
+        this.votedPolls.add(currentPollId);
         this.pollTitle.setText("You have voted!");
         this.voteBox.setVisible(false);
         this.submitPoll.setVisible(false);
