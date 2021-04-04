@@ -150,13 +150,12 @@ public class LectureTest {
     public void createScheduledLecture() {
         Map<String, Object> toBeReturned = new TreeMap<>();
 
-        Date date = new Date(9617964911237L);
-
         toBeReturned.put("success", true);
         toBeReturned.put("lectureId", null);
 
         when(lectureRepositoryMock.save(any(Lecture.class))).thenReturn(new Lecture());
 
+        Date date = new Date(9617964911237L);
         Map<String, Object> created = lectureService.createNewLecture(date, "OOPP");
 
         assertEquals(toBeReturned.get("success"), created.get("success"));
