@@ -148,3 +148,12 @@ build
 !gradle-wrapper.jar
 
 .DS_Store
+
+
+# Ignore database
+group54.mv.db
+group54.trace.db
+
+# Ignore logs, but keep the Logs directory
+server/Logs/*
+!server/Logs/.gitkeep

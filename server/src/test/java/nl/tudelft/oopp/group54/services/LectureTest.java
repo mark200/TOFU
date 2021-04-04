@@ -32,7 +32,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @ExtendWith(MockitoExtension.class)
-@RunWith(MockitoJUnitRunner.class)
 public class LectureTest {
 
     @Mock
@@ -68,6 +67,17 @@ public class LectureTest {
     }
 
     @Test
+    public void createLecture_NullStartTime() {
+        Map<String, Object> status = new TreeMap<>();
+        status.put("success", false);
+        status.put("message", "Null is not acceptable as a start time");
+
+        Map<String, Object> created =  lectureService.createNewLecture(null, "OOPP");
+
+        assertEquals(status, created);
+    }
+
+    @Test
     public void createInstantLecture() {
 
         Map<String, Object> toBeReturned = new TreeMap<>();
@@ -80,18 +90,77 @@ public class LectureTest {
         System.out.println(created);
 
         assertEquals(toBeReturned.get("lectureId"), created.get("lectureId"));
-        assertEquals(toBeReturned.get("success"), true);
+        assertEquals(toBeReturned.get("success"), created.get("success"));
     }
 
     @Test
-    public void createLecture_NullDate() {
-        Map<String, Object> status = new TreeMap<>();
-        status.put("success", false);
-        status.put("message", "Null is not acceptable as a start time");
+    public void createLectureStartTimeInThePast() {
+        Date timeInPast = new Date(1000);
 
-        Map<String, Object> created =  lectureService.createNewLecture(null, "OOPP");
+        Map<String, Object> toBeReturned = new TreeMap<>();
 
-        assertEquals(status, created);
+        toBeReturned.put("success", false);
+        toBeReturned.put("message", "Lecture start time was unacceptable");
+
+        Map<String, Object> created = lectureService.createNewLecture(timeInPast, "OOPP");
+
+        assertEquals(toBeReturned, created);
+    }
+
+    @Test
+    public void createLectureNameNull() {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+        Date date = new Date(9617564911237L);
+
+        toBeReturned.put("success", false);
+        toBeReturned.put("message", "Null is not acceptable as lecture name");
+
+        Map<String, Object> created = lectureService.createNewLecture(date, null);
+
+        assertEquals(toBeReturned, created);
+    }
+
+    @Test
+    public void createLectureNameTooLong() {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+        Date date = new Date(9617564911237L);
+
+        toBeReturned.put("success", false);
+        toBeReturned.put("message", "Lecture name should be shorter");
+
+        Map<String, Object> created = lectureService.createNewLecture(date, "This is a verry long OOPP lecture");
+
+        assertEquals(toBeReturned, created);
+    }
+
+    @Test
+    public void createLectureNameTooShort() {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+        Date date = new Date(9617564911237L);
+
+        toBeReturned.put("success", false);
+        toBeReturned.put("message", "Lecture name should be longer");
+
+        Map<String, Object> created = lectureService.createNewLecture(date, "");
+
+        assertEquals(toBeReturned, created);
+    }
+
+    @Test
+    public void createScheduledLecture() {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+
+        Date date = new Date(9617964911237L);
+
+        toBeReturned.put("success", true);
+        toBeReturned.put("lectureId", null);
+
+        when(lectureRepositoryMock.save(any(Lecture.class))).thenReturn(new Lecture());
+
+        Map<String, Object> created = lectureService.createNewLecture(date, "OOPP");
+
+        assertEquals(toBeReturned.get("success"), created.get("success"));
+        assertEquals(toBeReturned.get("lectureId"), null);
     }
 
     @Test
@@ -117,8 +186,4 @@ public class LectureTest {
 
 
     }
-
-
-
-
 }
