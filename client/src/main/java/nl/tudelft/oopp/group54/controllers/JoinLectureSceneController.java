@@ -2,6 +2,7 @@ package nl.tudelft.oopp.group54.controllers;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -83,8 +84,17 @@ public class JoinLectureSceneController extends AbstractApplicationController {
             }
         }
 
+        
+        if (textFieldParts.length != 4 || joinId.equals("") || !joinIdTextFieldString.startsWith("/j/")) {
+            this.shakeWidget(joinIdTextField);
+            this.displayStatusMessage("Please enter a valid join link!");
+            return;
+        }
+
         JoinLectureResponse response = null;
         String userIp = null;
+        
+
 
         try {
             userIp = InetAddress.getLocalHost().getHostAddress();
