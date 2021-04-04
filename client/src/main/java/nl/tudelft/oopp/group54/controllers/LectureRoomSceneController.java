@@ -340,8 +340,16 @@ public class LectureRoomSceneController extends AbstractApplicationController {
     }
 
     private void togglePollView(boolean open, Integer optionCount, String pollTitle, String pollId) {
+        
         if  (this.ds.getPrivilegeId() == 3) {
-            if (open) {
+            System.out.println("i am a student");
+            System.out.println("open = " + open);
+            System.out.println("contains = " + votedPolls.contains(pollId));
+            System.out.println("pollId = " + pollId);
+            System.out.println("votedPolls = " + votedPolls.toString());
+            
+            
+            if (open && !votedPolls.contains(pollId)) {
                 this.pollTitle.setText(pollTitle + ":");
                 this.voteBox.setVisible(true);
                 this.voteBox.getItems().clear();
@@ -361,7 +369,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                 submitPoll.setVisible(true);
                 statsView.setVisible(false);
 
-            } else if (votedPolls.contains(pollId)) {
+            } else if (open && votedPolls.contains(pollId)) {
                 this.pollTitle.setText("You have voted!");
                 this.voteBox.setVisible(false);
                 this.submitPoll.setVisible(false);
@@ -546,6 +554,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
             this.displayStatusMessage(response.getMessage());
             return;
         }
+
         
         if (openPoll && response.getClosed()) {
             this.displayStatusMessage("Poll/Quiz has closed!");
@@ -558,6 +567,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
         if (!openPoll && !response.getClosed()) {
             this.displayStatusMessage("Poll/Quiz has opened!");
             this.togglePollView(true, response.getOptionCount(), response.getTitle(), response.getPollId());
+            this.currentPollId = response.getPollId();
             this.pollAndQuizTab.setStyle("-fx-background-color: derive(green, 50%);");
             this.statsView.getItems().clear();
             this.openPoll = true;
