@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-public class LectureTest {
+public class LectureTest1 {
     static Lecture lecture1;
     static Lecture lecture2;
     static Lecture lecture3;
