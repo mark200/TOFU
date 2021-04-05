@@ -7,6 +7,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -343,6 +344,27 @@ public class LectureTest {
     }
 
     @Test
+    public void joinLecture_streamFilter() {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+
+        toBeReturned.put("success", true);
+        toBeReturned.put("userID", 1);
+        toBeReturned.put("userName", "Steve");
+        toBeReturned.put("role", "Lecturer");
+        toBeReturned.put("privilegeId", 1);
+
+        User user1 = new User(new UserKey(1, 1), "Ivan Ivanov", "127.0.0.1", new Date(), 1);
+        User user2 = new User(new UserKey(2, 2), "Ivan Ivanov", "127.0.0.1", new Date(), 1);
+
+        when(lectureRepositoryMock.findById(1)).thenReturn(Optional.of(lecture1));
+        when(userRepositoryMock.findAll()).thenReturn(Arrays.asList(user1, user2));
+
+        Map<String, Object> joined = lectureService.joinOngoingLecture(1, "lecturer-join", "Steve");
+
+        assertEquals(toBeReturned, joined);
+    }
+
+    @Test
     public void getLectureMetadata_lectureIdNull() {
         Map<String, Object> toBeReturned = new TreeMap<>();
 
@@ -384,6 +406,31 @@ public class LectureTest {
 
         assertEquals(toBeReturned, created);
     }
+
+    @Test
+    public void getLectureMetadata_streamFilter() {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+
+        toBeReturned.put("success", true);
+        toBeReturned.put("lectureID", lecture1.getId());
+        toBeReturned.put("people", 1);
+        toBeReturned.put("studentJoinID", lecture1.getStudentJoinId());
+        toBeReturned.put("moderatorJoinID", lecture1.getModeratorJoinId());
+        toBeReturned.put("lecturerJoinID", lecture1.getLecturerJoinId());
+        toBeReturned.put("lectureOngoing", lecture1.isLectureOngoing());
+
+        User user1 = new User(new UserKey(1, 1), "Ivan Ivanov", "127.0.0.1", new Date(), 1);
+        User user2 = new User(new UserKey(2, 2), "Ivan Ivanov", "127.0.0.1", new Date(), 1);
+
+        when(lectureRepositoryMock.findById(1)).thenReturn(Optional.of(lecture1));
+        when(userRepositoryMock.findAll()).thenReturn(Arrays.asList(user1, user2));
+
+        Map<String, Object> joined = lectureService.getLectureMetadata(1);
+
+        assertEquals(toBeReturned, joined);
+    }
+
+
 
     @Test
     public void endLecture_lectureIdNull() {
