@@ -192,4 +192,63 @@ public class VoteServiceTest {
 
         assertEquals(status, voted);
     }
+
+    @Test
+    void voteSameQuestion() {
+        Map<String, Object> status = new TreeMap<>();
+
+        status.put("success", false);
+        status.put("message", "Users cannot vote on their own question");
+
+        when(lectureRepositoryMock.findById(Mockito.anyInt())).thenReturn(Optional.of(lecture1));
+        when(userRepositoryMock.findById(Mockito.any(UserKey.class))).thenReturn(Optional.of(user1));
+        when(questionRepositoryMock.findById(Mockito.any(QuestionKey.class))).thenReturn(Optional.of(question1));
+
+        Map<String, Object> voted = voteService.voteOnQuestion(1, user1.getKey().getId().toString(),
+                question1.getPrimaryKey().getId(), true);
+
+        assertEquals(status, voted);
+    }
+
+    @Test
+    void voteTwice() {
+        Map<String, Object> status = new TreeMap<>();
+
+        status.put("success", false);
+        status.put("message", "Cannot vote more than once on the same question");
+
+        Vote vote = new Vote(new VoteKey(1, 1, 2), 1);
+
+        when(lectureRepositoryMock.findById(Mockito.anyInt())).thenReturn(Optional.of(lecture1));
+        when(userRepositoryMock.findById(Mockito.any(UserKey.class))).thenReturn(Optional.of(user1));
+        when(questionRepositoryMock.findById(Mockito.any(QuestionKey.class))).thenReturn(Optional.of(question2));
+        when(voteRepositoryMock.findById(Mockito.any(VoteKey.class))).thenReturn(Optional.of(vote));
+
+
+        Map<String, Object> voted = voteService.voteOnQuestion(1, user1.getKey().getId().toString(),
+                question2.getPrimaryKey().getId(), true);
+
+        assertEquals(status, voted);
+    }
+
+    @Test
+    void voteException() {
+        Map<String, Object> status = new TreeMap<>();
+
+        status.put("success", false);
+
+        IllegalArgumentException e = new IllegalArgumentException("Cannot save null Vote");
+
+        status.put("message", e.toString());
+
+        when(lectureRepositoryMock.findById(Mockito.anyInt())).thenReturn(Optional.of(lecture1));
+        when(userRepositoryMock.findById(Mockito.any(UserKey.class))).thenReturn(Optional.of(user1));
+        when(questionRepositoryMock.findById(Mockito.any(QuestionKey.class))).thenReturn(Optional.of(question2));
+        when(voteRepositoryMock.save(any(Vote.class))).thenThrow(e);
+
+        Map<String, Object> voted = voteService.voteOnQuestion(1, user1.getKey().getId().toString(),
+                question2.getPrimaryKey().getId(), true);
+
+        assertEquals(status, voted);
+    }
 }
