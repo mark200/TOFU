@@ -284,7 +284,7 @@ public class QuestionTest {
     }
     
     @Test
-    public void postQuestion() {
+    public void postQuestionStudentLastQuestionExists() {
         Map<String, Object> toBeReturned = new TreeMap<>();
         toBeReturned.put("success", true);
         toBeReturned.put("message", "question has been posted");
@@ -294,10 +294,40 @@ public class QuestionTest {
         
         student1.setLastQuestion(new Date(0));
         Map<String, Object> created = questionService.postQuestion(lecture1Id, student1Id, lecturerIp, questionText);
-        
+
         assertEquals(toBeReturned, created);
     }
     
+    @Test
+    public void postQuestionStudentLastQuestionDoesntExist() {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+        toBeReturned.put("success", true);
+        toBeReturned.put("message", "question has been posted");
+
+        when(userRepositoryMock.findById(new UserKey(1, 0))).thenReturn(Optional.of(student1));
+        when(lectureRepositoryMock.findById(0)).thenReturn(Optional.of(lecture1));
+
+        student1.setLastQuestion(null);
+        Map<String, Object> created = questionService.postQuestion(lecture1Id, student1Id, lecturerIp, questionText);
+
+        assertEquals(toBeReturned, created);
+    }
+
+    @Test
+    public void postQuestionLecturer() {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+        toBeReturned.put("success", true);
+        toBeReturned.put("message", "question has been posted");
+
+        when(userRepositoryMock.findById(new UserKey(0, 0))).thenReturn(Optional.of(lecturer));
+        when(lectureRepositoryMock.findById(0)).thenReturn(Optional.of(lecture1));
+
+        student1.setLastQuestion(new Date(0));
+        Map<String, Object> created = questionService.postQuestion(lecture1Id, lecturerId, lecturerIp, questionText);
+
+        assertEquals(toBeReturned, created);
+    }
+
     @Test
     public void getQuestionsWithoutLectureId() {
         Map<String, Object> toBeReturned = new TreeMap<>();
@@ -363,7 +393,7 @@ public class QuestionTest {
     }
     
     @Test
-    public void getAllQuestions() {
+    public void getAllQuestionsEmpty() {
         Map<String, Object> toBeReturned = new TreeMap<>();
         toBeReturned.put("answered", new ArrayList<Map<String, Object>>());
         toBeReturned.put("unanswered", new ArrayList<Map<String, Object>>());
@@ -372,12 +402,52 @@ public class QuestionTest {
         
         when(userRepositoryMock.findById(new UserKey(1, 0))).thenReturn(Optional.of(student1));
         when(lectureRepositoryMock.findById(0)).thenReturn(Optional.of(lecture1));
-        
+
+        Map<String, Object> created = questionService.getAllQuestions(lecture1Id, student1Id);
+
+        assertEquals(toBeReturned, created);
+    }
+
+    @Test
+    public void getAllQuestionsAnswered() {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+        List<Map<String, Object>> answered = new ArrayList<Map<String, Object>>();
+        toBeReturned.put("answered", answered);
+        toBeReturned.put("unanswered", new ArrayList<Map<String, Object>>());
+        toBeReturned.put("success", true);
+        toBeReturned.put("count", 1);
+
+        when(userRepositoryMock.findById(new UserKey(1, 0))).thenReturn(Optional.of(student1));
+        when(lectureRepositoryMock.findById(0)).thenReturn(Optional.of(lecture1));
+        when(questionRepositoryMock.findByLectureId(0)).thenReturn(List.of(question1));
+
+        answered.add(questionService.transformQuestion(question1, 0));
+
+        Map<String, Object> created = questionService.getAllQuestions(lecture1Id, student1Id);
+
+        assertEquals(toBeReturned, created);
+    }
+
+    @Test
+    public void getAllQuestionsUnanswered() {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+        List<Map<String, Object>> unanswered = new ArrayList<Map<String, Object>>();
+        toBeReturned.put("answered", new ArrayList<Map<String, Object>>());
+        toBeReturned.put("unanswered", unanswered);
+        toBeReturned.put("success", true);
+        toBeReturned.put("count", 1);
+
+        when(userRepositoryMock.findById(new UserKey(1, 0))).thenReturn(Optional.of(student1));
+        when(lectureRepositoryMock.findById(0)).thenReturn(Optional.of(lecture1));
+        when(questionRepositoryMock.findByLectureId(0)).thenReturn(List.of(question2));
+
+        unanswered.add(questionService.transformQuestion(question2, 0));
+
         Map<String, Object> created = questionService.getAllQuestions(lecture1Id, student1Id);
         
         assertEquals(toBeReturned, created);
     }
-    
+
     @Test
     public void deleteQuestionWithoutLectureId() {
         Map<String, Object> toBeReturned = new TreeMap<>();
@@ -597,6 +667,46 @@ public class QuestionTest {
         assertEquals(toBeReturned, created);
     }
     
+    @Test
+    public void editQuestionWithNullText() {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+        toBeReturned.put("code", "422 UNPROCESSABLE ENTRY");
+        toBeReturned.put("success", false);
+        toBeReturned.put("message", "Question cannot be null and must be between 1 and 420 characters.");
+
+        Map<String, Object> created = questionService.editQuestion(lecture1Id, question1Id, lecturerId, null);
+
+        assertEquals(toBeReturned, created);
+    }
+
+    @Test
+    public void editQuestionWithEmptyText() {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+        toBeReturned.put("code", "422 UNPROCESSABLE ENTRY");
+        toBeReturned.put("success", false);
+        toBeReturned.put("message", "Question cannot be null and must be between 1 and 420 characters.");
+
+        Map<String, Object> created = questionService.editQuestion(lecture1Id, question1Id, lecturerId, "");
+
+        assertEquals(toBeReturned, created);
+    }
+
+    @Test
+    public void editQuestionWithLongText() {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+        toBeReturned.put("code", "422 UNPROCESSABLE ENTRY");
+        toBeReturned.put("success", false);
+        toBeReturned.put("message", "Question cannot be null and must be between 1 and 420 characters.");
+
+        Map<String, Object> created = questionService.editQuestion(lecture1Id, question1Id, lecturerId,
+            "41e4a5dabecdba3c33ba24ebac2e153bac5c44d552435ebedad141d5a11d5e353c34cc51cee1a52a11c1caeacd2c3cdcbd3ea13a512abcd1c45"
+            + "e12b53552ddb4432ebec5513ce2aa2ee33db4bd422a312243dda34b13d1cc4e5322c1d22dcee5c2d4ded215cce255a4d553ea5eac1c3244de"
+            + "da3bbcde4dee353ba3ad3bac4c43e5c323a5a3ce5db533d3413b341e2bdc15dde2cbacac5314e2d41b14a3c5b22bd224b444ec3cceeccb453"
+            + "dee1ec4244532ad231245115a1e3e11b42aa34dc113e33c1eca4bababb1e3cd2e2cac4adb53a32b1");
+
+        assertEquals(toBeReturned, created);
+    }
+
     @Test
     public void editQuestionInvalidLectureId() {
         Map<String, Object> toBeReturned = new TreeMap<>();
