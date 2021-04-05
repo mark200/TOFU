@@ -57,12 +57,19 @@ public class MainView extends Application {
         Parent root = null;
         try {
             root = loader.load();
+            root.getStylesheets().add("stylesheets/defaultTheme.css");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+
         rootScene = new Scene(root);
         stage.setScene(rootScene);
+
+        if (newSceneName.getText().equals("lectureRoomScene")) {
+            stage.setHeight(650);
+            stage.setWidth(765);
+        }
 
         if (recordInHistory) {
             history.push(currentScene);
@@ -109,6 +116,10 @@ public class MainView extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static void clearHistory() {
+        history.clear();
     }
 
     private void batchLoadAllSceneLocations() throws IOException {

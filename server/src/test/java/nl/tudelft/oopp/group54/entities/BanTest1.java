@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-public class BanTest {
+public class BanTest1 {
 
     static Ban ban;
     static Ban banDuplicate;

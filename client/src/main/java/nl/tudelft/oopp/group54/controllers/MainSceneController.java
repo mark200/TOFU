@@ -1,5 +1,7 @@
 package nl.tudelft.oopp.group54.controllers;
 
+import com.sun.tools.javac.Main;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -31,6 +33,7 @@ public class MainSceneController extends AbstractApplicationController {
     @Override
     public void performControllerSpecificSetup() {
         System.out.println("Main controller config");
+        MainView.clearHistory();
     }
 
     /**

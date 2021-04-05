@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-public class QuestionTest {
+public class QuestionTest1 {
 
     private static Question question;
     private static Question questionDuplicate;
@@ -172,4 +172,3 @@ public class QuestionTest {
         assertEquals(expected, newQuestion.toString());
     }
 }
-

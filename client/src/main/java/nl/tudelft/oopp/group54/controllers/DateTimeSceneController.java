@@ -78,6 +78,10 @@ public class DateTimeSceneController extends AbstractApplicationController {
         String timeString = timeText.toString();
         Integer[] integerSplit = new Integer[2];
 
+        if (timeString.equals("")) {
+            return;
+        }
+
         if (!timeString.contains(":")) {
             if (timeString.length() <= 2) {
                 integerSplit[0] = Integer.valueOf(timeString);

@@ -1,5 +1,6 @@
 package nl.tudelft.oopp.group54.communication;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URI;
@@ -14,6 +15,8 @@ import nl.tudelft.oopp.group54.models.requestentities.EditQuestionRequest;
 import nl.tudelft.oopp.group54.models.requestentities.JoinLectureRequest;
 import nl.tudelft.oopp.group54.models.requestentities.LectureFeedbackRequest;
 import nl.tudelft.oopp.group54.models.requestentities.PostAnswerRequest;
+import nl.tudelft.oopp.group54.models.requestentities.PostPollRequest;
+import nl.tudelft.oopp.group54.models.requestentities.PostPollVoteRequest;
 import nl.tudelft.oopp.group54.models.requestentities.PostQuestionRequest;
 import nl.tudelft.oopp.group54.models.requestentities.VoteRequest;
 import nl.tudelft.oopp.group54.models.responseentities.BanIpResponse;
@@ -21,13 +24,19 @@ import nl.tudelft.oopp.group54.models.responseentities.CreateLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.DeleteQuestionResponse;
 import nl.tudelft.oopp.group54.models.responseentities.EditQuestionResponse;
 import nl.tudelft.oopp.group54.models.responseentities.EndLectureResponse;
+import nl.tudelft.oopp.group54.models.responseentities.EndPollResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetAllQuestionsResponse;
+import nl.tudelft.oopp.group54.models.responseentities.GetCurrentPollResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureFeedbackResponse;
 import nl.tudelft.oopp.group54.models.responseentities.GetLectureMetadataResponse;
+import nl.tudelft.oopp.group54.models.responseentities.GetPollStatsResponse;
 import nl.tudelft.oopp.group54.models.responseentities.JoinLectureResponse;
 import nl.tudelft.oopp.group54.models.responseentities.LectureFeedbackResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostAnswerResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostPollResponse;
+import nl.tudelft.oopp.group54.models.responseentities.PostPollVoteResponse;
 import nl.tudelft.oopp.group54.models.responseentities.PostQuestionResponse;
+import nl.tudelft.oopp.group54.models.responseentities.ReopenPollResponse;
 import nl.tudelft.oopp.group54.models.responseentities.VoteResponse;
 
 public class ServerCommunication {
@@ -411,5 +420,161 @@ public class ServerCommunication {
         }
 
         return objectMapper.readValue(response.body(), LectureFeedbackResponse.class);
+    }
+
+
+    /**
+     * post Poll.
+     * @param correctAnswer - the answer
+     * @param optionCount - # options
+     * @param title - title of poll
+     * @return - A PostPollResponse which describes whether the operation was successful
+     * @throws IOException - IO exception
+     * @throws InterruptedException - interrupts
+     */
+    public static PostPollResponse postPoll(String correctAnswer, Integer optionCount, String title)
+            throws IOException, InterruptedException {
+
+        PostPollRequest postPollRequest = new PostPollRequest(optionCount, ds.getUserId().toString(), correctAnswer, title);
+        String pprJson = objectMapper.writeValueAsString(postPollRequest);
+
+        System.out.println(pprJson);
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(pprJson))
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId() + "/polls"))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        System.out.println(objectMapper.readValue(response.body(), PostPollResponse.class).getMessage());
+
+        return objectMapper.readValue(response.body(), PostPollResponse.class);
+    }
+    
+    
+    /**
+     * Votes on a poll/quiz.
+     * 
+     * @param vote The vote
+     * @return The response
+     * @throws IOException - IO exception
+     * @throws InterruptedException - interrupts
+     */
+    public static PostPollVoteResponse postPollVote(String vote) throws IOException, InterruptedException {
+        PostPollVoteRequest ppvr = new PostPollVoteRequest(vote, ds.getUserId().toString());
+        String ppvrJson = objectMapper.writeValueAsString(ppvr);
+        
+        HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(ppvrJson))
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId() + "/polls/vote"))
+                .build();
+        
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), PostPollVoteResponse.class);
+    }
+    
+    /**
+     * Gets the current poll.
+     * @return information about the current poll
+     * @throws IOException - IO exception
+     * @throws InterruptedException - interrupts
+     */
+    public static GetCurrentPollResponse getCurrentPoll() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId() + "/polls?userId=" + ds.getUserId()))
+                .build();
+        
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), GetCurrentPollResponse.class);
+    }
+    
+    /**
+     * Ends the current poll.
+     * 
+     * @return information about the poll
+     * @throws IOException - IO exception
+     * @throws InterruptedException - interrupts
+     */
+    public static EndPollResponse endCurrentPoll() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .PUT(HttpRequest.BodyPublishers.ofString(""))
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId()
+                                 + "/polls/end?userId=" + ds.getUserId()))
+                .build();
+        
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), EndPollResponse.class);
+    }
+    
+    /**
+     * Gets statistics for the most recent poll.
+     * 
+     * @return the stats
+     * @throws IOException - IO exception
+     * @throws InterruptedException - interrupts
+     */
+    public static GetPollStatsResponse getPollStats() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .GET()
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId()
+                                 + "/polls/stats?userId=" + ds.getUserId()))
+                .build();
+   
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), GetPollStatsResponse.class);
+    }
+    
+    /**
+     * Reopens a poll.
+     * 
+     * @return the response
+     * @throws IOException - IO exception
+     * @throws InterruptedException - interrupts
+     */
+    public static ReopenPollResponse reopenPoll() throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .PUT(HttpRequest.BodyPublishers.ofString(""))
+                .header("content-type", "application/json")
+                .uri(URI.create(ds.getServiceEndpoint() + "/lectures/" + ds.getLectureId()
+                                 + "/polls/r?userId=" + ds.getUserId()))
+                .build();
+        
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            System.out.println("Status: " + response.statusCode());
+        }
+
+        return objectMapper.readValue(response.body(), ReopenPollResponse.class);
     }
 }

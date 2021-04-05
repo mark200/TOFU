@@ -28,10 +28,9 @@
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
@@ -59,47 +58,48 @@
                         </GridPane>
                      </children>
                   </GridPane>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Create lecture">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </Text>
-                  <Button fx:id="scheduleButton" mnemonicParsing="false" onAction="#scheduleButtonClicked" text="Schedule lecture" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                  <Button fx:id="scheduleButton" mnemonicParsing="false" onAction="#scheduleButtonClicked" text="Schedule lecture" GridPane.rowIndex="3" GridPane.valignment="TOP">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <GridPane GridPane.rowIndex="1">
+                  <GridPane GridPane.valignment="CENTER">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
                         <TextField fx:id="lectureNamePrompt" focusTraversable="false" promptText="Lecture name" GridPane.columnIndex="1" GridPane.valignment="BOTTOM" />
-                        <Button fx:id="instantButton" mnemonicParsing="false" onAction="#instantButtonClicked" text="Create Now" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Button>
                      </children>
                   </GridPane>
+                  <Button fx:id="instantButton" mnemonicParsing="false" onAction="#instantButtonClicked" text="Create Now" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
                </children>
             </GridPane>
-            <ToolBar fx:id="utilityToolbar" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0">
+            <ToolBar fx:id="utilityToolbar" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0">
               <items>
-                <Button fx:id="utilityToolbarBackButton" mnemonicParsing="false" onAction="#utilityToolbarBackButtonPressed" text="Back" />
+                <Button id="backButton" fx:id="utilityToolbarBackButton" mnemonicParsing="false" onAction="#utilityToolbarBackButtonPressed" styleClass="imageButton">
+                     <font>
+                        <Font size="11.0" />
+                     </font></Button>
               </items>
             </ToolBar>
-            <Text fx:id="systemStatus" fill="RED" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="This is the current system status" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Text>
+            <AnchorPane styleClass="statusBar" GridPane.rowIndex="2">
+               <children>
+                  <Text fx:id="systemStatus" fill="RED" layoutX="0.041015625" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="This is the current system status" AnchorPane.bottomAnchor="0.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
          </children>
       </GridPane>
    </children>
