@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-public class QuestionTest1 {
+public class QuestionTest {
 
     private static Question question;
     private static Question questionDuplicate;

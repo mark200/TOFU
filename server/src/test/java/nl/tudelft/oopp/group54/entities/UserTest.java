@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-public class UserTest1 {
+public class UserTest {
     private UserKey key = new UserKey(2, 3);
     private Date date = new Date();
     private User user = new User(key, "Ivan Ivanov", "127.0.0.1", date, 1);
