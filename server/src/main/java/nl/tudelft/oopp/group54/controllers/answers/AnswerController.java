@@ -1,10 +1,14 @@
 package nl.tudelft.oopp.group54.controllers.answers;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
 
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
+import nl.tudelft.oopp.group54.controllers.bans.BanController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/lectures")
 public class AnswerController {
+
+    private Logger logger = LoggerFactory.getLogger(AnswerController.class);
+
     @Autowired
     AnswerServiceImpl answerService;
 
@@ -61,6 +68,9 @@ public class AnswerController {
             toBeReturned.put("score", "catch");
             return toBeReturned;
         }
+
+        String logMessage = "User " + userId + " answered question " + questionId;
+        logger.info(logMessage);
 
         return answerService.answerQuestion(lectureId, userId, questionId, answerText);
     }

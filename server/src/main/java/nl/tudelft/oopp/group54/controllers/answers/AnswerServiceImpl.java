@@ -1,12 +1,13 @@
 package nl.tudelft.oopp.group54.controllers.answers;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.TreeMap;
 
 import nl.tudelft.oopp.group54.entities.Answer;
 import nl.tudelft.oopp.group54.entities.AnswerKey;
+import nl.tudelft.oopp.group54.entities.MapLoggers;
 import nl.tudelft.oopp.group54.entities.Question;
 import nl.tudelft.oopp.group54.entities.QuestionKey;
 import nl.tudelft.oopp.group54.entities.User;
@@ -95,6 +96,9 @@ public class AnswerServiceImpl implements AnswerService {
 
         questionRepository.flush();
         answerRepository.flush();
+
+        String logMessage = "User " + userId + " (" + foundUser.get().getIpAddress() + ") answered question " + questionId;
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
 
         try {
             questionRepository.save(foundQuestion.get());
