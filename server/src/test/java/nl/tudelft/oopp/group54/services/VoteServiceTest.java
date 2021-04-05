@@ -100,4 +100,96 @@ public class VoteServiceTest {
 
         assertEquals(status, voted);
     }
+
+    @Test
+    void voteUserIdNull() {
+        Map<String, Object> status = new TreeMap<>();
+
+        status.put("success", false);
+        status.put("message", "UserID cannot be null.");
+
+        Map<String, Object> voted = voteService.voteOnQuestion(1,null,
+                question2.getPrimaryKey().getId(), true);
+
+        assertEquals(status, voted);
+    }
+
+    @Test
+    void voteQuestionIdNull() {
+        Map<String, Object> status = new TreeMap<>();
+
+        status.put("success", false);
+        status.put("message", "QuestionID cannot be null.");
+
+        Map<String, Object> voted = voteService.voteOnQuestion(1,user1.getKey().getId().toString(),
+                null, true);
+
+        assertEquals(status, voted);
+    }
+
+    @Test
+    void userEmpty() {
+        Map<String, Object> status = new TreeMap<>();
+
+        status.put("success", false);
+        status.put("message", "Unrecognized userID.");
+
+        when(lectureRepositoryMock.findById(Mockito.anyInt())).thenReturn(Optional.of(lecture1));
+        when(questionRepositoryMock.findById(Mockito.any(QuestionKey.class))).thenReturn(Optional.of(question2));
+
+        Map<String, Object> voted = voteService.voteOnQuestion(1, user1.getKey().getId().toString(),
+                question2.getPrimaryKey().getId(), true);
+
+        assertEquals(status, voted);
+    }
+
+    @Test
+    void questionEmpty() {
+        Map<String, Object> status = new TreeMap<>();
+
+        status.put("success", false);
+        status.put("message", "There does not exist a question with this ID.");
+
+        when(lectureRepositoryMock.findById(Mockito.anyInt())).thenReturn(Optional.of(lecture1));
+        when(userRepositoryMock.findById(Mockito.any(UserKey.class))).thenReturn(Optional.of(user1));
+
+        Map<String, Object> voted = voteService.voteOnQuestion(1, user1.getKey().getId().toString(),
+                question2.getPrimaryKey().getId(), true);
+
+        assertEquals(status, voted);
+    }
+
+    @Test
+    void lectureEmpty() {
+        Map<String, Object> status = new TreeMap<>();
+
+        status.put("success", false);
+        status.put("message", "There does not exist a lecture with this id.");
+
+        when(userRepositoryMock.findById(Mockito.any(UserKey.class))).thenReturn(Optional.of(user1));
+        when(questionRepositoryMock.findById(Mockito.any(QuestionKey.class))).thenReturn(Optional.of(question2));
+
+        Map<String, Object> voted = voteService.voteOnQuestion(1, user1.getKey().getId().toString(),
+                question2.getPrimaryKey().getId(), true);
+
+        assertEquals(status, voted);
+    }
+
+    @Test
+    void lectureFinished() {
+        Map<String, Object> status = new TreeMap<>();
+
+        status.put("success", false);
+        status.put("message", "The lecture has ended.");
+
+        lecture1.setLectureOngoing(false);
+        when(lectureRepositoryMock.findById(Mockito.anyInt())).thenReturn(Optional.of(lecture1));
+        when(userRepositoryMock.findById(Mockito.any(UserKey.class))).thenReturn(Optional.of(user1));
+        when(questionRepositoryMock.findById(Mockito.any(QuestionKey.class))).thenReturn(Optional.of(question2));
+
+        Map<String, Object> voted = voteService.voteOnQuestion(1, user1.getKey().getId().toString(),
+                question2.getPrimaryKey().getId(), true);
+
+        assertEquals(status, voted);
+    }
 }
