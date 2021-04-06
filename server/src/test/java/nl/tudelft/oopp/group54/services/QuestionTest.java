@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+
+import nl.tudelft.oopp.group54.controllers.bans.BanService;
 import nl.tudelft.oopp.group54.controllers.lectures.LectureServiceImpl;
 import nl.tudelft.oopp.group54.controllers.questions.QuestionServiceImplementation;
 import nl.tudelft.oopp.group54.entities.Lecture;
@@ -17,6 +19,7 @@ import nl.tudelft.oopp.group54.entities.Question;
 import nl.tudelft.oopp.group54.entities.QuestionKey;
 import nl.tudelft.oopp.group54.entities.User;
 import nl.tudelft.oopp.group54.entities.UserKey;
+import nl.tudelft.oopp.group54.repositories.BanRepository;
 import nl.tudelft.oopp.group54.repositories.LectureFeedbackRepository;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.QuestionRepository;
@@ -49,6 +52,9 @@ public class QuestionTest {
     
     @Mock
     private QuestionRepository questionRepositoryMock;
+
+    @Mock
+    private BanRepository banRepositoryMock;
 
     @InjectMocks
     private QuestionServiceImplementation questionService;
@@ -265,7 +271,7 @@ public class QuestionTest {
         assertEquals(toBeReturned, created);
     }
     
-    @Test
+    @Test()
     public void postQuestionException() {
         NullPointerException e = new NullPointerException("Beep boop");
         
@@ -279,7 +285,7 @@ public class QuestionTest {
         
         student1.setLastQuestion(new Date(0));
         Map<String, Object> created = questionService.postQuestion(lecture1Id, student1Id, lecturerIp, questionText);
-        
+
         assertEquals(toBeReturned, created);
     }
     
@@ -624,6 +630,7 @@ public class QuestionTest {
         Map<String, Object> toBeReturned = new TreeMap<>();
         toBeReturned.put("success", true);
         toBeReturned.put("questionId", 3);
+        toBeReturned.put("message", "message was deleted successfully!");
         
         when(userRepositoryMock.findById(new UserKey(0, 0))).thenReturn(Optional.of(lecturer));
         when(lectureRepositoryMock.findById(0)).thenReturn(Optional.of(lecture1));
@@ -771,7 +778,7 @@ public class QuestionTest {
         Map<String, Object> toBeReturned = new TreeMap<>();
         toBeReturned.put("success", false);
         toBeReturned.put("message", "Answered questions cannot be edited!");
-        
+
         when(userRepositoryMock.findById(new UserKey(1, 0))).thenReturn(Optional.of(student1));
         when(lectureRepositoryMock.findById(0)).thenReturn(Optional.of(lecture1));
         when(questionRepositoryMock.findById(new QuestionKey(0, 0))).thenReturn(Optional.of(question1));
