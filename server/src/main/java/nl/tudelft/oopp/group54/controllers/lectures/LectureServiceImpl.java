@@ -18,6 +18,7 @@ import nl.tudelft.oopp.group54.repositories.LectureFeedbackRepository;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,6 +33,20 @@ public class LectureServiceImpl implements LectureService {
     @Autowired
     private LectureFeedbackRepository lectureFeedbackRepository;
 
+    public LectureServiceImpl() {
+    }
+
+    public LectureRepository getLectureRepository() {
+        return lectureRepository;
+    }
+
+    public UserRepository getUserRepository() {
+        return userRepository;
+    }
+
+    public LectureFeedbackRepository getLectureFeedbackRepository() {
+        return lectureFeedbackRepository;
+    }
 
     public void setLectureRepository(LectureRepository lectureRepository) {
         this.lectureRepository = lectureRepository;
