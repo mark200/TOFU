@@ -76,7 +76,8 @@ public class QuestionServiceImplementation implements QuestionService {
 
         Optional<User> findUserRow = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
         Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
-        Optional<Ban> findBanRow = banRepository.findById(new BanKey(userIp, lectureId));
+        BanKey bk = new BanKey(userIp, lectureId);
+        Optional<Ban> findBanRow = banRepository.findById(bk);
 
         if (foundLecture.isEmpty()) {
             status.put("success", false);

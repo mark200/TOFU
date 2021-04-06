@@ -42,6 +42,11 @@ public class BanTest {
     static BanKey banKey1;
     static BanKey banKey2;
 
+
+    /**
+     * A method that is run before every test.
+     * Creates two banned IPs.
+     */
     @BeforeEach
     public void init() {
         banKey1 = new BanKey("192.158.1.38", 321);
@@ -56,7 +61,7 @@ public class BanTest {
         status.put("success", false);
         status.put("message", "LectureID cannot be null!");
 
-        Map<String, Object> created = banService.banIp(null, 123, "192.158.1.38" );
+        Map<String, Object> created = banService.banIp(null, 123, "192.158.1.38");
         assertEquals(status, created);
     }
 
@@ -66,7 +71,7 @@ public class BanTest {
         status.put("success", false);
         status.put("message", "QuestionID cannot be null!");
 
-        Map<String, Object> created = banService.banIp(123, null, "192.158.1.38" );
+        Map<String, Object> created = banService.banIp(123, null, "192.158.1.38");
         assertEquals(status, created);
     }
 

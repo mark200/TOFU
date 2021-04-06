@@ -2,6 +2,9 @@ package nl.tudelft.oopp.group54.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import nl.tudelft.oopp.group54.controllers.polls.PollServiceImpl;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.PollRepository;
@@ -13,9 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Map;
-import java.util.TreeMap;
 
 @ExtendWith(MockitoExtension.class)
 public class PollServiceTest {

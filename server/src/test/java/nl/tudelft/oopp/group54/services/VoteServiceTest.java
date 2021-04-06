@@ -1,5 +1,9 @@
 package nl.tudelft.oopp.group54.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
@@ -29,10 +33,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class VoteServiceTest {
@@ -65,6 +65,10 @@ public class VoteServiceTest {
     Question question2;
 
 
+    /**
+     * A method that is run before every test.
+     * Creates two lectures, two users, two questions.
+     */
     @BeforeEach
     public void initEach() {
         System.out.println(voteRepositoryMock);

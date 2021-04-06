@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+
+import nl.tudelft.oopp.group54.controllers.bans.BanService;
 import nl.tudelft.oopp.group54.controllers.lectures.LectureServiceImpl;
 import nl.tudelft.oopp.group54.controllers.questions.QuestionServiceImplementation;
 import nl.tudelft.oopp.group54.entities.Ban;
@@ -55,6 +57,7 @@ public class QuestionTest {
     
     @Mock
     private BanRepository banRepositoryMock;
+
 
     @InjectMocks
     private QuestionServiceImplementation questionService;
@@ -291,7 +294,7 @@ public class QuestionTest {
         assertEquals(toBeReturned, created);
     }
     
-    @Test
+    @Test()
     public void postQuestionException() {
         NullPointerException e = new NullPointerException("Beep boop");
         
@@ -306,7 +309,7 @@ public class QuestionTest {
         
         student1.setLastQuestion(new Date(0));
         Map<String, Object> created = questionService.postQuestion(lecture1Id, student1Id, student1Ip, questionText);
-        
+   
         assertEquals(toBeReturned, created);
     }
     
