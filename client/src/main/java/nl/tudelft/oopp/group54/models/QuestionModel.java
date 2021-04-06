@@ -94,12 +94,9 @@ public class QuestionModel implements Serializable {
     @Override
     public String toString() {
         questionText = questionText.trim();
-        System.out.print(questionText + " a ");
-        System.out.println();
         String s = "Q: " + questionText + "\n";
         if (answerText != null && !answerText.equals("")) {
-            answerText.trim();
-            s += "A: " + answerText;
+            s += "A: " + answerText + "\n";
         } else {
             s += "A: No answer for this question\n";
         }

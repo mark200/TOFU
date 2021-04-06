@@ -1,0 +1,7 @@
+v entities/AnswerTest.java
+v entities/BanTest.java
+v entities/LectureTest.java
+  services/LectureTest.java
+  QuestionServiceImplementation.java
+  entities/QuestionTest.java
+  entities/UserTest.java

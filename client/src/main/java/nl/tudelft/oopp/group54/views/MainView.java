@@ -57,6 +57,7 @@ public class MainView extends Application {
         Parent root = null;
         try {
             root = loader.load();
+            root.getStylesheets().add("stylesheets/defaultTheme.css");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -115,6 +116,10 @@ public class MainView extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static void clearHistory() {
+        history.clear();
     }
 
     private void batchLoadAllSceneLocations() throws IOException {

@@ -1,12 +1,21 @@
 package nl.tudelft.oopp.group54.controllers;
 
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.FillTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
 import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -26,10 +35,6 @@ public abstract class AbstractApplicationController {
 
     @FXML
     Text systemStatus;
-
-    RotateTransition rotateTransition;
-
-    FadeTransition fadeTransition;
 
     public AbstractApplicationController() {
 
@@ -72,8 +77,23 @@ public abstract class AbstractApplicationController {
         fadeTransition.setAutoReverse(true);
         fadeTransition.setCycleCount(1);
 
-        fadeTransition.setNode(this.systemStatus);
+        fadeTransition.setNode(widget);
         fadeTransition.play();
+    }
+
+
+    /**
+     * Spin widget.
+     *
+     * @param widget the widget
+     */
+    public void spinWidget(Node widget) {
+        RotateTransition rotateTransition = new RotateTransition(Duration.seconds(1));
+        rotateTransition.setToAngle(360);
+        rotateTransition.setFromAngle(0);
+        rotateTransition.setCycleCount(1);
+        rotateTransition.setNode(widget);
+        rotateTransition.play();
     }
 
     public void utilityToolbarBackButtonPressed() {

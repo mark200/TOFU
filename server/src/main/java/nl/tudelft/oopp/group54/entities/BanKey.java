@@ -42,11 +42,10 @@ public class BanKey implements Serializable, Comparable {
         this.lectureID = lectureID;
     }
 
-    //TODO: implement this compare correctly.
     @Override
     public int compareTo(Object o) {
         BanKey that = (BanKey) o;
-        return Integer.valueOf(bannedIP).compareTo(Integer.valueOf(that.getBannedIP()))
+        return String.valueOf(bannedIP).compareTo(String.valueOf(that.getBannedIP()))
                 & Integer.valueOf(lectureID).compareTo(Integer.valueOf(that.getLectureID()));
     }
 

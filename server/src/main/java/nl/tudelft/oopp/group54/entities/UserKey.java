@@ -42,7 +42,10 @@ public class UserKey implements Serializable, Comparable {
      */
     @Override
     public int compareTo(Object o) {
-        return 0;
+        UserKey that = (UserKey) o;
+
+        return id.compareTo(that.getId())
+                & lectureID.compareTo(that.getLectureID());
     }
 
     /**

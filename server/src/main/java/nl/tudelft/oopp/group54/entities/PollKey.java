@@ -45,7 +45,7 @@ public class PollKey implements Serializable, Comparable {
     //TODO: implement this compare correctly.
     @Override
     public int compareTo(Object o) {
-        QuestionKey that = (QuestionKey) o;
+        PollKey that = (PollKey) o;
         return Integer.valueOf(id).compareTo(Integer.valueOf(that.getId()));
     }
 
@@ -55,10 +55,12 @@ public class PollKey implements Serializable, Comparable {
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        QuestionKey that = (QuestionKey) o;
+
+        PollKey that = (PollKey) o;
         return getId() == that.getId()
                 && getLectureId() == that.getLectureId();
     }

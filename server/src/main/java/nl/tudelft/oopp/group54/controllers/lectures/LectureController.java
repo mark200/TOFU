@@ -1,5 +1,6 @@
 package nl.tudelft.oopp.group54.controllers.lectures;
 
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -7,6 +8,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import nl.tudelft.oopp.group54.controllers.ParamResolver;
+import nl.tudelft.oopp.group54.entities.MapLoggers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/lectures")
 public class LectureController {
 
+    private Logger logger = LoggerFactory.getLogger(LectureController.class);
+
     @Autowired
     LectureServiceImpl lectureService;
 
@@ -33,10 +39,22 @@ public class LectureController {
     }
 
 
+    /**
+     * Ends a lecture.
+     * @param userId the user id
+     * @param lectureId the lecture id
+     * @return
+     */
     @PutMapping(
             value = "/e/{lectureId}",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> endLecture(@RequestParam String userId, @PathVariable String lectureId) {
+        try {
+            MapLoggers.getInstance().writeToFile(Integer.parseInt(lectureId));
+            MapLoggers.getInstance().setMapValue(Integer.parseInt(lectureId), null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return lectureService.endLecture(Integer.parseInt(userId), Integer.parseInt(lectureId));
     }
 
@@ -129,6 +147,9 @@ public class LectureController {
             return toBeReturned;
         }
 
+        String logMessage = "User " + userName + " joined";
+        logger.info(logMessage);
+
         return lectureService.joinOngoingLecture(lectureID, roleCode, userName);
     }
 
@@ -179,14 +200,28 @@ public class LectureController {
             return toBeReturned;
         }
 
+        String logMessage = "User " + userId + " posted feedback";
+        logger.info(logMessage);
+        MapLoggers.getInstance().logWarning(lectureID, new Date() + " - " + logMessage);
+
         return lectureService.postLectureFeedback(lectureID, userId, lectureFeedbackCode);
     }
 
+    /**
+     * Gets feedback about lecture.
+     * @param lectureID the lecture id
+     * @param userId the user id
+     * @return
+     */
     @GetMapping(
             value = "/{lectureID}/feedback",
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> getLectureFeedback(@PathVariable("lectureID") Integer lectureID,
                                                   @RequestParam String userId) {
+
+        String logMessage = "User " + userId + " requested feedback about lecture";
+        logger.info(logMessage);
+        MapLoggers.getInstance().logWarning(lectureID, new Date() + " - " + logMessage);
 
         return lectureService.getLectureFeedback(lectureID, userId);
     }

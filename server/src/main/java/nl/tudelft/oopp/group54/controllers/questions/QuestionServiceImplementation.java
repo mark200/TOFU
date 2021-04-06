@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import nl.tudelft.oopp.group54.entities.Ban;
 import nl.tudelft.oopp.group54.entities.BanKey;
 import nl.tudelft.oopp.group54.entities.Lecture;
+import nl.tudelft.oopp.group54.entities.MapLoggers;
 import nl.tudelft.oopp.group54.entities.Question;
 import nl.tudelft.oopp.group54.entities.QuestionKey;
 import nl.tudelft.oopp.group54.entities.User;
@@ -75,25 +76,26 @@ public class QuestionServiceImplementation implements QuestionService {
 
         Optional<User> findUserRow = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
         Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
-        Optional<Ban> findBanRow = banRepository.findById(new BanKey(userIp, lectureId));
+        BanKey bk = new BanKey(userIp, lectureId);
+        Optional<Ban> findBanRow = banRepository.findById(bk);
 
-        if (findBanRow.isPresent()) {
-            status.put("code", "401 UNAUTHORIZED");
+        if (foundLecture.isEmpty()) {
             status.put("success", false);
-            status.put("message", "Ip address has been banned from posting questions");
+            status.put("message", "There does not exist a lecture with this id.");
             return status;
         }
 
         if (findUserRow.isEmpty()) {
             status.put("code", "401 UNAUTHORIZED");
             status.put("success", false);
-            status.put("message", "Unrecognized user ID or specified lecture does not exist!");
+            status.put("message", "Unrecognized user ID or user not in lecture!");
             return status;
         }
-
-        if (foundLecture.isEmpty()) {
+        
+        if (findBanRow.isPresent()) {
+            status.put("code", "401 UNAUTHORIZED");
             status.put("success", false);
-            status.put("message", "There does not exist a lecture with this id.");
+            status.put("message", "Ip address has been banned from posting questions");
             return status;
         }
 
@@ -128,6 +130,9 @@ public class QuestionServiceImplementation implements QuestionService {
         findUserRow.get().setLastQuestion(new Date(System.currentTimeMillis()));
 
         questionRepository.flush();
+
+        String logMessage = "User " + userId + " (" + findUserRow.get().getIpAddress() + ") asked a question " + questionText;
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
 
         try {
             questionRepository.save(newQuestion);
@@ -191,6 +196,9 @@ public class QuestionServiceImplementation implements QuestionService {
                 .map(x -> transformQuestion(x, lectureId))
                 .collect(Collectors.toList());
 
+        String logMessage = "User " + userId + " (" + foundUser.get().getIpAddress() + ") requests all questions";
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+
         toBeReturned.put("answered", answeredQuestions);
         toBeReturned.put("unanswered", unAnsweredQuestions);
         toBeReturned.put("success", true);
@@ -215,24 +223,27 @@ public class QuestionServiceImplementation implements QuestionService {
             return status;
         }
 
+        if (userId == null) {
+            status.put("success", false);
+            status.put("message", "user id can't be null");
+            return status;
+        }
+
         // get question and author of request from database.
         Optional<Question> questionToBeDeleted = questionRepository.findById(new QuestionKey(questionId, lectureId));
         Optional<User> authorOfTheDeletionRequest = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
         Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
 
-        Integer requestAuthorLectureId = authorOfTheDeletionRequest.get().getKey().getLectureID();
-        Integer questionAuthorLectureId = questionToBeDeleted.get().getPrimaryKey().getLectureId();
-
-        // If the lectures of user and question do not match.
-        if (!requestAuthorLectureId.equals(questionAuthorLectureId)) {
-            status.put("success", false);
-            status.put("message", "The question in different lecture can't be deleted!");
-            return status;
-        }
-
         if (foundLecture.isEmpty()) {
             status.put("success", false);
             status.put("message", "Unrecognized lecture.");
+            return status;
+        }
+        
+        if (authorOfTheDeletionRequest.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized user id or specified lecture does not exist!");
+            return status;
         }
 
         if (questionToBeDeleted.isEmpty()) {
@@ -240,10 +251,10 @@ public class QuestionServiceImplementation implements QuestionService {
             status.put("message", "Unrecognized question. Incorrect combination of lecture and question ids");
             return status;
         }
-
-        if (authorOfTheDeletionRequest.isEmpty()) {
+        
+        if (questionToBeDeleted.get().getAnswered()) {
             status.put("success", false);
-            status.put("message", "Unrecognized user id or specified lecture does not exist!");
+            status.put("message", "Answered questions cannot be deleted!");
             return status;
         }
 
@@ -255,46 +266,25 @@ public class QuestionServiceImplementation implements QuestionService {
         // 2 - moderator
         // 3 - student
 
-        // don't let students post questions once the lecture has ended
-        if (authorOfTheDeletionRequest.get().getRoleID().equals(3)) {
+        //if the user is a student
+        if (requestAuthorRole.equals(3)) {
+            // don't let students delete questions once the lecture has ended
             if (!foundLecture.get().isLectureOngoing()) {
                 status.put("success", false);
                 status.put("message", "The lecture has ended.");
                 return status;
             }
-        }
 
-        // If the user who made the request to delete question is not the owner of the question,
-        // then delete question only if the user who sent delete request is a moderator/lecturer.
-        if (!requestAuthorId.equals(questionAuthorId)) {
             // If request was made by user then he is not authorized to delete other's questions
-            if (requestAuthorRole.equals(3)) {
+            if (!requestAuthorId.equals(questionAuthorId)) {
                 status.put("code", "401 UNAUTHORIZED");
                 status.put("success", false);
                 status.put("message", "You are not authorized to delete this question!");
                 return status;
             }
-
-            // If it was made by moderator or lecturer
-            if (requestAuthorRole.equals(2) || requestAuthorRole.equals(1)) {
-
-                try {
-                    questionRepository.delete(questionToBeDeleted.get());
-                    status.put("success", true);
-                    status.put("questionId", questionToBeDeleted.get().getPrimaryKey().getId());
-                    status.put("message", "message was deleted successfully!");
-                } catch (Exception e) {
-                    status.put("success", false);
-                    status.put("message", e.toString());
-                }
-
-                return status;
-
-            }
-
         }
 
-        // The last case: the author of request is the owner of the question,
+        // The person who tries to delete the question is an author or a moderator/lecturer
         // just delete the question.
         try {
             questionRepository.delete(questionToBeDeleted.get());
@@ -304,6 +294,14 @@ public class QuestionServiceImplementation implements QuestionService {
             status.put("success", false);
             status.put("message", e.toString());
         }
+
+        String logMessage = "User "
+                + userId
+                + " ("
+                + authorOfTheDeletionRequest.get().getIpAddress()
+                + ") deletes question "
+                + questionId;
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
 
         return status;
     }
@@ -319,30 +317,40 @@ public class QuestionServiceImplementation implements QuestionService {
             return status;
         }
 
+        if (userId == null) {
+            status.put("success", false);
+            status.put("message", "UserID cannot be null!");
+            return status;
+        }
+
         if (lectureId == null) {
             status.put("success", false);
             status.put("message", "Lecture id can't be null");
             return status;
         }
-        
+
+        if (newContent == null || newContent.length() <= 0 || newContent.length() > 420) {
+            status.put("code", "422 UNPROCESSABLE ENTRY");
+            status.put("success", false);
+            status.put("message", "Question cannot be null and must be between 1 and 420 characters.");
+            return status;
+        }
+
         // get question and author of request from database.
         Optional<Question> questionToBeEdited = questionRepository.findById(new QuestionKey(questionId, lectureId));
         Optional<User> authorOfTheEditRequest = userRepository.findById(new UserKey(Integer.parseInt(userId), lectureId));
         Optional<Lecture> foundLecture = lectureRepository.findById(lectureId);
-        
-        Integer requestAuthorLectureId = authorOfTheEditRequest.get().getKey().getLectureID();
-        Integer questionAuthorLectureId = questionToBeEdited.get().getPrimaryKey().getLectureId();
-        
-        // If the lectures of user and question do not match.
-        if (!requestAuthorLectureId.equals(questionAuthorLectureId)) {
-            status.put("success", false);
-            status.put("message", "The question in different lecture can't be edited!");
-            return status;
-        }
 
         if (foundLecture.isEmpty()) {
             status.put("success", false);
             status.put("message", "Unrecognized lecture.");
+            return status;
+        }
+        
+        if (authorOfTheEditRequest.isEmpty()) {
+            status.put("success", false);
+            status.put("message", "Unrecognized user id or specified lecture does not exist!");
+            return status;
         }
 
         if (questionToBeEdited.isEmpty()) {
@@ -350,10 +358,10 @@ public class QuestionServiceImplementation implements QuestionService {
             status.put("message", "Unrecognized question. Incorrect combination of lecture and question ids");
             return status;
         }
-
-        if (authorOfTheEditRequest.isEmpty()) {
+        
+        if (questionToBeEdited.get().getAnswered()) {
             status.put("success", false);
-            status.put("message", "Unrecognized user id or specified lecture does not exist!");
+            status.put("message", "Answered questions cannot be edited!");
             return status;
         }
         
@@ -387,7 +395,15 @@ public class QuestionServiceImplementation implements QuestionService {
             status.put("success", false);
             status.put("message", e.toString());
         }
-         
+
+        String logMessage = "User "
+                + userId
+                + " ("
+                + authorOfTheEditRequest.get().getIpAddress()
+                + ") edits question "
+                + questionId;
+        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+
         return status;
     }
 
