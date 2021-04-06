@@ -12,11 +12,14 @@ import java.util.Optional;
 import java.util.TreeMap;
 import nl.tudelft.oopp.group54.controllers.lectures.LectureServiceImpl;
 import nl.tudelft.oopp.group54.controllers.questions.QuestionServiceImplementation;
+import nl.tudelft.oopp.group54.entities.Ban;
+import nl.tudelft.oopp.group54.entities.BanKey;
 import nl.tudelft.oopp.group54.entities.Lecture;
 import nl.tudelft.oopp.group54.entities.Question;
 import nl.tudelft.oopp.group54.entities.QuestionKey;
 import nl.tudelft.oopp.group54.entities.User;
 import nl.tudelft.oopp.group54.entities.UserKey;
+import nl.tudelft.oopp.group54.repositories.BanRepository;
 import nl.tudelft.oopp.group54.repositories.LectureFeedbackRepository;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.QuestionRepository;
@@ -49,6 +52,9 @@ public class QuestionTest {
     
     @Mock
     private QuestionRepository questionRepositoryMock;
+    
+    @Mock
+    private BanRepository banRepositoryMock;
 
     @InjectMocks
     private QuestionServiceImplementation questionService;
@@ -59,6 +65,8 @@ public class QuestionTest {
     private static String student1Id;
     private static String student2Id;
     private static String lecturerIp;
+    private static String student1Ip;
+    private static String student2Ip;
     private static String questionText = "This is a question";
     private static String newQuestionText = "This is an editedquestion";
 
@@ -96,8 +104,10 @@ public class QuestionTest {
         lecturerIp = lecturer.getIpAddress();
         student1 = new User(new UserKey(1, 0), "Stud1", "help2", new Date(0), 3);
         student1Id = student1.getKey().getId().toString();
+        student1Ip = student1.getIpAddress();
         student2 = new User(new UserKey(0, 1), "Stud2", "help3", new Date(0), 3);
         student2Id = student2.getKey().getId().toString();
+        student2Ip = student2.getIpAddress();
         
         question1 = new Question(new QuestionKey(0, 0), student1.getKey().getId(), student1.getIpAddress(), 
                                  questionText, 0, true, new Date());
@@ -230,7 +240,23 @@ public class QuestionTest {
         when(userRepositoryMock.findById(new UserKey(1, 1))).thenReturn(Optional.empty());
         when(lectureRepositoryMock.findById(1)).thenReturn(Optional.of(lecture2));
         
-        Map<String, Object> created = questionService.postQuestion(1, student1Id, lecturerIp, questionText);
+        Map<String, Object> created = questionService.postQuestion(lecture2Id, student1Id, lecturerIp, questionText);
+        
+        assertEquals(toBeReturned, created);
+    }
+    
+    @Test
+    public void postQuestionUserBanned() {
+        Map<String, Object> toBeReturned = new TreeMap<>();
+        toBeReturned.put("code", "401 UNAUTHORIZED");
+        toBeReturned.put("success", false);
+        toBeReturned.put("message", "Ip address has been banned from posting questions");
+        
+        when(userRepositoryMock.findById(new UserKey(1, 0))).thenReturn(Optional.of(student1));
+        when(lectureRepositoryMock.findById(0)).thenReturn(Optional.of(lecture1));
+        when(banRepositoryMock.findById(new BanKey("help2", 0))).thenReturn(Optional.of(new Ban(new BanKey("help2", 0))));
+        
+        Map<String, Object> created = questionService.postQuestion(lecture1Id, student1Id, student1Ip, questionText);
         
         assertEquals(toBeReturned, created);
     }
@@ -276,9 +302,10 @@ public class QuestionTest {
         when(userRepositoryMock.findById(new UserKey(1, 0))).thenReturn(Optional.of(student1));
         when(lectureRepositoryMock.findById(0)).thenReturn(Optional.of(lecture1));
         when(questionRepositoryMock.save(any(Question.class))).thenThrow(e);
+        when(banRepositoryMock.findById(new BanKey("help2", 0))).thenReturn(Optional.empty());
         
         student1.setLastQuestion(new Date(0));
-        Map<String, Object> created = questionService.postQuestion(lecture1Id, student1Id, lecturerIp, questionText);
+        Map<String, Object> created = questionService.postQuestion(lecture1Id, student1Id, student1Ip, questionText);
         
         assertEquals(toBeReturned, created);
     }
@@ -772,11 +799,11 @@ public class QuestionTest {
         toBeReturned.put("success", false);
         toBeReturned.put("message", "Answered questions cannot be edited!");
         
-        when(userRepositoryMock.findById(new UserKey(1, 0))).thenReturn(Optional.of(student1));
+        when(userRepositoryMock.findById(new UserKey(0, 0))).thenReturn(Optional.of(lecturer));
         when(lectureRepositoryMock.findById(0)).thenReturn(Optional.of(lecture1));
         when(questionRepositoryMock.findById(new QuestionKey(0, 0))).thenReturn(Optional.of(question1));
         
-        Map<String, Object> created = questionService.editQuestion(lecture1Id, question1Id, student1Id, newQuestionText);
+        Map<String, Object> created = questionService.editQuestion(lecture1Id, question1Id, lecturerId, newQuestionText);
         
         assertEquals(toBeReturned, created);
     }
