@@ -127,7 +127,9 @@ public class PollServiceImpl implements PollService {
                 + " with correct answer "
                 + correctAnswer;
 
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
 
         return status;
     }
@@ -214,7 +216,9 @@ public class PollServiceImpl implements PollService {
         }
 
         String logMessage = "User " + userId + " (" + findUserRow.get().getIpAddress() + ") voted on current poll";
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
 
         return status;        
     }
@@ -269,7 +273,9 @@ public class PollServiceImpl implements PollService {
         status.put("pollId", poll.getPrimaryKey().getId());
 
         String logMessage = "User " + userId + " (" + findUserRow.get().getIpAddress() + ") requested current poll";
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
     
         return status;
     }
@@ -327,7 +333,9 @@ public class PollServiceImpl implements PollService {
         }
 
         String logMessage = "User " + userId + " (" + findUserRow.get().getIpAddress() + ") ended current poll";
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
         
         return status;
     }
@@ -412,7 +420,9 @@ public class PollServiceImpl implements PollService {
                 + " (" + findUserRow.get().getIpAddress()
                 + ") requested statistics on current poll";
 
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
         
         return status;
     }
@@ -491,7 +501,9 @@ public class PollServiceImpl implements PollService {
         }
 
         String logMessage = "User " + userId + " (" + findUserRow.get().getIpAddress() + ") reopened last poll";
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
 
         return status;
     }

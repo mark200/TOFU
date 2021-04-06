@@ -118,7 +118,9 @@ public class VoteServiceImpl implements VoteService {
         }
 
         String logMessage = "User " + userId + " (" + foundUser.get().getIpAddress() + ") voted on question " + questionId;
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
 
         return toBeReturned;
     }

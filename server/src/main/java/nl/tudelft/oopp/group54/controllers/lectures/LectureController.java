@@ -50,7 +50,7 @@ public class LectureController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public Map<String, Object> endLecture(@RequestParam String userId, @PathVariable String lectureId) {
         try {
-            MapLoggers.getInstance().writeToFile(Integer.parseInt(lectureId));
+            MapLoggers.getInstance().writeToFile(Integer.parseInt(lectureId), "server/Logs/" + lectureId + ".log");
             MapLoggers.getInstance().setMapValue(Integer.parseInt(lectureId), null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -202,7 +202,9 @@ public class LectureController {
 
         String logMessage = "User " + userId + " posted feedback";
         logger.info(logMessage);
-        MapLoggers.getInstance().logWarning(lectureID, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureID,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureID + ".log");
 
         return lectureService.postLectureFeedback(lectureID, userId, lectureFeedbackCode);
     }
@@ -221,7 +223,9 @@ public class LectureController {
 
         String logMessage = "User " + userId + " requested feedback about lecture";
         logger.info(logMessage);
-        MapLoggers.getInstance().logWarning(lectureID, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureID,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureID + ".log");
 
         return lectureService.getLectureFeedback(lectureID, userId);
     }
