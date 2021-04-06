@@ -86,26 +86,25 @@ public class LectureTest {
         assertEquals("{\"success\":true}", result.getContentAsString());
     }
 
-
     @Test
-    public void createLecture_DoesNotContainInfo() throws Exception {
+    public void createLectureTest_noInfo() throws Exception {
 
         Map<String, Object> status = new TreeMap<>();
         status.put("success", true);
 
+        //when(lectureService.createNewLecture(any(Date.class), anyString())).thenReturn(status);
+
         MockHttpServletResponse result = mockMvc.perform(MockMvcRequestBuilders
                 .post("/lectures")
-                .content("{\n" +
-                        "    \"startTime\": 1614451405020,\n" +
-                        "}")
+                .content("{}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().is(400))
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
                 .andReturn().getResponse();
         System.out.println(result);
 
-        assertEquals("", result.getContentAsString());
-    }
 
+        assertEquals("{\"message\":\"Expected lectureName and startTime to be provided.\",\"success\":\"false\"}", result.getContentAsString());
+    }
 
     public static String asJsonString(final Object obj) {
         try {
