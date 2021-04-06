@@ -37,10 +37,10 @@ public class LectureFeedbackTest {
         lectureFeedback = new LectureFeedback(userKey, lectureFeedbackCode1.getValue());
         lectureFeedbackDuplicate = new LectureFeedback(userKeyDuplicate, lectureFeedbackCode1.getValue());
         lectureFeedback1 = new LectureFeedback(userKey, lectureFeedbackCode2.getValue());
-        lectureFeedback2= new LectureFeedback(userKey2,lectureFeedbackCode1.getValue());
+        lectureFeedback2= new LectureFeedback(userKey2, lectureFeedbackCode1.getValue());
         lectureFeedbackKey = new LectureFeedbackKey(userKey, lectureFeedbackCode1.getValue());
         lectureFeedbackKeyDuplicate = new LectureFeedbackKey(userKeyDuplicate, lectureFeedbackCode1.getValue());
-        lectureFeedbackKey2= new LectureFeedbackKey(userKey2,lectureFeedbackCode1.getValue());
+        lectureFeedbackKey2= new LectureFeedbackKey(userKey2, lectureFeedbackCode1.getValue());
         lectureFeedbackKey1 = new LectureFeedbackKey(userKey, lectureFeedbackCode2.getValue());
     }
 
