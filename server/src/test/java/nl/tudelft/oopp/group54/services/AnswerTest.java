@@ -103,6 +103,7 @@ public class AnswerTest {
 
         assertEquals(toBeReturned, created);
     }
+
     @Test
     public void answerQuestion_LongText() {
         Map<String, Object> toBeReturned = new TreeMap<>();

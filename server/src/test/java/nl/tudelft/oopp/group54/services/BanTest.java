@@ -76,7 +76,7 @@ public class BanTest {
         status.put("success", false);
         status.put("message", "UserIP cannot be null!");
 
-        Map<String, Object> created = banService.banIp(123, 123, null );
+        Map<String, Object> created = banService.banIp(123, 123, null);
         assertEquals(status, created);
     }
 
@@ -88,7 +88,7 @@ public class BanTest {
 
         when(banRepositoryMock.save(any(Ban.class))).thenReturn(new Ban());
 
-        Map<String, Object> created = banService.banIp(123, 123, "192.158.1.38" );
+        Map<String, Object> created = banService.banIp(123, 123, "192.158.1.38");
         assertTrue(toBeReturned.get("banIP").equals(created.get("banIP")));
         assertEquals(toBeReturned.get("success"), created.get("success"));
     }
@@ -101,7 +101,7 @@ public class BanTest {
 
         when(banRepositoryMock.save(any(Ban.class))).thenThrow(new IllegalArgumentException("this is not good"));
 
-        Map<String, Object> created = banService.banIp(123, 123, "192.158.1.38" );
+        Map<String, Object> created = banService.banIp(123, 123, "192.158.1.38");
         assertEquals(status, created);
     }
 

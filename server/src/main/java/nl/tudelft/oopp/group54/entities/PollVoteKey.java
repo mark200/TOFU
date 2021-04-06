@@ -59,8 +59,4 @@ public class PollVoteKey implements Serializable {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
-
-    
-    
-    
 }

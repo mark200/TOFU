@@ -1,11 +1,27 @@
 package nl.tudelft.oopp.group54.services;
 
+import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+
 import nl.tudelft.oopp.group54.controllers.lectures.LectureServiceImpl;
 import nl.tudelft.oopp.group54.controllers.votes.VoteService;
 import nl.tudelft.oopp.group54.controllers.votes.VoteServiceImpl;
-import nl.tudelft.oopp.group54.entities.*;
-import nl.tudelft.oopp.group54.repositories.*;
-import org.junit.jupiter.api.BeforeAll;
+
+import nl.tudelft.oopp.group54.entities.Lecture;
+import nl.tudelft.oopp.group54.entities.Question;
+import nl.tudelft.oopp.group54.entities.QuestionKey;
+import nl.tudelft.oopp.group54.entities.User;
+import nl.tudelft.oopp.group54.entities.UserKey;
+import nl.tudelft.oopp.group54.entities.Vote;
+import nl.tudelft.oopp.group54.entities.VoteKey;
+
+import nl.tudelft.oopp.group54.repositories.LectureRepository;
+import nl.tudelft.oopp.group54.repositories.QuestionRepository;
+import nl.tudelft.oopp.group54.repositories.UserRepository;
+import nl.tudelft.oopp.group54.repositories.VoteRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,11 +29,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
