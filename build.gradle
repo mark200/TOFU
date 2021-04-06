@@ -35,7 +35,11 @@ subprojects {
 
         afterEvaluate {
             classDirectories.setFrom(files(classDirectories.files.collect {
-                fileTree(dir: it, exclude: 'nl/tudelft/oopp/demo/*')
+                fileTree(dir: it,
+                        exclude: [
+                                'nl/tudelft/oopp/demo/*',
+                                'nl/tudelft/oopp/group54/controllers/*/*Mock*'
+                        ])
             }))
         }
     }
