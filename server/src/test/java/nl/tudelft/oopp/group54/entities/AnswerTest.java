@@ -32,31 +32,15 @@ public class AnswerTest {
     }
 
     @Test
-    public void equalsPrimaryKeys() {
+    public void testEquals() {
         assertEquals(answer, answerDuplicate);
-    }
-
-    @Test
-    public void equalsSameObject() {
         assertEquals(answer, answer);
-    }
-
-    @Test
-    public void equalsNull() {
         assertNotEquals(answer, null);
-    }
-
-    @Test
-    public void notEquals() {
         assertNotEquals(answer, answer1);
-    }
-
-    @Test
-    public void equalsDifferentObject() {
         assertNotEquals(answer, "123");
+
     }
 
-    @Test
     public void testEmptyAnswerKeyNotNull() {
         AnswerKey answerKey = new AnswerKey();
         assertNotNull(answerKey);
@@ -90,15 +74,15 @@ public class AnswerTest {
     }
 
     @Test
-    public void testAnswerKeyEqualsSameObject() {
+    public void testAnswerKeyEquals() {
         AnswerKey answerKey = new AnswerKey(1, 2);
+        AnswerKey answerKey1 = new AnswerKey(1,3);
+        AnswerKey answerKey2 = new AnswerKey(1, 2);
         assertEquals(answerKey, answerKey);
-    }
-
-    @Test
-    public void testAnswerKeyEqualsNull() {
-        AnswerKey answerKey = new AnswerKey(1, 2);
-        assertFalse(answerKey.equals(null));
+        assertEquals(answerKey, answerKey2);
+        assertFalse(answerKey.equals(answerKey1));
+        assertFalse(answerKey2.equals(null));
+        assertFalse(answerKey.equals("123"));
     }
 
     @Test

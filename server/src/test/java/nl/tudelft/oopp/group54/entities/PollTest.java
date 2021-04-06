@@ -77,13 +77,16 @@ public class PollTest {
     @Test
     public void testKeyEquals() {
         PollKey key1 = new PollKey(2, 3);
-        assertEquals(key, key1);
-    }
+        PollKey key2 = new PollKey(4, 4);
+        PollKey key3 = new PollKey(2,4);
 
-    @Test
-    public void testKeyNotEquals() {
-        PollKey key1 = new PollKey(4, 4);
-        assertNotEquals(key, key1);
+
+        assertEquals(key, key1);
+        assertNotEquals(key, key2);
+        assertNotEquals(key, key3);
+        assertFalse(key.equals(null));
+        assertFalse(key.equals("123"));
+
     }
 
     @Test

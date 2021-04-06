@@ -19,6 +19,7 @@ public class BanTest {
     static Ban emptyBan;
     static BanKey keyDuplicate;
     static Ban ban1;
+    static BanKey key2;
 
     /**
      * Init.
@@ -28,6 +29,7 @@ public class BanTest {
         emptyBan = new Ban();
         emptyKey = new BanKey();
         key = new BanKey("192.158.1.38", 321);
+        key2 =  new BanKey("192.158.1.3", 321);
         keyDuplicate = new BanKey("192.158.1.38", 321);
         ban = new Ban(key);
         banDuplicate = new Ban(keyDuplicate);
@@ -62,27 +64,11 @@ public class BanTest {
     }
 
     @Test
-    public void equalsPrimaryKeys() {
+    public void testEquals() {
         assertEquals(ban, banDuplicate);
-    }
-
-    @Test
-    public void equalsSameObject() {
         assertEquals(ban, ban);
-    }
-
-    @Test
-    public void equalsNull() {
         assertNotEquals(ban, null);
-    }
-
-    @Test
-    public void notEquals() {
         assertNotEquals(ban1, ban);
-    }
-
-    @Test
-    public void equalsDifferentObject() {
         assertNotEquals(ban, "123");
     }
 
@@ -104,12 +90,11 @@ public class BanTest {
     }
 
     @Test
-    public void testBanKeyEqualsSameObject() {
+    public void testKeyEquals() {
         assertEquals(key, key);
-    }
-
-    @Test
-    public void testBanKeyEqualsNull() {
+        assertEquals(key, keyDuplicate);
         assertFalse(key.equals(null));
+        assertFalse(key.equals(key2));
+        assertFalse(key.equals("123"));
     }
 }

@@ -14,11 +14,14 @@ public class LectureFeedbackTest {
     static LectureFeedback lectureFeedback;
     static LectureFeedback lectureFeedbackDuplicate;
     static LectureFeedback lectureFeedback1;
+    static LectureFeedback lectureFeedback2;
     static LectureFeedbackKey lectureFeedbackKey;
     static LectureFeedbackKey lectureFeedbackKeyDuplicate;
     static LectureFeedbackKey lectureFeedbackKey1;
+    static LectureFeedbackKey lectureFeedbackKey2;
     static UserKey userKey;
     static UserKey userKeyDuplicate;
+    static UserKey userKey2;
     static LectureFeedbackCode lectureFeedbackCode1 = LectureFeedbackCode.LECTURE_IS_TOO_FAST;
     static LectureFeedbackCode lectureFeedbackCode2 = LectureFeedbackCode.LECTURE_IS_TOO_SLOW;
 
@@ -30,37 +33,26 @@ public class LectureFeedbackTest {
     public void init() {
         userKey = new UserKey(2, 3);
         userKeyDuplicate = new UserKey(2,3);
+        userKey2 = new UserKey(3, 3);
         lectureFeedback = new LectureFeedback(userKey, lectureFeedbackCode1.getValue());
         lectureFeedbackDuplicate = new LectureFeedback(userKeyDuplicate, lectureFeedbackCode1.getValue());
         lectureFeedback1 = new LectureFeedback(userKey, lectureFeedbackCode2.getValue());
+        lectureFeedback2= new LectureFeedback(userKey2,lectureFeedbackCode1.getValue());
         lectureFeedbackKey = new LectureFeedbackKey(userKey, lectureFeedbackCode1.getValue());
         lectureFeedbackKeyDuplicate = new LectureFeedbackKey(userKeyDuplicate, lectureFeedbackCode1.getValue());
+        lectureFeedbackKey2= new LectureFeedbackKey(userKey2,lectureFeedbackCode1.getValue());
         lectureFeedbackKey1 = new LectureFeedbackKey(userKey, lectureFeedbackCode2.getValue());
     }
 
+
     @Test
     public void testEquals() {
-        assertEquals(lectureFeedback, lectureFeedbackDuplicate);
-    }
-
-    @Test
-    public void equalsSameObjectTest() {
-        assertEquals(lectureFeedback, lectureFeedback);
-    }
-
-    @Test
-    public void equalsNullTest() {
-        assertNotEquals(lectureFeedback, null);
-    }
-
-    @Test
-    public void testNotEquals() {
-        assertNotEquals(lectureFeedback, lectureFeedback1);
-    }
-
-    @Test
-    public void equalsDifferentObjectTest() {
         assertNotEquals(lectureFeedback, "123");
+        assertNotEquals(lectureFeedback, lectureFeedback1);
+        assertNotEquals(lectureFeedback, null);
+        assertNotEquals(lectureFeedback, lectureFeedback2);
+        assertEquals(lectureFeedback, lectureFeedback);
+        assertEquals(lectureFeedback, lectureFeedbackDuplicate);
     }
 
     @Test
@@ -115,28 +107,13 @@ public class LectureFeedbackTest {
     }
 
     @Test
-    public void equalsPrimaryKeyslectureFeedbackKeyTest() {
+    public void equalsLectureFeedbackKey() {
         assertEquals(lectureFeedbackKey, lectureFeedbackKeyDuplicate);
-    }
-
-    @Test
-    public void equalsSameObjectLectureFeedbackKeyTest() {
         assertEquals(lectureFeedbackKey, lectureFeedbackKey);
-    }
-
-    @Test
-    public void equalsNullLectureFeedbackKeyTest() {
         assertNotEquals(lectureFeedbackKey, null);
-    }
-
-    @Test
-    public void notEqualsLectureFeedbackKeyTest() {
         assertNotEquals(lectureFeedbackKey, lectureFeedbackKey1);
-    }
-
-    @Test
-    public void equalsDifferentObjectLectureFeedbackKeyTest() {
         assertNotEquals(lectureFeedbackKey, "123");
+        assertNotEquals(lectureFeedbackKey, lectureFeedbackKey2);
     }
 
     @Test

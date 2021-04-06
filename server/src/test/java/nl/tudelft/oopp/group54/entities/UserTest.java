@@ -89,8 +89,10 @@ public class UserTest {
     }
 
     @Test
-    public void testKeyNotEqualsDifferentInstance() {
+    public void testKeyEquals() {
+        UserKey key1 = new UserKey(2, 4);
         assertNotEquals(key, "a, b, c");
+        assertNotEquals(key, key1);
     }
 
     @Test

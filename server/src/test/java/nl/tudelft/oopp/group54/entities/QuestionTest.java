@@ -19,6 +19,7 @@ public class QuestionTest {
     private static Question question1;
     private static QuestionKey key;
     private static QuestionKey keyDuplicate;
+    private static QuestionKey key2;
 
     /**
      * Executes before all tests.
@@ -27,6 +28,7 @@ public class QuestionTest {
     public void init() {
         key = new QuestionKey(123, 321);
         keyDuplicate = new QuestionKey(123, 321);
+        key2 = new QuestionKey(123, 32);
         Date date = new Date();
         question = new Question(key, 321, "192.158.1.38", "231", 231, true, date);
         questionDuplicate = new Question(keyDuplicate, 321, "192.158.1.38", "231", 231, true, date);
@@ -57,13 +59,12 @@ public class QuestionTest {
     }
 
     @Test
-    public void testKeyEqualsSameObject() {
+    public void testKeyEquals() {
         assertEquals(key, key);
-    }
-
-    @Test
-    public void testKeyNotEqualsNull() {
         assertNotEquals(key, null);
+        assertNotEquals(key, key2);
+        assertFalse(key.equals(null));
+        assertFalse(key.equals("123"));
     }
 
     @Test
@@ -78,27 +79,11 @@ public class QuestionTest {
     }
 
     @Test
-    public void equalsPrimaryKeys() {
+    public void testEquals() {
         assertEquals(question, questionDuplicate);
-    }
-
-    @Test
-    public void equalsSameObject() {
         assertEquals(question, question);
-    }
-
-    @Test
-    public void equalsNull() {
         assertNotEquals(question, null);
-    }
-
-    @Test
-    public void notEquals() {
         assertNotEquals(question, question1);
-    }
-
-    @Test
-    public void equalsDifferentObject() {
         assertNotEquals(question1, "123");
     }
 
