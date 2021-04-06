@@ -1,0 +1,30 @@
+2021-04-03 10:56:52 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER" not found; SQL statement:
+select user0_.id as id1_8_0_, user0_.lecture_id as lecture_2_8_0_, user0_.ip as ip3_8_0_, user0_.last_question_timestamp as last_que4_8_0_, user0_.name as name5_8_0_, user0_.role_id as role_id6_8_0_ from user user0_ where user0_.id=? and user0_.lecture_id=? [42102-200]
+2021-04-03 10:56:57 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER" not found; SQL statement:
+select user0_.id as id1_8_0_, user0_.lecture_id as lecture_2_8_0_, user0_.ip as ip3_8_0_, user0_.last_question_timestamp as last_que4_8_0_, user0_.name as name5_8_0_, user0_.role_id as role_id6_8_0_ from user user0_ where user0_.id=? and user0_.lecture_id=? [42102-200]
+2021-04-03 10:57:02 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER" not found; SQL statement:
+select user0_.id as id1_8_0_, user0_.lecture_id as lecture_2_8_0_, user0_.ip as ip3_8_0_, user0_.last_question_timestamp as last_que4_8_0_, user0_.name as name5_8_0_, user0_.role_id as role_id6_8_0_ from user user0_ where user0_.id=? and user0_.lecture_id=? [42102-200]
+2021-04-03 10:57:04 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "LECTURE" not found; SQL statement:
+insert into lecture (id, lecture_nickname, lecture_ongoing, lecturer_join_id, moderator_join_id, start_time, student_join_id) values (null, ?, ?, ?, ?, ?, ?) [42102-200]
+2021-04-03 10:57:07 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER" not found; SQL statement:
+select user0_.id as id1_8_0_, user0_.lecture_id as lecture_2_8_0_, user0_.ip as ip3_8_0_, user0_.last_question_timestamp as last_que4_8_0_, user0_.name as name5_8_0_, user0_.role_id as role_id6_8_0_ from user user0_ where user0_.id=? and user0_.lecture_id=? [42102-200]
+2021-04-03 10:57:08 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "LECTURE" not found; SQL statement:
+insert into lecture (id, lecture_nickname, lecture_ongoing, lecturer_join_id, moderator_join_id, start_time, student_join_id) values (null, ?, ?, ?, ?, ?, ?) [42102-200]
+2021-04-03 10:57:10 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "LECTURE" not found; SQL statement:
+insert into lecture (id, lecture_nickname, lecture_ongoing, lecturer_join_id, moderator_join_id, start_time, student_join_id) values (null, ?, ?, ?, ?, ?, ?) [42102-200]
+2021-04-03 10:57:10 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "LECTURE" not found; SQL statement:
+insert into lecture (id, lecture_nickname, lecture_ongoing, lecturer_join_id, moderator_join_id, start_time, student_join_id) values (null, ?, ?, ?, ?, ?, ?) [42102-200]
+2021-04-03 10:57:12 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER" not found; SQL statement:
+select user0_.id as id1_8_0_, user0_.lecture_id as lecture_2_8_0_, user0_.ip as ip3_8_0_, user0_.last_question_timestamp as last_que4_8_0_, user0_.name as name5_8_0_, user0_.role_id as role_id6_8_0_ from user user0_ where user0_.id=? and user0_.lecture_id=? [42102-200]
+2021-04-03 10:57:17 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USER" not found; SQL statement:
+select user0_.id as id1_8_0_, user0_.lecture_id as lecture_2_8_0_, user0_.ip as ip3_8_0_, user0_.last_question_timestamp as last_que4_8_0_, user0_.name as name5_8_0_, user0_.role_id as role_id6_8_0_ from user user0_ where user0_.id=? and user0_.lecture_id=? [42102-200]
