@@ -1,8 +1,6 @@
 package nl.tudelft.oopp.group54.models.requestentities;
 
-import java.io.Serializable;
-
-public class PostPollRequest implements Serializable {
+public class PostPollRequest extends AbstractRequest {
     Integer optionCount;
     String userId;
     String correctAnswer;

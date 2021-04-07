@@ -1,8 +1,6 @@
 package nl.tudelft.oopp.group54.models.requestentities;
 
-import java.io.Serializable;
-
-public class CreateLectureRequest implements Serializable {
+public class CreateLectureRequest extends AbstractRequest {
 
     private String lectureName;
     private Long startTime;
