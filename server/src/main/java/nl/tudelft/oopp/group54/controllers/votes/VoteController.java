@@ -28,6 +28,10 @@ public class VoteController {
     @Autowired
     VoteServiceImpl voteService;
 
+    public void setVoteService(VoteServiceImpl voteService) {
+        this.voteService = voteService;
+    }
+
     /**
      * An API call for a User to vote on a Question.
      * @param lectureId ID of the lecture where the question has been asked
@@ -73,6 +77,6 @@ public class VoteController {
         String logMessage = "User " + userId + " votes on question " + questionId;
         logger.info(logMessage);
 
-        return voteService.voteOnQuestion(lectureId, userId, questionId, isUpvote);
+        return voteService.voteOnQuestion(lectureId, userId, questionId, true);
     }
 }

@@ -63,17 +63,17 @@ class VoteControllerTest {
         status.put("success", "false");
         status.put("message", "Expected isUpvote," + " userId to be provided");
 
-        when(voteService.voteOnQuestion(anyInt(), anyString(), anyInt(), anyBoolean())).thenReturn(status);
+        //when(voteService.voteOnQuestion(anyInt(), anyString(), anyInt(), anyBoolean())).thenReturn(status);
 
         MockHttpServletResponse result = mockMvc.perform(MockMvcRequestBuilders
-                .post("/lectures/1/questions/1/")
+                .post("/lectures/1/questions/1/votes")
                 .content("{}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
                 .andReturn().getResponse();
         System.out.println(result);
 
-        assertEquals(status, result.getContentAsString());
+        assertEquals("{\"message\":\"Expected isUpvote, userId to be provided\",\"success\":\"false\"}", result.getContentAsString());
     }
 
     @Test
@@ -83,17 +83,13 @@ class VoteControllerTest {
         when(voteService.voteOnQuestion(anyInt(), anyString(), anyInt(), anyBoolean())).thenReturn(status);
 
         MockHttpServletResponse result = mockMvc.perform(MockMvcRequestBuilders
-                .post("/lectures/1/questions/1/")
-                .content("{\n"
-                        +
-                        "    \"userId\": 1,\n"
-                        +
-                        "}")
+                .post("/lectures/1/questions/1/votes")
+                .content("{ \"userId\": \"1\"}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
                 .andReturn().getResponse();
         System.out.println(result);
 
-        assertEquals(status, result.getContentAsString());
+        assertEquals("{\"success\":\"true\"}", result.getContentAsString());
     }
 }
