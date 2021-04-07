@@ -44,19 +44,7 @@ class VoteControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private LectureServiceImpl lectureService;
-
-    @Mock
     private VoteServiceImpl voteService;
-
-    @Mock
-    private QuestionServiceImplementation questionService;
-
-    @InjectMocks
-    private QuestionController questionController;
-
-    @InjectMocks
-    private LectureController lectureController;
 
     @InjectMocks
     private VoteController voteController;
@@ -66,7 +54,7 @@ class VoteControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(lectureController, questionController, voteController).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(voteController).build();
         status = new TreeMap<>();
     }
 
@@ -75,21 +63,37 @@ class VoteControllerTest {
         status.put("success", "false");
         status.put("message", "Expected isUpvote," + " userId to be provided");
 
-        Map<String, Object> voted = voteController.voteOnQuestion(1, 1, new TreeMap<>());
+        when(voteService.voteOnQuestion(anyInt(), anyString(), anyInt(), anyBoolean())).thenReturn(status);
 
-        assertEquals(status, voted);
+        MockHttpServletResponse result = mockMvc.perform(MockMvcRequestBuilders
+                .post("/lectures/1/questions/1/")
+                .content("{}")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
+                .andReturn().getResponse();
+        System.out.println(result);
+
+        assertEquals(status, result.getContentAsString());
     }
 
     @Test
-    void voteOnQuestion() {
+    void voteOnQuestion() throws Exception {
         status.put("success", "true");
 
-        Map<String, Object> requestBody = new TreeMap<>();
-        requestBody.put("userId", "1");
-
         when(voteService.voteOnQuestion(anyInt(), anyString(), anyInt(), anyBoolean())).thenReturn(status);
-        Map<String, Object> voted = voteController.voteOnQuestion(1, 1, requestBody);
 
-        assertEquals(new TreeMap<>(), voted);
+        MockHttpServletResponse result = mockMvc.perform(MockMvcRequestBuilders
+                .post("/lectures/1/questions/1/")
+                .content("{\n"
+                        +
+                        "    \"userId\": 1,\n"
+                        +
+                        "}")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
+                .andReturn().getResponse();
+        System.out.println(result);
+
+        assertEquals(status, result.getContentAsString());
     }
 }
