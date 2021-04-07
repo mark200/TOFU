@@ -202,6 +202,40 @@ public class PollServiceTest {
     }
 
     @Test
+    public void testPostPollException() {
+        Map<String, Object> expected = new TreeMap<>();
+        expected.put("success", false);
+        expected.put("message", "java.lang.IllegalArgumentException");
+
+        List<Poll> pollList = new ArrayList<>();
+
+        when(userRepository.findById(any(UserKey.class))).thenReturn(Optional.of(user1));
+        when(lectureRepository.findById(any(Integer.class))).thenReturn(Optional.of(lecture1));
+        when(pollRepository.save(any(Poll.class))).thenThrow(new IllegalArgumentException());
+
+        Map<String, Object> actual = pollService.postPoll(1, "1", 3, "abc", "title");
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testPostPollSuccessful() {
+        Map<String, Object> expected = new TreeMap<>();
+        expected.put("success", true);
+        expected.put("message", "Poll/quiz has been created");
+
+        List<Poll> pollList = new ArrayList<>();
+
+        when(userRepository.findById(any(UserKey.class))).thenReturn(Optional.of(user1));
+        when(lectureRepository.findById(any(Integer.class))).thenReturn(Optional.of(lecture1));
+        when(pollRepository.findOpenPoll(1)).thenReturn(pollList);
+
+        Map<String, Object> actual = pollService.postPoll(1, "1", 3, "abc", "title");
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void testVotePollLectureIdNull() {
         Map<String, Object> expected = new TreeMap<>();
         expected.put("success", false);
