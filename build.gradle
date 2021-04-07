@@ -32,6 +32,16 @@ subprojects {
             csv.enabled false
             html.destination file("${buildDir}/reports/jacoco/html")
         }
+
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it,
+                        exclude: [
+                                'nl/tudelft/oopp/demo/*',
+                                'nl/tudelft/oopp/group54/controllers/*/*Mock*'
+                        ])
+            }))
+        }
     }
 
     jacocoTestCoverageVerification {
@@ -67,7 +77,14 @@ subprojects {
         jacoco {
             enabled = true
             includes = ['nl.tudelft.*']
-            excludes = []
+            excludes = ['nl.tudelft.oopp.demo.*',
+            			'nl.tudelft.oopp.group54.controllers.answer.MockAnswerServiceImpl.java',
+            			'nl.tudelft.oopp.group54.controllers.bans.MockBanServiceImpl.java',
+            			'nl.tudelft.oopp.group54.controllers.lectures.MockLectureServiceImplementation.java',
+            			'nl.tudelft.oopp.group54.controllers.moderator.MockModeratorServiceImplementation.java',
+            			'nl.tudelft.oopp.group54.controllers.questions.MockQuestionServiceImplementation.java',
+            			'nl.tudelft.oopp.group54.controllers.votes.MockVoteServiceImplementation.java',
+            			]
         }
 
     }
