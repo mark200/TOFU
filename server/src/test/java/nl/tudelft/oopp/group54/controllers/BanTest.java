@@ -53,7 +53,7 @@ public class BanTest {
     }
 
     @Test
-    public void BanIp_NoUserIp() throws Exception {
+    public void banIp_NoUserIp() throws Exception {
         status.put("success", "true");
         status.put("message", "Expected userIp" + " to be provided");
 
@@ -70,7 +70,7 @@ public class BanTest {
     }
 
     @Test
-    public void BanIp() throws Exception {
+    public void banIp() throws Exception {
         status.put("success", "true");
 
         when(banServiceImpl.banIp(anyInt(), anyInt(), anyString())).thenReturn(status);
