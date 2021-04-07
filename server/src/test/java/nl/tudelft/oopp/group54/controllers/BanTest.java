@@ -1,7 +1,5 @@
-package nl.tudelft.oopp.group54.controllers.votes;
+package nl.tudelft.oopp.group54.controllers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -10,6 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Map;
 import java.util.TreeMap;
 
+import nl.tudelft.oopp.group54.controllers.bans.BanController;
+import nl.tudelft.oopp.group54.controllers.bans.BanServiceImpl;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,62 +28,61 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ExtendWith(MockitoExtension.class)
-class VoteControllerTest {
+public class BanTest {
     @Autowired
     private MockMvc mockMvc;
 
     @Mock
-    private VoteServiceImpl voteService;
+    BanServiceImpl banServiceImpl;
 
     @InjectMocks
-    private VoteController voteController;
+    BanController banController;
 
     Map<String, Object> status;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(voteController).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(banController).build();
         status = new TreeMap<>();
     }
 
     @Test
-    void voteOnQuestion_withoutUserId() throws Exception {
-        status.put("success", "false");
-        status.put("message", "Expected isUpvote," + " userId to be provided");
-
-        //when(voteService.voteOnQuestion(anyInt(), anyString(), anyInt(), anyBoolean())).thenReturn(status);
+    public void BanControllerTest_NoUserIp() throws Exception {
+        status.put("success", "true");
+        status.put("message", "Expected userIp" + " to be provided");
 
         MockHttpServletResponse result = mockMvc.perform(MockMvcRequestBuilders
-                .post("/lectures/1/questions/1/votes")
+                .post("/lectures/1/questions/1/ban")
                 .content("{}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
                 .andReturn().getResponse();
         System.out.println(result);
 
-        assertEquals("{\"message\":\"Expected isUpvote, userId to be provided\",\"success\":\"false\"}",
+        Assertions.assertEquals("{\"message\":\"Expected userIp to be provided\",\"success\":\"false\"}",
                 result.getContentAsString());
     }
 
     @Test
-    void voteOnQuestion() throws Exception {
+    public void BanControllerTest() throws Exception {
         status.put("success", "true");
 
-        when(voteService.voteOnQuestion(anyInt(), anyString(), anyInt(), anyBoolean())).thenReturn(status);
+        when(banServiceImpl.banIp(anyInt(), anyInt(), anyString())).thenReturn(status);
 
         MockHttpServletResponse result = mockMvc.perform(MockMvcRequestBuilders
-                .post("/lectures/1/questions/1/votes")
-                .content("{ \"userId\": \"1\"}")
+                .post("/lectures/1/questions/1/ban")
+                .content("{ \"userIp\": \"192.158.1.38\"}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
                 .andReturn().getResponse();
         System.out.println(result);
 
-        assertEquals("{\"success\":\"true\"}", result.getContentAsString());
+        Assertions.assertEquals("{\"success\":\"true\"}", result.getContentAsString());
     }
 }
