@@ -361,23 +361,25 @@ DeleteQuestionAsLecturerTest {
 EditQuestionTest {
     As a lecturer or moderator, press on the Options drop-down menu button on the top right hand side of a question
     Press on edit
-    Edit the question
+    Edit the question while maintaining 1 to 420 characters
+    Press enter
     Expect no error, the question to be edited and a status message "message was edited successfully!"
 }
 
-****
 EditQuestionTest_MoreThan420Characters {
     As a lecturer or moderator, press on the Options drop-down menu button on the top right hand side of a question
     Press on edit
-    Edit the question
-    Expect the question to be edited and a status message "message was edited successfully!"
+    Edit the question to have 421 characters
+    Press enter
+    Expect a status message "Question cannot be null and must be between 1 and 420 characters."
 }
-****
+
 EditQuestionTest_NoCharacters {
     As a lecturer or moderator, press on the Options drop-down menu button on the top right hand side of a question
     Press on edit
-    Edit the question
-    Expect the question to be edited and a status message "message was edited successfully!"
+    Edit the question to have 0 characters
+    Press enter
+    Expect a status message "Question cannot be null and must be between 1 and 420 characters."
 }
 
 MarkQuestionAsAnsweredLecturerModeTest {
@@ -457,14 +459,23 @@ ResetLectureFeedbackTooSlowTest {
     Expect no error and the number next to the Too slow button to be set to 0
 }
 
-****
-SortByFunctionTest {
-
+SortByFunctionTest_mostVotes {
+    Open the sort by view
+    Press on sort by votes
+    Expect no error and the questions to get sorted from top to bottom by most votes to least votes, if a question has the same amount of votes as the other question, sort them by recency
 }
 
-****
-EndLectureAsLecturerTest {
+SortByFunctionTest_mostRecent {
+    Open the sort by view
+    Press on sort by recency
+    Expect no error and the questions to get sorted from top to bottom by least recent to most recent
+}
 
+EndLectureAsLecturerTest {
+    Open the lecture settings menu as lecturer
+    Press on the end lecture button
+    Expect no error, the students to return to the join/create lecture view, a status message "The lecture was successfully ended."
+    Also expect a status message every 3 seconds "The lecture has already ended." and the question bar to turn grey and non-usable
 }
 
 CreatePollTest {
