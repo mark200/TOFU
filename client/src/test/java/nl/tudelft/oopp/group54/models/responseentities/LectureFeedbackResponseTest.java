@@ -7,34 +7,34 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LectureFeedbackResponseTest {
 
-  LectureFeedbackResponse response;
-  LectureFeedbackResponse response2;
-  
-  @BeforeEach
-  void setUp() {
-    Boolean success = true;
-    String message = "Success message";
-    String code = "200";
+	LectureFeedbackResponse response;
+	LectureFeedbackResponse response2;
 
-    response = new LectureFeedbackResponse();
-    response2 = new LectureFeedbackResponse(success, message, code);
-    response.setSuccess(success);
-    response.setMessage(message);
-    response.setCode(code);
-  }
+	@BeforeEach
+	void setUp() {
+		Boolean success = true;
+		String message = "Success message";
+		String code = "200";
 
-  @Test
-  void isSuccess() {
-    assertEquals(response.isSuccess(), response2.isSuccess());
-  }
+		response = new LectureFeedbackResponse();
+		response2 = new LectureFeedbackResponse(success, message, code);
+		response.setSuccess(success);
+		response.setMessage(message);
+		response.setCode(code);
+	}
 
-  @Test
-  void getMessage() {
-    assertEquals(response.getMessage(), response2.getMessage());
-  }
+	@Test
+	void isSuccess() {
+		assertEquals(response.isSuccess(), response2.isSuccess());
+	}
 
-  @Test
-  void getCode() {
-    assertEquals(response.getCode(), response2.getCode());
-  }
+	@Test
+	void getMessage() {
+		assertEquals(response.getMessage(), response2.getMessage());
+	}
+
+	@Test
+	void getCode() {
+		assertEquals(response.getCode(), response2.getCode());
+	}
 }

@@ -7,25 +7,25 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PostPollVoteResponseTest {
 
-  PostPollVoteResponse response;
+	PostPollVoteResponse response;
 
-  @BeforeEach
-  void setUp() {
-    Boolean success = true;
-    String message = "Success message";
+	@BeforeEach
+	void setUp() {
+		Boolean success = true;
+		String message = "Success message";
 
-    response = new PostPollVoteResponse();
-    response.setSuccess(success);
-    response.setMessage(message);
-  }
+		response = new PostPollVoteResponse();
+		response.setSuccess(success);
+		response.setMessage(message);
+	}
 
-  @Test
-  void getSuccess() {
-    assertEquals(response.getSuccess(), true);
-  }
+	@Test
+	void getSuccess() {
+		assertEquals(response.getSuccess(), true);
+	}
 
-  @Test
-  void getMessage() {
-    assertEquals(response.getMessage(), "Success message");
-  }
+	@Test
+	void getMessage() {
+		assertEquals(response.getMessage(), "Success message");
+	}
 }

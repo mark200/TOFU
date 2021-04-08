@@ -14,57 +14,57 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GetAllQuestionsResponseTest {
-  GetAllQuestionsResponse response;
-  GetAllQuestionsResponse response2;
-  GetAllQuestionsResponse response3;
+	GetAllQuestionsResponse response;
+	GetAllQuestionsResponse response2;
+	GetAllQuestionsResponse response3;
 
 
-  @BeforeEach
-  void setUp() {
+	@BeforeEach
+	void setUp() {
 
-    List<QuestionModel> answered = List.of(
-            new QuestionModel(),
-            new QuestionModel(),
-            new QuestionModel()
-    );
-    List<QuestionModel> unanswered = new ArrayList<>();
-    boolean success = true;
-    int count = 3;
+		List<QuestionModel> answered = List.of(
+				new QuestionModel(),
+				new QuestionModel(),
+				new QuestionModel()
+		);
+		List<QuestionModel> unanswered = new ArrayList<>();
+		boolean success = true;
+		int count = 3;
 
-    response = new GetAllQuestionsResponse();
-    response.setSuccess(success);
-    response.setAnswered(answered);
-    response.setUnanswered(unanswered);
-    response.setCount(count);
+		response = new GetAllQuestionsResponse();
+		response.setSuccess(success);
+		response.setAnswered(answered);
+		response.setUnanswered(unanswered);
+		response.setCount(count);
 
-    response2 = new GetAllQuestionsResponse(
-            answered,
-            unanswered,
-            success,
-            count
-    );
+		response2 = new GetAllQuestionsResponse(
+				answered,
+				unanswered,
+				success,
+				count
+		);
 
-    response3 = new GetAllQuestionsResponse();
-  }
+		response3 = new GetAllQuestionsResponse();
+	}
 
 
-  @Test
-  void getAnswered() {
-    assertEquals(response.getAnswered(), response2.getAnswered());
-  }
+	@Test
+	void getAnswered() {
+		assertEquals(response.getAnswered(), response2.getAnswered());
+	}
 
-  @Test
-  void getUnanswered() {
-    assertEquals(response.getUnanswered(), response2.getUnanswered());
-  }
+	@Test
+	void getUnanswered() {
+		assertEquals(response.getUnanswered(), response2.getUnanswered());
+	}
 
-  @Test
-  void getSuccess() {
-    assertEquals(response.getSuccess(), response2.getSuccess());
-  }
+	@Test
+	void getSuccess() {
+		assertEquals(response.getSuccess(), response2.getSuccess());
+	}
 
-  @Test
-  void getCount() {
-    assertEquals(response.getCount(), response2.getCount());
-  }
+	@Test
+	void getCount() {
+		assertEquals(response.getCount(), response2.getCount());
+	}
 }
