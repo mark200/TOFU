@@ -67,8 +67,8 @@ public class PollTest {
                 .andReturn().getResponse();
         System.out.println(result);
 
-        Assertions.assertEquals("{\"message\":\"Expected lectureId, userId and question Text to be provided\"," +
-                        "\"success\":\"false\"}",
+        Assertions.assertEquals("{\"message\":\"Expected lectureId, userId and question Text to be provided\","
+                        + "\"success\":\"false\"}",
                 result.getContentAsString());
     }
 
@@ -112,8 +112,8 @@ public class PollTest {
                 .andReturn().getResponse();
         System.out.println(result);
 
-        Assertions.assertEquals("{\"message\":\"Expected lectureId, userID and vote to be provided\"," +
-                        "\"success\":\"false\"}",
+        Assertions.assertEquals("{\"message\":\"Expected lectureId, userID and vote to be provided\","
+                        + "\"success\":\"false\"}",
                 result.getContentAsString());
     }
 
@@ -130,7 +130,7 @@ public class PollTest {
                         "\"userId\": \"1\",\n"
                         +
                         "\"vote\": \"A\"\n"
-                        +"}")
+                        + "}")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
                 .andReturn().getResponse();
