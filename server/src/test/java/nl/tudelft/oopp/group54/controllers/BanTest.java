@@ -54,7 +54,7 @@ public class BanTest {
 
     @Test
     public void banIp_NoUserIp() throws Exception {
-        status.put("success", "true");
+        status.put("success", "false");
         status.put("message", "Expected userIp" + " to be provided");
 
         MockHttpServletResponse result = mockMvc.perform(MockMvcRequestBuilders
