@@ -4,10 +4,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 
 import nl.tudelft.oopp.group54.controllers.polls.PollServiceImpl;
-import nl.tudelft.oopp.group54.entities.*;
+import nl.tudelft.oopp.group54.entities.Lecture;
+import nl.tudelft.oopp.group54.entities.Poll;
+import nl.tudelft.oopp.group54.entities.PollKey;
+import nl.tudelft.oopp.group54.entities.PollVote;
+import nl.tudelft.oopp.group54.entities.PollVoteKey;
+import nl.tudelft.oopp.group54.entities.User;
+import nl.tudelft.oopp.group54.entities.UserKey;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.PollRepository;
 import nl.tudelft.oopp.group54.repositories.PollVoteRepository;
@@ -50,6 +61,9 @@ public class PollServiceTest {
     @InjectMocks
     PollServiceImpl pollService;
 
+    /**
+     * Executes before each test.
+     */
     @BeforeEach
     public void init() {
         date = new Date(1617841943);
@@ -768,11 +782,12 @@ public class PollServiceTest {
         pollVoteList.add(pollVote1);
         pollVoteList.add(pollVote2);
         pollVoteList.add(pollVote3);
+        when(pollVoteRepository.findAllByLectureIdAndPollId(1, 1)).thenReturn(pollVoteList);
+
 
         when(userRepository.findById(any(UserKey.class))).thenReturn(Optional.of(student1));
         when(lectureRepository.findById(any(Integer.class))).thenReturn(Optional.of(lecture1));
         when(pollRepository.findAllByLectureId(1)).thenReturn(pollList);
-        when(pollVoteRepository.findAllByLectureIdAndPollId(1, 1)).thenReturn(pollVoteList);
 
         Map<String, Object> actual = pollService.getStatistics(1, "123");
 
