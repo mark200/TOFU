@@ -75,15 +75,13 @@ class VoteTest {
     }
 
     @Test
-    public void testVoteKeyEqualsSameObject() {
-        VoteKey newKey = new VoteKey(3, 4, 5);
+    public void testVoteKeyEquals() {
+        VoteKey newKey = new VoteKey(3, 4, 6);
+        VoteKey newKey1 = new VoteKey(3, 4, 5);
         assertEquals(newKey, newKey);
-    }
-
-    @Test
-    public void testVoteKeyNotEqualsDifferentInstance() {
-        VoteKey newKey = new VoteKey(3, 4, 5);
+        assertNotEquals(newKey, newKey1);
         assertNotEquals(newKey, "string");
+
     }
 
     @Test
@@ -124,25 +122,9 @@ class VoteTest {
     @Test
     public void testEquals() {
         assertEquals(vote1, vote2);
-    }
-
-    @Test
-    public void equalsSameObject() {
         assertEquals(vote1, vote1);
-    }
-
-    @Test
-    public void equalsNull() {
         assertNotEquals(vote1, null);
-    }
-
-    @Test
-    public void notEquals() {
         assertNotEquals(vote1, vote3);
-    }
-
-    @Test
-    public void equalsDifferentObject() {
         assertNotEquals(vote1, "123");
     }
 }

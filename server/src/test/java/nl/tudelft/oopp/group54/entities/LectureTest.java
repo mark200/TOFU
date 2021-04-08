@@ -16,6 +16,7 @@ public class LectureTest {
     static Lecture lecture1;
     static Lecture lecture2;
     static Lecture lecture3;
+    static Lecture lecture4;
 
     @Test
     public void testSetOngoingLecture() {
@@ -34,48 +35,34 @@ public class LectureTest {
     }
 
     @Test
-    public void equalsPrimaryKeys() {
+    public void testEquals() {
         Date date = new Date();
         lecture1 = new Lecture(123, "312", date, "123", "132", "123", true);
         lecture2 = new Lecture(123, "312", date, "123", "132", "123", true);
+        lecture3 = new Lecture(12, "31", date, "123", "132", "123", true);
+
+        assertEquals(lecture1, lecture1);
         assertEquals(lecture1, lecture2);
         assertTrue(lecture1.equalsPrimaryKeys(lecture2));
-    }
-
-    @Test
-    public void equalsSameObject() {
-        Date date = new Date();
-        lecture1 = new Lecture(123, "312", date, "123", "132", "123", true);
-        assertEquals(lecture1, lecture1);
-    }
-
-    @Test
-    public void equalsNull() {
-        Date date = new Date();
-        lecture1 = new Lecture(123, "312", date, "123", "132", "123", true);
+        assertFalse(lecture1.equals(date));
+        assertFalse(lecture1.equals(null));
         assertNotNull(lecture1);
-    }
-
-    @Test
-    public void notEquals() {
-        Date date = new Date();
-        lecture1 = new Lecture(123, "312", date, "123", "132", "123", true);
-        lecture3 = new Lecture(12, "31", date, "123", "132", "123", true);
         assertNotEquals(lecture1, lecture3);
-    }
-
-    @Test
-    public void equalsDifferentObject() {
-        Date date = new Date();
-        lecture1 = new Lecture(123, "312", date, "123", "132", "123", true);
-        assertNotEquals(lecture1, "123");
     }
 
     @Test
     public void testIsJoinable() {
         Date date = new Date();
+        Date date2 = new Date(200000, 12, 12);
         lecture1 = new Lecture(123, "312", date, "123", "132", "123", true);
+        lecture2 = new Lecture(123, "312", date2, "123", "132", "123", false);
+        lecture3 = new Lecture(123, "312", date, "123", "132", "123", false);
+        lecture4 = new Lecture(123, "312", date2, "123", "132", "123", true);
+
         assertTrue(lecture1.isJoinable());
+        assertFalse(lecture2.isJoinable());
+        assertFalse(lecture3.isJoinable());
+        assertFalse(lecture4.isJoinable());
     }
 
     @Test
@@ -83,6 +70,10 @@ public class LectureTest {
         Date date = new Date();
         lecture1 = new Lecture(123, "312", date, "123", "132", "123", true);
         assertTrue(lecture1.isLectureStarted());
+
+        Date date2 = new Date(200000, 12, 12);
+        lecture2 = new Lecture(123, "312", date2, "123", "132", "123", false);
+        assertFalse(lecture2.isLectureStarted());
     }
 
     @Test
@@ -152,6 +143,8 @@ public class LectureTest {
         Date date = new Date();
         lecture1 = new Lecture(123, "312", date, "123", "132", "123", true);
         assertTrue(lecture1.equalsPrimaryKeys(lecture1));
+        assertFalse(lecture1.equalsPrimaryKeys(date));
+        assertFalse(lecture1.equalsPrimaryKeys(null));
     }
 
     @Test
