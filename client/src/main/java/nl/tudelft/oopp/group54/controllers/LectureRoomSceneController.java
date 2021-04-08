@@ -1099,6 +1099,7 @@ public class LectureRoomSceneController extends AbstractApplicationController {
                     if (!ended) {
                         ended = true;
                         this.displayStatusMessage("The Lecture has been ended.");
+                        refreshThread.shutdown();
                     }
                     if (ds.getPrivilegeId().equals(3)) {
                         MainView.changeSceneClearHistory(ApplicationScene.MAINVIEW, false, true);
