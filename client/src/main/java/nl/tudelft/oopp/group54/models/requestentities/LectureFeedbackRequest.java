@@ -1,8 +1,6 @@
 package nl.tudelft.oopp.group54.models.requestentities;
 
-import java.io.Serializable;
-
-public class LectureFeedbackRequest implements Serializable {
+public class LectureFeedbackRequest extends AbstractRequest {
 
     private Long userId;
     private Integer lectureFeedbackCode;

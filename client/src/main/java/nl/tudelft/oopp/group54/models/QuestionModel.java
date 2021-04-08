@@ -14,7 +14,7 @@ public class QuestionModel implements Serializable {
     private String answerText;
     private Date createdAt;
 
-    private QuestionModel() {
+    public QuestionModel() {
 
     }
 

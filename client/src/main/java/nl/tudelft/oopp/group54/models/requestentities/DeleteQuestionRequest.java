@@ -1,8 +1,6 @@
 package nl.tudelft.oopp.group54.models.requestentities;
 
-import java.io.Serializable;
-
-public class DeleteQuestionRequest implements Serializable {
+public class DeleteQuestionRequest extends AbstractRequest {
     String userId;
 
     public DeleteQuestionRequest(String userId) {
