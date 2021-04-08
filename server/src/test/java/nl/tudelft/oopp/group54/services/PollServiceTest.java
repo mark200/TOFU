@@ -767,18 +767,19 @@ public class PollServiceTest {
         expected.put("voteCount", 3);
         expected.put("optionCount", 3);
 
-        List<Poll> pollList = new ArrayList<>();
-        pollList.add(poll);
-        pollList.add(poll1);
-        pollList.add(poll1);
-
-        List<PollVote> pollVoteList = new ArrayList<>();
         PollVote pollVote1 = new PollVote();
         pollVote1.setVote("A");
         PollVote pollVote2 = new PollVote();
         pollVote2.setVote("A");
         PollVote pollVote3 = new PollVote();
         pollVote3.setVote("C");
+
+        List<Poll> pollList = new ArrayList<>();
+        pollList.add(poll);
+        pollList.add(poll1);
+        pollList.add(poll1);
+
+        List<PollVote> pollVoteList = new ArrayList<>();
         pollVoteList.add(pollVote1);
         pollVoteList.add(pollVote2);
         pollVoteList.add(pollVote3);
@@ -808,24 +809,25 @@ public class PollServiceTest {
         expected.put("voteCount", 3);
         expected.put("optionCount", 3);
 
-        List<Poll> pollList = new ArrayList<>();
-        pollList.add(poll);
-
-        List<PollVote> pollVoteList = new ArrayList<>();
         PollVote pollVote1 = new PollVote();
         pollVote1.setVote("A");
         PollVote pollVote2 = new PollVote();
         pollVote2.setVote("A");
         PollVote pollVote3 = new PollVote();
         pollVote3.setVote("C");
+
+        List<Poll> pollList = new ArrayList<>();
+        pollList.add(poll);
+
+        List<PollVote> pollVoteList = new ArrayList<>();
         pollVoteList.add(pollVote1);
         pollVoteList.add(pollVote2);
         pollVoteList.add(pollVote3);
+        when(pollVoteRepository.findAllByLectureIdAndPollId(1, 1)).thenReturn(pollVoteList);
 
         when(userRepository.findById(any(UserKey.class))).thenReturn(Optional.of(user1));
         when(lectureRepository.findById(any(Integer.class))).thenReturn(Optional.of(lecture1));
         when(pollRepository.findAllByLectureId(1)).thenReturn(pollList);
-        when(pollVoteRepository.findAllByLectureIdAndPollId(1, 1)).thenReturn(pollVoteList);
 
         Map<String, Object> actual = pollService.getStatistics(1, "123");
 
