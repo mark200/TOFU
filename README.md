@@ -16,6 +16,7 @@ Add your own name (do not add the names for others!) to the section below.
 |---|---|---|
 | AA | Apoorva Abhishek | A.Abhishek@student.tudelft.nl |
 | MND | Mark Dragnev | m.n.dragnev@student.tudelft.nl |
+| MK | Milan de Koning | m.dekoning-1@student.tudelft.nl |
 
 <!-- Instructions (remove once assignment has been completed -->
 <!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
