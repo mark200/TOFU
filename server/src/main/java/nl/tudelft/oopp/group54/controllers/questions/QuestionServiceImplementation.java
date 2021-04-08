@@ -132,7 +132,9 @@ public class QuestionServiceImplementation implements QuestionService {
         questionRepository.flush();
 
         String logMessage = "User " + userId + " (" + findUserRow.get().getIpAddress() + ") asked a question " + questionText;
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
 
         try {
             questionRepository.save(newQuestion);
@@ -197,7 +199,9 @@ public class QuestionServiceImplementation implements QuestionService {
                 .collect(Collectors.toList());
 
         String logMessage = "User " + userId + " (" + foundUser.get().getIpAddress() + ") requests all questions";
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
 
         toBeReturned.put("answered", answeredQuestions);
         toBeReturned.put("unanswered", unAnsweredQuestions);
@@ -301,7 +305,9 @@ public class QuestionServiceImplementation implements QuestionService {
                 + authorOfTheDeletionRequest.get().getIpAddress()
                 + ") deletes question "
                 + questionId;
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
 
         return status;
     }
@@ -402,7 +408,9 @@ public class QuestionServiceImplementation implements QuestionService {
                 + authorOfTheEditRequest.get().getIpAddress()
                 + ") edits question "
                 + questionId;
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
 
         return status;
     }

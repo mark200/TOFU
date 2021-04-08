@@ -225,7 +225,9 @@ public class LectureServiceImpl implements LectureService {
         userRepository.flush();
 
         String logMessage = "User " + userName + " (" + newUser.getIpAddress() + ") joined";
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
 
         try {
             userRepository.save(newUser);
