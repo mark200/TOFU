@@ -482,13 +482,6 @@ public class PollServiceImpl implements PollService {
             return status;
         }
 
-        List<Poll> openPoll = pollRepository.findAllByLectureId(lectureId);
-        if (openPoll.isEmpty()) {
-            status.put("success", false);
-            status.put("message", "There are no polls we can currently reopen!");
-            return status;
-        }
-
         lastPollInserted.get().setClosed(false);
 
         try {
