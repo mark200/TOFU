@@ -181,26 +181,6 @@ class QuestionControllerTest {
     }
 
     @Test
-    void editQuestion_noStrings() throws Exception {
-        MockHttpServletResponse result = mockMvc.perform(MockMvcRequestBuilders
-                .post("/lectures/1/questions/edit")
-                .param("userId", "1")
-                .content("{\n"
-                        +
-                        "    \"questionId\": 1,\n"
-                        +
-                        "    \"newContent\": 1\n"
-                        +
-                        "}")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
-                .andReturn().getResponse();
-
-        assertEquals("{\"message\":\"Expected lectureId and new Content to be strings\",\"success\":\"false\"}",
-                result.getContentAsString());
-    }
-
-    @Test
     void editQuestion() throws Exception {
         status.put("success", "true");
 
