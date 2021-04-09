@@ -18,6 +18,7 @@ import nl.tudelft.oopp.group54.repositories.LectureFeedbackRepository;
 import nl.tudelft.oopp.group54.repositories.LectureRepository;
 import nl.tudelft.oopp.group54.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,9 +33,31 @@ public class LectureServiceImpl implements LectureService {
     @Autowired
     private LectureFeedbackRepository lectureFeedbackRepository;
 
+    public LectureServiceImpl() {
+    }
 
-    public void setRepository(LectureRepository repository) {
-        this.lectureRepository = repository;
+    public LectureRepository getLectureRepository() {
+        return lectureRepository;
+    }
+
+    public UserRepository getUserRepository() {
+        return userRepository;
+    }
+
+    public LectureFeedbackRepository getLectureFeedbackRepository() {
+        return lectureFeedbackRepository;
+    }
+
+    public void setLectureRepository(LectureRepository lectureRepository) {
+        this.lectureRepository = lectureRepository;
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public void setLectureFeedbackRepository(LectureFeedbackRepository lectureFeedbackRepository) {
+        this.lectureFeedbackRepository = lectureFeedbackRepository;
     }
 
     /**
@@ -202,7 +225,9 @@ public class LectureServiceImpl implements LectureService {
         userRepository.flush();
 
         String logMessage = "User " + userName + " (" + newUser.getIpAddress() + ") joined";
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
 
         try {
             userRepository.save(newUser);

@@ -33,13 +33,12 @@ public class Poll {
     @NotNull
     private Date createdAt;
 
-
-
+    /**
+     * Empty constructor.
+     */
     public Poll() {
 
     }
-
-
 
     /**
      * Initialize a new Poll object.
@@ -107,6 +106,5 @@ public class Poll {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
-
 
 }

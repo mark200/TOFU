@@ -1,8 +1,6 @@
 package nl.tudelft.oopp.group54.models.requestentities;
 
-import java.io.Serializable;
-
-public class VoteRequest implements Serializable {
+public class VoteRequest extends AbstractRequest {
     private Integer questionId = -1;
     private boolean upvote = true;
 

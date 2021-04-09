@@ -26,9 +26,14 @@ public class GetLectureMetadataResponse implements Serializable {
      * @param moderatorJoinId - String
      * @param lectureOngoing - has the lecture ended. Boolean
      */
-    public GetLectureMetadataResponse(Boolean success, String message, Integer lectureId, Integer people,
-                                      String studentJoinId, String lecturerJoinId,
-                                      String moderatorJoinId, Boolean lectureOngoing) {
+    public GetLectureMetadataResponse(Boolean success,
+                                      String message,
+                                      Integer lectureId,
+                                      Integer people,
+                                      String studentJoinId,
+                                      String lecturerJoinId,
+                                      String moderatorJoinId,
+                                      Boolean lectureOngoing) {
         this.success = success;
         this.message = message;
         this.lectureId = lectureId;

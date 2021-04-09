@@ -146,12 +146,7 @@ public class Lecture {
         }
 
         Lecture lecture = (Lecture) o;
-        return getId().equals(lecture.getId())
-                && getLectureName().equals(lecture.getLectureName())
-                && getStartTime().equals(lecture.getStartTime())
-                && getStudentJoinId().equals(lecture.getStudentJoinId())
-                && getModeratorJoinId().equals(lecture.getModeratorJoinId())
-                && getLecturerJoinId().equals(lecture.getLecturerJoinId());
+        return getId().equals(lecture.getId());
     }
 
     /**

@@ -142,14 +142,6 @@ public class QuestionController {
             return toBeReturned;
         }
         
-        if (!(requestPayload.get("questionId") instanceof String && requestPayload.get("questionId") instanceof String)) {
-            Map<String, Object> toBeReturned = new TreeMap<>();
-            toBeReturned.put("success", "false");
-            toBeReturned.put("message", "Expected lectureId and new Content to be strings");
-
-            return toBeReturned;
-        }
-        
         Integer questionId = Integer.parseInt((String)requestPayload.get("questionId"));
         String newContent = (String)requestPayload.get("newContent");
 

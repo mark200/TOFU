@@ -1,8 +1,6 @@
 package nl.tudelft.oopp.group54.models.requestentities;
 
-import java.io.Serializable;
-
-public class PostQuestionRequest implements Serializable {
+public class PostQuestionRequest extends AbstractRequest {
     String questionText;
     String userId;
 

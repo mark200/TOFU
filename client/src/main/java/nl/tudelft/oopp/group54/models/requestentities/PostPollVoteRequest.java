@@ -1,8 +1,6 @@
 package nl.tudelft.oopp.group54.models.requestentities;
 
-import java.io.Serializable;
-
-public class PostPollVoteRequest implements Serializable {
+public class PostPollVoteRequest extends AbstractRequest {
     private String vote;
     private String userId;
     

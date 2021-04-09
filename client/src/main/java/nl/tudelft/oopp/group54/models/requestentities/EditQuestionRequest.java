@@ -1,6 +1,6 @@
 package nl.tudelft.oopp.group54.models.requestentities;
 
-public class EditQuestionRequest {
+public class EditQuestionRequest extends AbstractRequest {
     private String questionId;
     private String newContent;
     

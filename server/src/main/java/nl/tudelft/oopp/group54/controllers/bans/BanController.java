@@ -70,7 +70,9 @@ public class BanController {
 
         String logMessage = "User with IP address " + userIp + " was banned for question " + questionId;
         logger.info(logMessage);
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
 
         return banService.banIp(lectureId, questionId, userIp);
     }

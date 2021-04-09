@@ -1,6 +1,7 @@
 package nl.tudelft.oopp.group54.entities;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MapLoggers {
-    private Map<Integer, List<String>> map;
+    Map<Integer, List<String>> map;
 
     private static MapLoggers instance;
 
@@ -38,7 +39,7 @@ public class MapLoggers {
      * @param id ID of the lecture for which the log is going to be written at
      * @param msg the content of the log message
      */
-    public void logWarning(Integer id, String msg) {
+    public void logWarning(Integer id, String msg, String filename) {
         if (id == null) {
             return;
         }
@@ -51,7 +52,7 @@ public class MapLoggers {
 
         if (map.get(id).size() > 10) {
             try {
-                writeToFile(id);
+                writeToFile(id, filename);
                 setMapValue(id, new ArrayList<>());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -64,12 +65,12 @@ public class MapLoggers {
      * @param lectureId the lecture id
      * @throws IOException exception when writing to file
      */
-    public void writeToFile(Integer lectureId) throws IOException {
+    public void writeToFile(Integer lectureId, String filename) throws IOException {
         if (lectureId == null) {
             return;
         }
 
-        FileWriter fw = new FileWriter("server/Logs/" + lectureId + ".log", true);
+        FileWriter fw = new FileWriter(filename, true);
         BufferedWriter bw = new BufferedWriter(fw);
 
         String toWrite = "";

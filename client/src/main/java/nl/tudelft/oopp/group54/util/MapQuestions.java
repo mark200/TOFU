@@ -31,7 +31,7 @@ public class MapQuestions {
         return innerUnansweredQuestionsIDs;
     }
 
-    public void setInnerUnansweredQuestionsIDs(HashMap<String, Integer> innerUnansweredQuestionsIDs) {
+    public void setInnerUnansweredQuestionsIDs(Map<String, Integer> innerUnansweredQuestionsIDs) {
         this.innerUnansweredQuestionsIDs = innerUnansweredQuestionsIDs;
     }
 

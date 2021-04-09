@@ -1,8 +1,6 @@
 package nl.tudelft.oopp.group54.models.requestentities;
 
-import java.io.Serializable;
-
-public class BanIpRequest implements Serializable {
+public class BanIpRequest extends AbstractRequest {
     String userIp;
 
     public BanIpRequest(String userIp) {

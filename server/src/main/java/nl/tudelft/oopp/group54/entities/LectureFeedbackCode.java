@@ -5,7 +5,7 @@ public enum LectureFeedbackCode {
 
     private final int value;
 
-    private LectureFeedbackCode(int value) {
+    LectureFeedbackCode(int value) {
         this.value = value;
     }
 

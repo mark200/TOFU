@@ -98,7 +98,9 @@ public class AnswerServiceImpl implements AnswerService {
         answerRepository.flush();
 
         String logMessage = "User " + userId + " (" + foundUser.get().getIpAddress() + ") answered question " + questionId;
-        MapLoggers.getInstance().logWarning(lectureId, new Date() + " - " + logMessage);
+        MapLoggers.getInstance().logWarning(lectureId,
+                new Date() + " - " + logMessage,
+                "server/Logs/" + lectureId + ".log");
 
         try {
             questionRepository.save(foundQuestion.get());
