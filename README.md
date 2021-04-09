@@ -9,15 +9,17 @@ This information can be added throughout the course, except for the names of the
 Add your own name (do not add the names for others!) to the section below.
 
 ## Description of project
+TOFU is the communication system between lecturers and students for the online education.
 
 ## Group members
 
 | 📸 | Name | Email |
 |---|---|---|
-| AA | Apoorva Abhishek | A.Abhishek@student.tudelft.nl |
-| MND | Mark Dragnev | m.n.dragnev@student.tudelft.nl |
-| MK | Milan de Koning | m.dekoning-1@student.tudelft.nl |
-| JB | Joosep den Boer | j.denboer-3@student.tudelft.nl |
+| https://eu.ui-avatars.com/api/?name=AA&length=3&size=50&color=FFF&background=0D8ABC&font-size=0.325 | Apoorva Abhishek | A.Abhishek@student.tudelft.nl |
+| https://eu.ui-avatars.com/api/?name=MND&length=3&size=50&color=FFF&background=0D8ABC&font-size=0.325 | Mark Dragnev | m.n.dragnev@student.tudelft.nl |
+| https://eu.ui-avatars.com/api/?name=MK&length=3&size=50&color=FFF&background=0D8ABC&font-size=0.325 | Milan de Koning | m.dekoning-1@student.tudelft.nl |
+| https://eu.ui-avatars.com/api/?name=JB&length=3&size=50&color=FFF&background=0D8ABC&font-size=0.325 | Joosep den Boer | j.denboer-3@student.tudelft.nl |
+| https://eu.ui-avatars.com/api/?name=MK&length=3&size=50&color=FFF&background=0D8ABC&font-size=0.325 | Martynas Krupskis | m.krupskis@student.tudelft.nl
 
 <!-- Instructions (remove once assignment has been completed -->
 <!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
@@ -26,7 +28,19 @@ Add your own name (do not add the names for others!) to the section below.
 <!-- - (please make sure the photos have the same size) --> 
 
 ## How to run it
+1. Install IntelliJ IDEA Professional (free for students)
+2. Import project from Gradle model
+3. For IntelliJ to run the project make sure are running jdk 8.
+4. Start the server by right-clicking ClassroomApplication and clicking 'Run'
+5. Start the client by right-clicking MainApp and click 'Run'.
 
+Make sure you have the server running before trying out the client.
 ## How to contribute to it
+1. Clone the project to your local machine
+2. Commit changes to your own branch, branch from develop
+3. Follow the checkstyle and the codestyle of the project, comment your code
+4. Make sure to test your additions
+3. Submit a Merge Request so that we can review your changes
+
 
 ## Copyright / License (opt.)
