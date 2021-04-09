@@ -1,5 +1,7 @@
-Client: ![Client coverage](https://gitlab.ewi.tudelft.nl/cse1105/2019-2020/organisation/repository-template/badges/master/coverage.svg?job=client-test)
-Server: ![Server coverage](https://gitlab.ewi.tudelft.nl/cse1105/2019-2020/organisation/repository-template/badges/master/coverage.svg?job=server-test)
+Stable Release Client: ![Client coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/master/coverage.svg?job=client-test)
+Stable Release Server: ![Server coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/master/coverage.svg?job=server-test)
+Bleeding Edge Client: ![Client coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/develop/coverage.svg?job=client-test)
+Bleeding Edge Server: ![Server coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/develop/coverage.svg?job=server-test)
 
 
 # Starting template
@@ -18,6 +20,7 @@ Add your own name (do not add the names for others!) to the section below.
 | MND | Mark Dragnev | m.n.dragnev@student.tudelft.nl |
 | MK | Milan de Koning | m.dekoning-1@student.tudelft.nl |
 | JB | Joosep den Boer | j.denboer-3@student.tudelft.nl |
+| BB | Bartu Bali | b.b.bali@student.tudelft.nl |
 
 <!-- Instructions (remove once assignment has been completed -->
 <!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
