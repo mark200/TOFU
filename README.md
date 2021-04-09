@@ -10,7 +10,7 @@ This README will need to contain a description of your project, how to run it, h
 This information can be added throughout the course, except for the names of the group members.
 Add your own name (do not add the names for others!) to the section below.
 
-## Description of project
+## TOFU
 TOFU is the communication system between lecturers and students for the online education.
 
 ## Group members
@@ -20,7 +20,7 @@ TOFU is the communication system between lecturers and students for the online e
 | ![](https://eu.ui-avatars.com/api/?name=AA&length=3&size=50&color=FFF&background=0D8ABC&font-size=0.325) | Apoorva Abhishek | A.Abhishek@student.tudelft.nl |
 | ![](https://eu.ui-avatars.com/api/?name=MND&length=3&size=50&color=FFF&background=0D8ABC&font-size=0.325) | Mark Dragnev | m.n.dragnev@student.tudelft.nl |
 | ![](https://eu.ui-avatars.com/api/?name=MK&length=3&size=50&color=FFF&background=0D8ABC&font-size=0.325) | Milan de Koning | m.dekoning-1@student.tudelft.nl |
-| ![]https://eu.ui-avatars.com/api/?name=JB&length=3&size=50&color=FFF&background=0D8ABC&font-size=0.325) | Joosep den Boer | j.denboer-3@student.tudelft.nl |
+| ![](https://eu.ui-avatars.com/api/?name=JB&length=3&size=50&color=FFF&background=0D8ABC&font-size=0.325) | Joosep den Boer | j.denboer-3@student.tudelft.nl |
 | ![](https://eu.ui-avatars.com/api/?name=MK&length=3&size=50&color=FFF&background=0D8ABC&font-size=0.325) | Martynas Krupskis | m.krupskis@student.tudelft.nl
 | ![](https://eu.ui-avatars.com/api/?name=BB&length=3&size=50&color=FFF&background=0D8ABC&font-size=0.325) | Bartu Bali | b.b.bali@student.tudelft.nl | 
 <!-- Instructions (remove once assignment has been completed -->
