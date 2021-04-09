@@ -3,13 +3,6 @@ Stable Release Server: ![Server coverage](https://gitlab.ewi.tudelft.nl/cse1105/
 Bleeding Edge Client: ![Client coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/develop/coverage.svg?job=client-test)
 Bleeding Edge Server: ![Server coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/develop/coverage.svg?job=server-test)
 
-
-# Starting template
-
-This README will need to contain a description of your project, how to run it, how to set up the development environment, and who worked on it.
-This information can be added throughout the course, except for the names of the group members.
-Add your own name (do not add the names for others!) to the section below.
-
 ## TOFU
 TOFU is the communication system between lecturers and students for the online education.
 
