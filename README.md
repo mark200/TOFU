@@ -1,7 +1,8 @@
-Stable Release Client: ![Client coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/master/coverage.svg?job=client-test)
-Stable Release Server: ![Server coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/master/coverage.svg?job=server-test)
-Bleeding Edge Client: ![Client coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/develop/coverage.svg?job=client-test)
-Bleeding Edge Server: ![Server coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/develop/coverage.svg?job=server-test)
+Client (Production): ![Client coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/master/coverage.svg?job=client-test)
+Server (Production): ![Server coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/master/coverage.svg?job=server-test)
+
+Client (Develop): ![Client coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/develop/coverage.svg?job=client-test)
+Server (Develop): ![Server coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/develop/coverage.svg?job=server-test)
 
 
 # Starting template

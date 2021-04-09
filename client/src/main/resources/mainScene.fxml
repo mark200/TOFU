@@ -62,7 +62,8 @@
             </GridPane>
             <ToolBar fx:id="utilityToolbar" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0">
               <items>
-                <Button id="backButton" fx:id="utilityToolbarBackButton" disable="true" mnemonicParsing="false" onAction="#utilityToolbarBackButtonPressed" styleClass="imageButton" visible="false" />
+                <Button id="backButton" fx:id="utilityToolbarBackButton" disable="true" mnemonicParsing="false" onAction="#utilityToolbarBackButtonPressed" styleClass="imageButton" />
+                  <Button fx:id="settingsButton" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#settingsButtonClicked" text="Settings" />
               </items>
             </ToolBar>
             <AnchorPane styleClass="statusBar" GridPane.rowIndex="2">
