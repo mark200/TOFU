@@ -5,7 +5,10 @@ Client (Develop): ![Client coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-
 Server (Develop): ![Server coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/develop/coverage.svg?job=server-test)
 
 ## TOFU
-TOFU is the communication system between lecturers and students for the online education.
+
+TOFU is an online platform that is meant to enhance the communication 
+between lecturers and students. It is meant to be used in conjunction 
+with video-telephony software such as Zoom, Jitsi, etc.
 
 ## Group members
 
@@ -24,12 +27,18 @@ TOFU is the communication system between lecturers and students for the online e
 <!-- - (please make sure the photos have the same size) --> 
 
 ## How to run it
+
+### Starting the application via IntelliJ IDEA
+
 1. Install IntelliJ IDEA Professional (free for students)
 2. Import project from Gradle model
 4. Start the server by right-clicking ClassroomApplication and clicking 'Run'
 5. Start the client by right-clicking MainApp and click 'Run'.
 
 Make sure you have the server running before trying out the client.
+
+
+
 ## How to contribute to it
 1. Clone the project to your local machine
 2. Commit changes to your own branch, branch from develop
