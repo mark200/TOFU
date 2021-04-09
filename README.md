@@ -25,7 +25,6 @@ TOFU is the communication system between lecturers and students for the online e
 ## How to run it
 1. Install IntelliJ IDEA Professional (free for students)
 2. Import project from Gradle model
-3. For IntelliJ to run the project make sure are running jdk 8.
 4. Start the server by right-clicking ClassroomApplication and clicking 'Run'
 5. Start the client by right-clicking MainApp and click 'Run'.
 
