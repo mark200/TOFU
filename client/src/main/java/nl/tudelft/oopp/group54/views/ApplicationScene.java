@@ -6,7 +6,8 @@ public enum ApplicationScene {
   LECTUREROOM("lectureRoomScene"),
   JOINLECTURE("joinLectureScene"),
   DATETIME("dateTimeScene"),
-  COPYLINK("copyLinkScene");
+  COPYLINK("copyLinkScene"),
+  SETTINGSVIEW("settingsView");
 
     private final String text;
 

@@ -1,0 +1,38 @@
+* {
+   -fx-54-background: #2c2c2c;
+   -fx-54-primary: #7c6e04;
+   -fx-54-secondary: #5c5c5c;
+   -fx-54-foreground: #ffffff;
+}
+
+#backButton {
+    -fx-background-image: url('../../images/white/backButton.png');
+}
+
+#upvoteButton {
+    -fx-background-image: url('../../images/white/upvoteButton.png');
+}
+
+#refreshButton {
+    -fx-background-image: url('../../images/white/refreshButton.png');
+}
+
+#askButton {
+    -fx-background-image: url('../../images/white/askButton.png');
+}
+
+#exportButton {
+    -fx-background-image: url('../../images/white/exportButton.png');
+}
+
+#lectureModeButton {
+    -fx-background-image: url('../../images/white/lecturerModeButton.png');
+}
+
+#feedbackPanelButton {
+    -fx-background-image: url('../../images/white/feedbackPanelButton.png');
+}
+
+.date-picker > .arrow-button {
+    -fx-background-image: url("../../images/white/datePickerIcon.png");
+}

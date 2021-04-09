@@ -10,6 +10,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import nl.tudelft.oopp.group54.Datastore;
 import nl.tudelft.oopp.group54.controllers.AbstractApplicationController;
 
 public class MainView extends Application {
@@ -58,6 +60,7 @@ public class MainView extends Application {
         try {
             root = loader.load();
             root.getStylesheets().add("stylesheets/defaultTheme.css");
+            root.getStylesheets().add("stylesheets/colorSchemes/" + Datastore.getInstance().getColorScheme() + ".css");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -93,6 +96,8 @@ public class MainView extends Application {
         try {
             root = loader.load();
             root.getStylesheets().add("stylesheets/defaultTheme.css");
+            root.getStylesheets().add("stylesheets/colorSchemes/" + Datastore.getInstance().getColorScheme() + ".css");
+
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -24,6 +24,7 @@ public class Datastore {
     JoinLectureResponse joinLectureResponse;
 
     String serviceEndpoint = "http://localhost:8080";
+    String colorScheme = "Darcc";
 
     Long userId = 0L;
     Integer lectureId = 0;
@@ -52,6 +53,18 @@ public class Datastore {
 
     public String getServiceEndpoint() {
         return this.serviceEndpoint;
+    }
+
+    public void setServiceEndpoint(String serviceEndpoint) {
+        this.serviceEndpoint = serviceEndpoint;
+    }
+
+    public String getColorScheme() {
+        return this.colorScheme;
+    }
+
+    public void setColorScheme(String colorScheme) {
+        this.colorScheme = colorScheme;
     }
 
     public ObservableList<QuestionView> getCurrentUnansweredQuestionViews() {
