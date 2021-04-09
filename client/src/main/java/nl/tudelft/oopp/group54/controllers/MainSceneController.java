@@ -22,6 +22,13 @@ public class MainSceneController extends AbstractApplicationController {
     @FXML
     private AnchorPane anchorPane;
 
+    @FXML
+    private Button settingsButton;
+
+    public void settingsButtonClicked() {
+        MainView.changeScene(ApplicationScene.SETTINGSVIEW, true);
+    }
+
     public void createButtonClicked() {
         MainView.changeScene(ApplicationScene.DATETIME, true);
     }
