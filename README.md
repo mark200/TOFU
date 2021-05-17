@@ -1,9 +1,3 @@
-Client (Production): ![Client coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/master/coverage.svg?job=client-test)
-Server (Production): ![Server coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/master/coverage.svg?job=server-test)
-
-Client (Develop): ![Client coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/develop/coverage.svg?job=client-test)
-Server (Develop): ![Server coverage](https://gitlab.ewi.tudelft.nl/cse1105/2020-2021/team-repositories/oopp-group-54/repository-template/badges/develop/coverage.svg?job=server-test)
-
 ## TOFU
 
 TOFU is an online platform that is meant to enhance the communication 
